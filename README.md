@@ -7,6 +7,8 @@ __Statistical Analyzer__
 ## Table of Contents
 - [Rational](https://github.com/jab0073/CS-499-Statistical-Analyzer#rationale)
 - [Features](https://github.com/jab0073/CS-499-Statistical-Analyzer#features)
+- [Team Info](https://github.com/jab0073/CS-499-Statistical-Analyzer#team-information)
+- [Scrum Points](https://github.com/jab0073/CS-499-Statistical-Analyzer#scrum-point-values)
 
 ### Rationale
 
@@ -58,12 +60,7 @@ statistical analyses performed on the data.
 | Points | Amount of Work |
 | ------ | -------------- |
 |    1   |  A few Hours   |
-| ------ | -------------- |
 |    3   |  A few Days    |
-| ------ | -------------- |
 |    5   |     A Week     |
-| ------ | -------------- |
 |    8   |    1.5 Weeks   |
-| ------ | -------------- |
 |   10   |    A Sprint    |
-| ------ | -------------- |
