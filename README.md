@@ -1,13 +1,16 @@
 # CS 499 Senior Project
 **Project Assignment**
+
 **Statistical Analyzer**
 ### Rationale
+
 Anyone doing research, especially in the social sciences, uses statistics to analyze the 
 resulting data.  Usually a number of different statistical measures are performed on the data.  
 This class project will be to produce a software system which will take a set of data and 
 perform user selected statistical analyses on the data then generate both an on-screen display 
 of the results and a printable file of the results.
 ### Features
+
 The features listed below shall be included in the software.
 1. The proposed system will accept as input either (1) a comma delimited data file such 
 as can be output from Microsoft Excel or (2) data input into an editable table or text 
