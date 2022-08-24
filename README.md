@@ -1,7 +1,7 @@
 # CS 499 Senior Project
 **Project Assignment**
 
-__**Statistical Analyzer**__
+__Statistical Analyzer__
 ### Rationale
 
 Anyone doing research, especially in the social sciences, uses statistics to analyze the 
