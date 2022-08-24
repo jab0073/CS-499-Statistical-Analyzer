@@ -1,7 +1,7 @@
 # CS 499 Senior Project
 **Project Assignment**
 
-**Statistical Analyzer**
+__**Statistical Analyzer**__
 ### Rationale
 
 Anyone doing research, especially in the social sciences, uses statistics to analyze the 
@@ -19,7 +19,7 @@ fields on screen.
 calculated on the data if the measure is meaningful for the type of data (frequency, 
 ordinal, interval):  mean, median, mode, standard deviation, variance, coefficient of 
 variance, percentiles, probability distribution, binomial distribution, least square line, 
-2 (Chi Square), correlation coefficient, sign test, rank sum test, and Spearman rank 
+X2 (Chi Square), correlation coefficient, sign test, rank sum test, and Spearman rank 
 correlation coefficient.
 3. When appropriate for the statistical measure the following graphs shall be selectable 
 by the user for display: Horizontal bar chart, vertical bar chart, pie chart, normal 
