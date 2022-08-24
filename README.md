@@ -58,6 +58,7 @@ statistical analyses performed on the data.
 - Brandon Perry
 - Elizabeth Dooley
 - Byron Thompson
+- Justin Bushue
 
 ### Scrum Point Values
 
