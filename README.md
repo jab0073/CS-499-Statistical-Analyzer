@@ -5,7 +5,7 @@
 __Statistical Analyzer__
 
 ## Table of Contents
-- [Rational](https://github.com/jab0073/CS-499-Statistical-Analyzer/blob/main/README.md#rationale)
+- [Rational](https://github.com/jab0073/CS-499-Statistical-Analyzer#rationale)
 - [Features](https://github.com/jab0073/CS-499-Statistical-Analyzer#features)
 
 ### Rationale
@@ -46,3 +46,24 @@ simple text based output if tabular output is not appropriate.
 displays.
 10. The system shall be capable of producing text files summarizing the results of all 
 statistical analyses performed on the data. 
+
+### Team Information
+
+- Brandon Perry
+- Elizabeth Dooley
+- Byron Thompson
+
+### Scrum Point Values
+
+| Points | Amount of Work |
+| ------ | -------------- |
+|    1   |  A few Hours   |
+| ------ | -------------- |
+|    3   |  A few Days    |
+| ------ | -------------- |
+|    5   |     A Week     |
+| ------ | -------------- |
+|    8   |    1.5 Weeks   |
+| ------ | -------------- |
+|   10   |    A Sprint    |
+| ------ | -------------- |
