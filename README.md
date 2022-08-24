@@ -1,7 +1,13 @@
 # CS 499 Senior Project
+
+## Table of Contents
+- [Rational](https://github.com/jab0073/CS-499-Statistical-Analyzer/blob/main/README.md#rationale)
+- [Features](https://github.com/jab0073/CS-499-Statistical-Analyzer#features)
+
 **Project Assignment**
 
 __Statistical Analyzer__
+
 ### Rationale
 
 Anyone doing research, especially in the social sciences, uses statistics to analyze the 
@@ -9,6 +15,7 @@ resulting data.  Usually a number of different statistical measures are performe
 This class project will be to produce a software system which will take a set of data and 
 perform user selected statistical analyses on the data then generate both an on-screen display 
 of the results and a printable file of the results.
+
 ### Features
 
 The features listed below shall be included in the software.
