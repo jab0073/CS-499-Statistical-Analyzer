@@ -1,12 +1,12 @@
 # CS 499 Senior Project
 
-## Table of Contents
-- [Rational](https://github.com/jab0073/CS-499-Statistical-Analyzer/blob/main/README.md#rationale)
-- [Features](https://github.com/jab0073/CS-499-Statistical-Analyzer#features)
-
 **Project Assignment**
 
 __Statistical Analyzer__
+
+## Table of Contents
+- [Rational](https://github.com/jab0073/CS-499-Statistical-Analyzer/blob/main/README.md#rationale)
+- [Features](https://github.com/jab0073/CS-499-Statistical-Analyzer#features)
 
 ### Rationale
 
