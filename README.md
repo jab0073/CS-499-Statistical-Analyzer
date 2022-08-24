@@ -1,6 +1,6 @@
 # CS 499 Senior Project
-## Project Assignment
-## Statistical Analyzer
+**Project Assignment**
+**Statistical Analyzer**
 ### Rationale
 Anyone doing research, especially in the social sciences, uses statistics to analyze the 
 resulting data.  Usually a number of different statistical measures are performed on the data.  
