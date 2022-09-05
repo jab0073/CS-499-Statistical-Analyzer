@@ -4,6 +4,6 @@ import org.mariuszgromada.math.mxparser.mathcollection.Calculus.*;
 
 public class ExpressionEvaluation {
 
-    public static Double eval(String input) {
+    public static void eval(String input) {
     }
 }
