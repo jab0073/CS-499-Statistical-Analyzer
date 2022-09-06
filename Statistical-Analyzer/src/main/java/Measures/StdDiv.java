@@ -1,6 +1,10 @@
 package Measures;
+
 import Interfaces.IMeasure;
+import Utilities.DataSet;
 import tech.tablesaw.api.DoubleColumn;
+
+import javax.xml.crypto.Data;
 
 public class StdDiv implements IMeasure {
     private String name = "standard deviation";
@@ -16,7 +20,8 @@ public class StdDiv implements IMeasure {
     }
 
     @Override
-    public double function(DoubleColumn inputData) {
-        return inputData.removeMissing().standardDeviation();
+    public double function(DataSet inputData) {
+        DoubleColumn dc = DoubleColumn.create("", inputData.getDataAsDouble());
+        return dc.removeMissing().standardDeviation();
     }
 }

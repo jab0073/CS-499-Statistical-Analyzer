@@ -1,14 +1,15 @@
 package Interfaces;
 
+import Utilities.DataSet;
 import tech.tablesaw.api.DoubleColumn;
 
 public interface IMeasure {
-    public String name = "";
+    String name = "";
 
-    public void setName(String name);
+    void setName(String name);
 
-    public String getName();
+    String getName();
 
-    public double function(DoubleColumn inputData);
+    double function(DataSet inputData);
 
 }

@@ -20,7 +20,7 @@ __Statistical Analyzer__
 Anyone doing research, especially in the social sciences, uses statistics to analyze the 
 resulting data.  Usually a number of different statistical measures are performed on the data.  
 This class project will be to produce a software system which will take a set of data and 
-perform user selected statistical analyses on the data then generate both an on-screen display 
+perform user selected statistical analyzes on the data then generate both an on-screen display 
 of the results and a printable file of the results.
 
 ### Features
@@ -67,9 +67,9 @@ statistical analyses performed on the data.
 ### Scrum Point Values
 
 | Points | Amount of Work |
-| ------ | -------------- |
-|    1   |  A few Hours   |
-|    3   |  A few Days    |
-|    5   |     A Week     |
-|    8   |    1.5 Weeks   |
-|   10   |    A Sprint    |
+|--------|----------------|
+| 1      | A few Hours    |
+| 3      | A few Days     |
+| 5      | A Week         |
+| 8      | 1.5 Weeks      |
+| 10     | A Sprint       |

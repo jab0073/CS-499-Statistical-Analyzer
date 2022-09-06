@@ -1,5 +1,6 @@
 package Measures;
 import Interfaces.IMeasure;
+import Utilities.DataSet;
 import tech.tablesaw.api.DoubleColumn;
 
 public class BinomialDistribution implements IMeasure {
@@ -16,7 +17,7 @@ public class BinomialDistribution implements IMeasure {
     }
 
     @Override
-    public double function(DoubleColumn inputData) {
+    public double function(DataSet inputData) {
         //TODO: define function for binomial distribution
         return 0.0;
     }

@@ -1,5 +1,6 @@
 package Measures;
 import Interfaces.IMeasure;
+import Utilities.DataSet;
 import tech.tablesaw.api.DoubleColumn;
 
 public class Percentiles implements IMeasure {
@@ -16,7 +17,7 @@ public class Percentiles implements IMeasure {
     }
 
     @Override
-    public double function(DoubleColumn inputData) {
+    public double function(DataSet inputData) {
         //TODO: define function for percentile
         return 0.0;
     }
