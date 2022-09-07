@@ -1,7 +1,6 @@
 package Measures;
 import Interfaces.IMeasure;
-import Utilities.DataSet;
-import tech.tablesaw.api.DoubleColumn;
+import BackEndUtilities.DataSet;
 
 public class ProbabilityDistribution implements IMeasure {
     private String name = "probability distribution";

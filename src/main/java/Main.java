@@ -1,18 +1,19 @@
-import Interfaces.IMeasure;
-import tech.tablesaw.api.DoubleColumn;
-import Utilities.*;
+import BackEndUtilities.*;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Comparator;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
         DataSet ds = new DataSet();
-        ds.addData(Stream.of(1.0, 2.0, 3.0, 4.0, 5.0, 3.0, 3.0, 1.0, 6.0, 9.0).map(String::valueOf).collect(Collectors.toList()));
-        double output = (double) FunctionCaller.measureRunner("mode", ds);
-        double value = Expressions.eval("5*y", "y=" + output);
-        System.out.println(value);
+        ds.addData(Arrays.asList("x*12", "y/3", "y*12", "x/3", "12", "19", "72"));
+        ds.addVariables(Arrays.asList("x=3", "y=12"));
+        double output = (double) FunctionCaller.measureRunner("median", ds);
+
+        List<Double> value = Expressions.eval(ds);
+        value.sort(Comparator.naturalOrder());
+        value.forEach(System.out::println);
+        System.out.println("median: " + output);
     }
 }

@@ -1,7 +1,6 @@
 package Measures;
 import Interfaces.IMeasure;
-import Utilities.DataSet;
-import tech.tablesaw.api.DoubleColumn;
+import BackEndUtilities.DataSet;
 
 public class BinomialDistribution implements IMeasure {
     private String name = "binomial distribution";

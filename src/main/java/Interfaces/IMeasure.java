@@ -1,7 +1,6 @@
 package Interfaces;
 
-import Utilities.DataSet;
-import tech.tablesaw.api.DoubleColumn;
+import BackEndUtilities.DataSet;
 
 public interface IMeasure {
     String name = "";

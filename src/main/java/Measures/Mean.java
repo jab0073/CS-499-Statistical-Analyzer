@@ -1,7 +1,12 @@
 package Measures;
 import Interfaces.IMeasure;
-import Utilities.DataSet;
+import BackEndUtilities.DataSet;
 import tech.tablesaw.api.DoubleColumn;
+
+import java.math.BigDecimal;
+import java.util.stream.DoubleStream;
+
+import static java.util.stream.Collectors.summingDouble;
 
 public class Mean implements IMeasure {
     private String name = "mean";
@@ -18,7 +23,7 @@ public class Mean implements IMeasure {
 
     @Override
     public double function(DataSet inputData) {
-        DoubleColumn dc = DoubleColumn.create("", inputData.getDataAsDouble());
-        return dc.removeMissing().mean();
+
+        return inputData.getDataAsDouble(true).stream().mapToDouble(f -> f).sum() / inputData.getSize();
     }
 }

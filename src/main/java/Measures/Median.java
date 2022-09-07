@@ -1,7 +1,12 @@
 package Measures;
 import Interfaces.IMeasure;
-import Utilities.DataSet;
+import BackEndUtilities.DataSet;
 import tech.tablesaw.api.DoubleColumn;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Comparator;
+import java.util.List;
 
 public class Median implements IMeasure {
     private String name = "median";
@@ -18,7 +23,12 @@ public class Median implements IMeasure {
 
     @Override
     public double function(DataSet inputData) {
-        DoubleColumn dc = DoubleColumn.create("", inputData.getDataAsDouble());
-        return dc.removeMissing().median();
+        List<Double> toSort = inputData.getDataAsDouble(true);
+        toSort.sort(Comparator.naturalOrder());
+        int size = toSort.size();
+        BigDecimal median = BigDecimal.valueOf(size / 2).setScale(0, RoundingMode.HALF_UP);
+        int middle = median.intValue();
+
+        return toSort.get(middle);
     }
 }
