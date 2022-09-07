@@ -14,19 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/tech.tablesaw/tablesaw-core -->
-        <dependency>
-            <groupId>tech.tablesaw</groupId>
-            <artifactId>tablesaw-core</artifactId>
-            <version>0.43.1</version>
-        </dependency>
 
-        <!-- https://mvnrepository.com/artifact/tech.tablesaw/tablesaw-excel -->
-        <dependency>
-            <groupId>tech.tablesaw</groupId>
-            <artifactId>tablesaw-excel</artifactId>
-            <version>0.43.1</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/org.mariuszgromada.math/MathParser.org-mXparser -->
         <dependency>
             <groupId>org.mariuszgromada.math</groupId>
