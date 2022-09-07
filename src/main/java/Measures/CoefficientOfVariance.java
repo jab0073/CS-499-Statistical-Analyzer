@@ -1,7 +1,6 @@
 package Measures;
 import Interfaces.IMeasure;
 import BackEndUtilities.DataSet;
-import tech.tablesaw.api.DoubleColumn;
 
 public class CoefficientOfVariance implements IMeasure {
     private String name = "coefficient of variance";
@@ -18,9 +17,9 @@ public class CoefficientOfVariance implements IMeasure {
 
     @Override
     public double function(DataSet inputData) {
-        DoubleColumn dc = DoubleColumn.create("", inputData.getDataAsDouble(true));
-        double stdDiv = dc.removeMissing().standardDeviation();
-        double mean = dc.removeMissing().mean();
-        return (stdDiv / mean) * 100.0;
+        StdDiv stddiv = new StdDiv();
+        Mean mn = new Mean();
+
+        return (stddiv.function(inputData) / mn.function(inputData)) * 100.0;
     }
 }

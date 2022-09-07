@@ -2,7 +2,6 @@ package Measures;
 
 import Interfaces.IMeasure;
 import BackEndUtilities.DataSet;
-import tech.tablesaw.api.DoubleColumn;
 
 public class StdDiv implements IMeasure {
     private String name = "standard deviation";
@@ -19,7 +18,8 @@ public class StdDiv implements IMeasure {
 
     @Override
     public double function(DataSet inputData) {
-        DoubleColumn dc = DoubleColumn.create("", inputData.getDataAsDouble(true));
-        return dc.removeMissing().standardDeviation();
+        Mean mn = new Mean();
+        double mean = mn.function(inputData);
+        return Math.sqrt(inputData.getDataAsDouble(true).stream().mapToDouble(d -> Math.pow(d - mean, 2)).sum() / inputData.getSize());
     }
 }

@@ -1,12 +1,6 @@
 package Measures;
 import Interfaces.IMeasure;
 import BackEndUtilities.DataSet;
-import tech.tablesaw.api.DoubleColumn;
-
-import java.math.BigDecimal;
-import java.util.stream.DoubleStream;
-
-import static java.util.stream.Collectors.summingDouble;
 
 public class Mean implements IMeasure {
     private String name = "mean";
