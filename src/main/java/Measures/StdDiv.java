@@ -18,8 +18,7 @@ public class StdDiv implements IMeasure {
 
     @Override
     public double function(DataSet inputData) {
-        Mean mn = new Mean();
-        double mean = mn.function(inputData);
-        return Math.sqrt(inputData.getDataAsDouble(true).stream().mapToDouble(d -> Math.pow(d - mean, 2)).sum() / inputData.getSize());
+        Variance vnc = new Variance();
+        return Math.sqrt(vnc.function(inputData));
     }
 }

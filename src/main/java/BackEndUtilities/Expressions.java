@@ -32,4 +32,16 @@ public class Expressions {
 
         return exps.stream().map(Expression::calculate).collect(Collectors.toList());
     }
+
+    public static List<Double> eval(List<String> expressions, List<String> variables) {
+        List<Expression> exps = expressions.stream().map(d -> {
+            Expression exp = new Expression(d);
+            variables.forEach(v -> {
+                Argument arg = new Argument(v);
+                exp.addArguments(arg);
+            });
+            return exp;
+        }).toList();
+        return exps.stream().map(Expression::calculate).collect(Collectors.toList());
+    }
 }

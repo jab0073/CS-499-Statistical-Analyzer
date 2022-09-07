@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 public class DataSet {
 
     private List<String> data;
+
+    private List<String> additionalData;
     private List<String> variables;
     private int size;
 
@@ -49,7 +51,7 @@ public class DataSet {
     }
 
     /*
-    This method is destructive.
+    This method is destructive to the original data.
      */
     public void evaluate() {
         this.data = Expressions.eval(this).stream().map(String::valueOf).collect(Collectors.toList());
@@ -68,6 +70,27 @@ public class DataSet {
     public void addData(List<String> data) {
         this.data.addAll(data);
         this.size += data.size();
+    }
+
+    public void switchToAlternate() {
+        List<String> tmp = this.data;
+        this.data = this.additionalData;
+        this.additionalData = tmp;
+    }
+
+    public List<Double> getAdditionalDataAsDouble(Boolean evaluate) {
+        if(evaluate) {
+            return Expressions.eval(this.additionalData, this.variables);
+        }
+        else {
+            return data.stream().map(s -> {
+                try {
+                    return Double.parseDouble(s);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+        }
     }
 
     public List<String> getVariables() {
