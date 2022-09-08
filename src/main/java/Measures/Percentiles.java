@@ -1,8 +1,10 @@
 package Measures;
-import Interfaces.IMeasure;
+import Interfaces.IMeasureBigDecimal;
 import BackEndUtilities.DataSet;
 
-public class Percentiles implements IMeasure {
+import java.math.BigDecimal;
+
+public class Percentiles implements IMeasureBigDecimal {
     private String name = "percentiles";
 
     @Override
@@ -16,8 +18,8 @@ public class Percentiles implements IMeasure {
     }
 
     @Override
-    public double function(DataSet inputData) {
+    public BigDecimal function(DataSet inputData) {
         //TODO: define function for percentile
-        return 0.0;
+        return BigDecimal.ZERO;
     }
 }

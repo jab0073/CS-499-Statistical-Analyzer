@@ -1,9 +1,12 @@
 package Measures;
 
 import BackEndUtilities.DataSet;
-import Interfaces.IMeasure;
+import Interfaces.IMeasureBigDecimal;
 
-public class Variance implements IMeasure {
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+public class Variance implements IMeasureBigDecimal {
 
     String name = "variance";
     @Override
@@ -17,9 +20,12 @@ public class Variance implements IMeasure {
     }
 
     @Override
-    public double function(DataSet inputData) {
+    public BigDecimal function(DataSet inputData) {
         Mean mn = new Mean();
-        double mean = mn.function(inputData);
-        return inputData.getDataAsDouble(true).stream().mapToDouble(d -> Math.pow(d - mean, 2)).sum() / (inputData.getSize() - 1);
+        BigDecimal mean = mn.function(inputData);
+        return inputData.getDataAsDouble(true)
+                .stream()
+                .map(d -> BigDecimal.valueOf(Math.pow(d.subtract(mean).doubleValue(), 2)))
+                .reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(inputData.getSize() - 1), RoundingMode.HALF_UP);
     }
 }

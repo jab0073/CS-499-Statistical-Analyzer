@@ -1,8 +1,11 @@
 package Measures;
-import Interfaces.IMeasure;
+import Interfaces.IMeasureBigDecimal;
 import BackEndUtilities.DataSet;
 
-public class Mean implements IMeasure {
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+public class Mean implements IMeasureBigDecimal {
     private String name = "mean";
 
     @Override
@@ -16,8 +19,7 @@ public class Mean implements IMeasure {
     }
 
     @Override
-    public double function(DataSet inputData) {
-
-        return inputData.getDataAsDouble(true).stream().mapToDouble(f -> f).sum() / inputData.getSize();
+    public BigDecimal function(DataSet inputData) {
+        return inputData.getDataAsDouble(true).stream().reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(inputData.getSize()), RoundingMode.HALF_UP);
     }
 }

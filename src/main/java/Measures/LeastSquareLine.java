@@ -1,11 +1,13 @@
 package Measures;
 
 import BackEndUtilities.DataSet;
-import Interfaces.IMeasure;
+import Interfaces.IMeasureString;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
-public class LeastSquareLine implements IMeasure {
+public class LeastSquareLine implements IMeasureString {
     private String name = "least square line";
 
     @Override
@@ -19,26 +21,26 @@ public class LeastSquareLine implements IMeasure {
     }
 
     @Override
-    public double function(DataSet inputData) {
-        List<Double> x = inputData.getDataAsDouble(true);
-        List<Double> y = inputData.getAdditionalDataAsDouble(true);
-        double xSum = x.stream().mapToDouble(d->d).sum();
-        double ySum = y.stream().mapToDouble(d->d).sum();
+    public String function(DataSet inputData) {
+        List<BigDecimal> x = inputData.getDataAsDouble(true);
+        List<BigDecimal> y = inputData.getAdditionalDataAsDouble(true);
+        BigDecimal xSum = x.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal ySum = y.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
         int n = inputData.getData().size();
-        int sxsy = 0;
+        BigDecimal sxsy = BigDecimal.ZERO;
         // sum of square of x
-        int sx2 = 0;
-        for (int i = 0; i < n; i++) {
-            sxsy += x.get(i) * y.get(i);
-            sx2 += x.get(i) * x.get(i);
+        BigDecimal sx2 = BigDecimal.ZERO;
+        for (int i = 0; i < n ; i++) {
+            sxsy = sxsy.add(x.get(i).multiply(y.get(i)));
+            sx2 = sx2.add(x.get(i).multiply(x.get(i)));
         }
-        double b = (n * sxsy - xSum * ySum) / (n * sx2 - xSum * ySum);
+        BigDecimal b = (sxsy.multiply(BigDecimal.valueOf(n)).subtract(xSum.multiply(ySum))).divide(sx2.multiply(BigDecimal.valueOf(n)).subtract(xSum.multiply(ySum)), RoundingMode.HALF_UP);
 
-        double xMean = xSum / n;
-        double yMean = ySum / n;
+        BigDecimal xMean = xSum.divide(BigDecimal.valueOf(n), RoundingMode.HALF_UP);
+        BigDecimal yMean = ySum.divide(BigDecimal.valueOf(n), RoundingMode.HALF_UP);
 
-        double a = yMean - b * xMean;
+        BigDecimal a = yMean.subtract(b.multiply(xMean));
 
-        return 0.0;
+        return "Y=" + a.doubleValue() + "+" + b.doubleValue() + "X";
     }
 }

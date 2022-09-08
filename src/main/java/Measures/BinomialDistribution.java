@@ -1,8 +1,10 @@
 package Measures;
-import Interfaces.IMeasure;
+import Interfaces.IMeasureBigDecimal;
 import BackEndUtilities.DataSet;
 
-public class BinomialDistribution implements IMeasure {
+import java.math.BigDecimal;
+
+public class BinomialDistribution implements IMeasureBigDecimal {
     private String name = "binomial distribution";
 
     @Override
@@ -16,8 +18,8 @@ public class BinomialDistribution implements IMeasure {
     }
 
     @Override
-    public double function(DataSet inputData) {
+    public BigDecimal function(DataSet inputData) {
         //TODO: define function for binomial distribution
-        return 0.0;
+        return BigDecimal.ZERO;
     }
 }

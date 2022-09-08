@@ -1,6 +1,8 @@
 package BackEndUtilities;
 
 import org.mariuszgromada.math.mxparser.*;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +22,7 @@ public class Expressions {
         return exp.calculate();
     }
 
-    public static List<Double> eval(DataSet dataset) {
+    public static List<BigDecimal> eval(DataSet dataset) {
         List<Expression> exps = dataset.getData().stream().map(d -> {
             Expression exp = new Expression(d);
             for(String var: dataset.getVariables()) {
@@ -30,10 +32,10 @@ public class Expressions {
             return exp;
         }).toList();
 
-        return exps.stream().map(Expression::calculate).collect(Collectors.toList());
+        return exps.stream().map(Expression::calculate).map(BigDecimal::valueOf).collect(Collectors.toList());
     }
 
-    public static List<Double> eval(List<String> expressions, List<String> variables) {
+    public static List<BigDecimal> eval(List<String> expressions, List<String> variables) {
         List<Expression> exps = expressions.stream().map(d -> {
             Expression exp = new Expression(d);
             variables.forEach(v -> {
@@ -42,6 +44,6 @@ public class Expressions {
             });
             return exp;
         }).toList();
-        return exps.stream().map(Expression::calculate).collect(Collectors.toList());
+        return exps.stream().map(Expression::calculate).map(BigDecimal::valueOf).collect(Collectors.toList());
     }
 }

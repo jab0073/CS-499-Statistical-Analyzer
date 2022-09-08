@@ -1,11 +1,12 @@
 package BackEndUtilities;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class DataSet {
+public class DataSet implements Cloneable{
 
     private List<String> data;
 
@@ -35,14 +36,14 @@ public class DataSet {
         return data;
     }
 
-    public List<Double> getDataAsDouble(Boolean evaluate) {
+    public List<BigDecimal> getDataAsDouble(Boolean evaluate) {
         if(evaluate) {
             return Expressions.eval(this);
         }
         else {
             return data.stream().map(s -> {
                 try {
-                    return Double.parseDouble(s);
+                    return new BigDecimal(s);
                 } catch (NumberFormatException e) {
                     return null;
                 }
@@ -78,14 +79,14 @@ public class DataSet {
         this.additionalData = tmp;
     }
 
-    public List<Double> getAdditionalDataAsDouble(Boolean evaluate) {
+    public List<BigDecimal> getAdditionalDataAsDouble(Boolean evaluate) {
         if(evaluate) {
             return Expressions.eval(this.additionalData, this.variables);
         }
         else {
             return data.stream().map(s -> {
                 try {
-                    return Double.parseDouble(s);
+                    return new BigDecimal(s);
                 } catch (NumberFormatException e) {
                     return null;
                 }
@@ -145,5 +146,14 @@ public class DataSet {
                 ", variables=" + variables +
                 ", size=" + size +
                 '}';
+    }
+
+    @Override
+    public DataSet clone() {
+        try {
+            return (DataSet) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

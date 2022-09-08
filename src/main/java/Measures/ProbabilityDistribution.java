@@ -1,8 +1,10 @@
 package Measures;
-import Interfaces.IMeasure;
+import Interfaces.IMeasureBigDecimal;
 import BackEndUtilities.DataSet;
 
-public class ProbabilityDistribution implements IMeasure {
+import java.math.BigDecimal;
+
+public class ProbabilityDistribution implements IMeasureBigDecimal {
     private String name = "probability distribution";
 
     @Override
@@ -16,8 +18,8 @@ public class ProbabilityDistribution implements IMeasure {
     }
 
     @Override
-    public double function(DataSet inputData) {
+    public BigDecimal function(DataSet inputData) {
         //TODO: define function for probability distribution
-        return 0.0;
+        return BigDecimal.ZERO;
     }
 }

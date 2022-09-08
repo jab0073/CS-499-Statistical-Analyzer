@@ -1,9 +1,13 @@
 package Measures;
 
-import Interfaces.IMeasure;
+import Interfaces.IMeasureBigDecimal;
 import BackEndUtilities.DataSet;
 
-public class StdDiv implements IMeasure {
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+
+public class StdDiv implements IMeasureBigDecimal {
     private String name = "standard deviation";
 
     @Override
@@ -17,8 +21,8 @@ public class StdDiv implements IMeasure {
     }
 
     @Override
-    public double function(DataSet inputData) {
+    public BigDecimal function(DataSet inputData) {
         Variance vnc = new Variance();
-        return Math.sqrt(vnc.function(inputData));
+        return vnc.function(inputData).sqrt(new MathContext(10, RoundingMode.HALF_UP));
     }
 }

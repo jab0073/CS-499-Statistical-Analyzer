@@ -4,12 +4,13 @@ import BackEndUtilities.DataSet;
 
 import java.math.BigDecimal;
 
-public interface IMeasure {
+public interface IMeasureString extends IMeasure{
     String name = "";
 
     void setName(String name);
 
     String getName();
 
-    Object function(DataSet inputData);
+    String function(DataSet inputData);
+
 }

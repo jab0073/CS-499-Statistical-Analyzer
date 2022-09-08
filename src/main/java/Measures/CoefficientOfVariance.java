@@ -1,8 +1,11 @@
 package Measures;
-import Interfaces.IMeasure;
+import Interfaces.IMeasureBigDecimal;
 import BackEndUtilities.DataSet;
 
-public class CoefficientOfVariance implements IMeasure {
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+public class CoefficientOfVariance implements IMeasureBigDecimal {
     private String name = "coefficient of variance";
 
     @Override
@@ -16,10 +19,10 @@ public class CoefficientOfVariance implements IMeasure {
     }
 
     @Override
-    public double function(DataSet inputData) {
+    public BigDecimal function(DataSet inputData) {
         StdDiv stddiv = new StdDiv();
         Mean mn = new Mean();
 
-        return (stddiv.function(inputData) / mn.function(inputData)) * 100.0;
+        return (stddiv.function(inputData).divide(mn.function(inputData), RoundingMode.HALF_UP)).multiply(BigDecimal.valueOf(100.0));
     }
 }
