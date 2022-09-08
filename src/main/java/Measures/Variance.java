@@ -6,6 +6,9 @@ import Interfaces.IMeasureBigDecimal;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * Measure to calculate Variance
+ */
 public class Variance implements IMeasureBigDecimal {
 
     String name = "variance";

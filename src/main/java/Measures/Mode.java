@@ -5,6 +5,9 @@ import BackEndUtilities.DataSet;
 import java.math.BigDecimal;
 import java.util.HashMap;
 
+/**
+ * Measure to calculate Mode
+ */
 public class Mode implements IMeasureBigDecimal {
     private String name = "mode";
 

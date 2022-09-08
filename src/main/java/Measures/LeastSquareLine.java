@@ -7,6 +7,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
+/**
+ * Measure to calculate Least Square Line
+ */
 public class LeastSquareLine implements IMeasureString {
     private String name = "least square line";
 

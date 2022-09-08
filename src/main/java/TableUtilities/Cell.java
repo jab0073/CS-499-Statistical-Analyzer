@@ -10,11 +10,20 @@ public class Cell {
     public CellStatus status = CellStatus.NONE;
     public boolean selected = false;
 
+    /**
+     * This function returns the row of the current cell.
+     *
+     * @return The row of the cell.
+     */
     public int getRow(){return row;}
+    /**
+     * Returns the column of the cell.
+     *
+     * @return The column of the cell.
+     */
     public int getColumn(){return column;}
-    public Cell(){
+    public Cell(){}
 
-    }
     public Cell(int row, int col){
         this.row = row;
         this.column = col;

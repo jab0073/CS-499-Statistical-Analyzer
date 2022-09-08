@@ -7,8 +7,18 @@ import Interfaces.IMeasureBigDecimal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Utility Class that is used to get the Class object of the required measure.
+ */
 public class ClassMap {
     private static final Logger logger = LogManager.getLogger(ClassMap.class.getName());
+    /**
+     * If the measure is to return a BigDecimal, return the class for that measure. If it's not to return a BigDecimal,
+     * return the class for the String returning measure. If it's not to return a String, return null
+     *
+     * @param measure The name of the measure you want to retrieve the class for.
+     * @return The class of the measure.
+     */
     public static Class<? extends IMeasure> getMeasureClass(String measure) {
         logger.debug("Retrieving class for: " + measure);
         Class<? extends IMeasure> clazz = getBigDecimalMeasureClass(measure);
@@ -27,6 +37,12 @@ public class ClassMap {
         }
     }
 
+    /**
+     * It takes a string as input and returns a class that implements the IMeasureBigDecimal interface
+     *
+     * @param measure the name of the measure to be returned
+     * @return The class of the measure.
+     */
     private static Class<? extends IMeasureBigDecimal> getBigDecimalMeasureClass(String measure) {
 
         return switch (measure) {
@@ -44,6 +60,13 @@ public class ClassMap {
         };
     }
 
+    /**
+     * It returns a class that implements the IMeasureString interface, given a string that represents the name of the
+     * measure
+     *
+     * @param measure the name of the measure to be used.
+     * @return A class object that implements IMeasureString.
+     */
     private static Class<? extends IMeasureString> getStringMeasureClass(String measure) {
         return switch (measure) {
             case "least square line" -> LeastSquareLine.class;

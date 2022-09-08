@@ -7,6 +7,9 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
+/**
+ * Measure to calculate Standard Deviation
+ */
 public class StdDiv implements IMeasureBigDecimal {
     private String name = "standard deviation";
 

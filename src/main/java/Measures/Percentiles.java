@@ -4,6 +4,9 @@ import BackEndUtilities.DataSet;
 
 import java.math.BigDecimal;
 
+/**
+ * Measure to calculate Percentiles
+ */
 public class Percentiles implements IMeasureBigDecimal {
     private String name = "percentiles";
 

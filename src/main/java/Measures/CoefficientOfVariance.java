@@ -5,6 +5,9 @@ import BackEndUtilities.DataSet;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * Measure to calculate Coefficient of Variance
+ */
 public class CoefficientOfVariance implements IMeasureBigDecimal {
     private String name = "coefficient of variance";
 

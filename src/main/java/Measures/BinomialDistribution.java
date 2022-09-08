@@ -4,6 +4,9 @@ import BackEndUtilities.DataSet;
 
 import java.math.BigDecimal;
 
+/**
+ * Measure to calculate Binomial Distribution
+ */
 public class BinomialDistribution implements IMeasureBigDecimal {
     private String name = "binomial distribution";
 

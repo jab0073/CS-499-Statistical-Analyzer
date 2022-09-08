@@ -4,6 +4,9 @@ import BackEndUtilities.DataSet;
 
 import java.math.BigDecimal;
 
+/**
+ * Interface for string returning measures.
+ */
 public interface IMeasureString extends IMeasure{
     String name = "";
 

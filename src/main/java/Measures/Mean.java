@@ -5,6 +5,9 @@ import BackEndUtilities.DataSet;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * Measure to calculate Mean
+ */
 public class Mean implements IMeasureBigDecimal {
     private String name = "mean";
 

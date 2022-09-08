@@ -7,6 +7,9 @@ import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Measure to calculate Median
+ */
 public class Median implements IMeasureBigDecimal {
     private String name = "median";
 

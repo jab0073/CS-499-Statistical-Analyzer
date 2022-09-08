@@ -8,6 +8,12 @@ import java.util.stream.Collectors;
 
 public class Expressions {
 
+    /**
+     * It takes a string expression and a list of arguments and returns the result of the expression
+     *
+     * @param expression The expression to be evaluated.
+     * @return The result of the expression.
+     */
     public static double eval(String expression, String... arguments) {
         Expression exp = new Expression(expression);
         for (String argues : arguments) {
@@ -17,11 +23,24 @@ public class Expressions {
         return exp.calculate();
     }
 
+    /**
+     * It takes a string, parses it, evaluates the expression, and returns a double
+     *
+     * @param expression The expression to be evaluated.
+     * @return The result of the expression.
+     */
     public static double eval(String expression) {
         Expression exp = new Expression(expression);
         return exp.calculate();
     }
 
+    /**
+     * For each data point in the dataset, create an expression, add the variables as arguments, and then calculate the
+     * expression
+     *
+     * @param dataset The dataset to be evaluated.
+     * @return A list of BigDecimal values.
+     */
     public static List<BigDecimal> eval(DataSet dataset) {
         List<Expression> exps = dataset.getData().stream().map(d -> {
             Expression exp = new Expression(d);
@@ -35,6 +54,14 @@ public class Expressions {
         return exps.stream().map(Expression::calculate).map(BigDecimal::valueOf).collect(Collectors.toList());
     }
 
+    /**
+     * Creates a list of expressions from the input list of strings, add the variables to each expression, and then
+     * calculate the value of each expression and return a list of the results
+     *
+     * @param expressions A list of expressions to evaluate.
+     * @param variables ["x", "y", "z"]
+     * @return A list of BigDecimal values.
+     */
     public static List<BigDecimal> eval(List<String> expressions, List<String> variables) {
         List<Expression> exps = expressions.stream().map(d -> {
             Expression exp = new Expression(d);

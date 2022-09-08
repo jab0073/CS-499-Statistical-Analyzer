@@ -23,6 +23,12 @@ public class UIServices {
 
     static final Logger logger = LogManager.getLogger(UIServices.class.getName());
 
+    /**
+     * It reads a CSV file and returns a DataTable object.
+     *
+     * @param file The file path to the CSV file.
+     * @return A DataTable object.
+     */
     public static DataTable fromCSV(String file) {
         DataTable dt = new DataTable();
         try (CSVReader reader = new CSVReader(new FileReader(file))) {
@@ -41,6 +47,13 @@ public class UIServices {
         return dt;
     }
 
+    /**
+     * This function takes a table name and a file path as input and returns a DataTable object
+     *
+     * @param tableName The name of the table that will be created in the database.
+     * @param file The file path to the CSV file.
+     * @return A DataTable object
+     */
     public static DataTable fromCSV(String tableName, String file) {
         DataTable dt = UIServices.fromCSV(file);
         if(dt != null) {
@@ -50,6 +63,13 @@ public class UIServices {
         return null;
     }
 
+    /**
+     * It reads a delimited file and returns a DataTable object.
+     *
+     * @param file The file to be loaded.
+     * @param delimiter The delimiter to use.
+     * @return A DataTable object.
+     */
     public static DataTable fromDelimitedFile(String file, char delimiter) {
         DataTable dt = new DataTable();
         CSVParser csvParser = new CSVParserBuilder().withSeparator(delimiter).build(); // custom separator
@@ -72,12 +92,28 @@ public class UIServices {
         return dt;
     }
 
+    /**
+     * This function takes a file name, a table name, and a delimiter character, and returns a DataTable object with the
+     * given table name and the data from the file
+     *
+     * @param tableName The name of the table.
+     * @param file The file to read from.
+     * @param delimiter The character that separates the columns in the file.
+     * @return A DataTable object
+     */
     public static DataTable fromDelimitedFile(String tableName, String file, char delimiter) {
         DataTable dt = fromDelimitedFile(file, delimiter);
         dt.setTableName(tableName);
         return dt;
     }
 
+    /**
+     * It takes a file path and a sheet number, and returns a DataTable object
+     *
+     * @param filePath The path to the file you want to read.
+     * @param sheetNumber The sheet number you want to read from.
+     * @return A DataTable object
+     */
     public static DataTable fromXLSX(String filePath, int sheetNumber) throws IOException {
         FileInputStream file = new FileInputStream(filePath);
         Workbook workbook = new XSSFWorkbook(file);
@@ -109,11 +145,18 @@ public class UIServices {
         return dt;
     }
 
+    /**
+     * This function creates a DataTable object from an XLSX file
+     *
+     * @param tableName The name of the table.
+     * @param filePath The path to the file you want to read.
+     * @param sheetNumber The sheet number in the Excel file to read.
+     * @return A DataTable object
+     */
     public static DataTable fromXLSX(String tableName, String filePath, int sheetNumber) throws IOException {
         DataTable dt = UIServices.fromXLSX(filePath, sheetNumber);
         dt.setTableName(tableName);
         return dt;
     }
-
 
 }
