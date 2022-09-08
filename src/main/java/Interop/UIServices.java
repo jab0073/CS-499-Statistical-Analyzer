@@ -9,6 +9,8 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -18,6 +20,8 @@ import java.io.*;
 import java.util.*;
 
 public class UIServices {
+
+    static final Logger logger = LogManager.getLogger(UIServices.class.getName());
 
     public static DataTable fromCSV(String file) {
         DataTable dt = new DataTable();
@@ -31,15 +35,19 @@ public class UIServices {
                 dt.getRows().add(row.clone());
             });
         } catch (IOException | CsvException e) {
-            throw new RuntimeException(e);
+            logger.error("File could not be loaded.");
+            return null;
         }
         return dt;
     }
 
     public static DataTable fromCSV(String tableName, String file) {
         DataTable dt = UIServices.fromCSV(file);
-        dt.setTableName(tableName);
-        return dt;
+        if(dt != null) {
+            dt.setTableName(tableName);
+            return dt;
+        }
+        return null;
     }
 
     public static DataTable fromDelimitedFile(String file, char delimiter) {
@@ -48,7 +56,6 @@ public class UIServices {
         try(CSVReader reader = new CSVReaderBuilder(
                 new FileReader(file))
                 .withCSVParser(csvParser)   // custom CSV parser
-                .withSkipLines(1)           // skip the first line, header info
                 .build()){
             List<String[]> r = reader.readAll();
             r.forEach(x -> {
@@ -59,6 +66,7 @@ public class UIServices {
                 dt.getRows().add(row.clone());
             });
         } catch (IOException | CsvException e) {
+            logger.error("File could not be loaded.");
             throw new RuntimeException(e);
         }
         return dt;

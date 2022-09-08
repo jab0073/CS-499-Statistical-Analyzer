@@ -2,6 +2,7 @@ package TableUtilities;
 
 import BackEndUtilities.DataSet;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +40,14 @@ public class Row implements Cloneable{
         cell.column = cells.size();
         cell.data = data;
         cells.add(cell);
+    }
+
+    public DataSet toDataSet() {
+        DataSet ds = new DataSet();
+        for(Cell cell : this.cells) {
+            ds.addData(cell.data);
+        }
+        return ds;
     }
 
     public Cell get(int index) {

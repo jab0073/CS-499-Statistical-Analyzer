@@ -1,16 +1,15 @@
 package TableUtilities;
 
 import BackEndUtilities.DataSet;
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
 public class DataTable {
+    private static final Logger logger = LogManager.getLogger(DataTable.class.getName());
     private List<Row> rows;
 
     private List<Column> columns;
@@ -19,6 +18,7 @@ public class DataTable {
     private int size;
 
     public DataTable() {
+        logger.trace("Creating empty DataTable");
         this.rows = new ArrayList<>();
         this.columns = new ArrayList<>();
         this.tableName = "";
@@ -26,6 +26,7 @@ public class DataTable {
     }
 
     public DataTable(String tableName) {
+        logger.trace("Creating new DataTable: " + tableName);
         this.rows = new ArrayList<>();
         this.columns = new ArrayList<>();
         this.tableName = tableName;
