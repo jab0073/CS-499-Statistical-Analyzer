@@ -14,7 +14,7 @@ public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
-        logger.trace("Starting Main.");
+        logger.debug("Starting Main.");
         DataTable dt = null;
         try {
             dt = UIServices.fromXLSX("Sample Table", "C:\\Users\\jusbus6p\\Desktop\\testingcsv.xlsx", 0);
@@ -30,6 +30,6 @@ public class Main {
         value.sort(Comparator.naturalOrder());
         value.forEach(System.out::println);
         System.out.println("standard deviation: " + output);
-        logger.trace("Leaving Main.");
+        logger.debug("Leaving Main.");
     }
 }

@@ -10,19 +10,19 @@ import org.apache.logging.log4j.Logger;
 public class ClassMap {
     private static final Logger logger = LogManager.getLogger(ClassMap.class.getName());
     public static Class<? extends IMeasure> getMeasureClass(String measure) {
-        logger.trace("Retrieving class for: " + measure);
+        logger.debug("Retrieving class for: " + measure);
         Class<? extends IMeasure> clazz = getBigDecimalMeasureClass(measure);
         if(clazz == null) {
             Class<? extends IMeasure> strClazz = getStringMeasureClass(measure);
             if(strClazz != null) {
-                logger.trace("Class retrieved: " + strClazz.getName());
+                logger.debug("Class retrieved: " + strClazz.getName());
                 return strClazz;
             }
             logger.error("Measure class was not able to be retrieved.");
             return null;
         }
         else {
-            logger.trace("Class retrieved: " + clazz.getName());
+            logger.debug("Class retrieved: " + clazz.getName());
             return clazz;
         }
     }

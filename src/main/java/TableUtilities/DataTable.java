@@ -18,7 +18,7 @@ public class DataTable {
     private int size;
 
     public DataTable() {
-        logger.trace("Creating empty DataTable");
+        logger.debug("Creating empty DataTable");
         this.rows = new ArrayList<>();
         this.columns = new ArrayList<>();
         this.tableName = "";
@@ -26,7 +26,7 @@ public class DataTable {
     }
 
     public DataTable(String tableName) {
-        logger.trace("Creating new DataTable: " + tableName);
+        logger.debug("Creating new DataTable: " + tableName);
         this.rows = new ArrayList<>();
         this.columns = new ArrayList<>();
         this.tableName = tableName;
