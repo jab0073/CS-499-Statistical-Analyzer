@@ -17,6 +17,9 @@ public class Mean implements IMeasure<BigDecimal> {
     public BigDecimal function(DataSet inputData) {
         String name = "mean";
         logger.debug("Running " + name);
-        return inputData.getDataAsDouble(true).stream().reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(inputData.getSize()), RoundingMode.HALF_UP);
+        if (inputData.getSize() != 0 && !inputData.getDataAsDouble(true).isEmpty()) {
+            return inputData.getDataAsDouble(true).stream().reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(inputData.getSize()), RoundingMode.HALF_UP);
+        }
+        return null;
     }
 }

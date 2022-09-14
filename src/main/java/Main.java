@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
         logger.debug("Starting Main.");
         DataTable dt = new DataTable();
-        dt.addRow(new Sample(1.2, 3.2, 5.4, 7.9, 101.2));
+        dt.addRow(new Sample(1.0,2.0,3.0));
         /*try {
             dt = UIServices.fromXLSX("Sample Table", "C:\\Users\\jusbus6p\\Desktop\\testingcsv.xlsx", 0);
         } catch (IOException e) {
@@ -26,12 +26,12 @@ public class Main {
 
         ds.addSample(sample);
 
-        BigDecimal output = (BigDecimal) FunctionCaller.measureRunner("mean", ds);
+        BigDecimal output = (BigDecimal) FunctionCaller.measureRunner("standard deviation", ds);
 
         //List<BigDecimal> value = Expressions.eval(ds);
         //value.sort(Comparator.naturalOrder());
         //value.forEach(System.out::println);
-        System.out.println("mean: " + output);
+        System.out.println("std dev: " + output);
         logger.debug("Leaving Main.");
     }
 }

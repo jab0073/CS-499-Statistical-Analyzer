@@ -19,8 +19,11 @@ public class Median implements IMeasure<BigDecimal> {
     @Override
     public BigDecimal function(DataSet inputData) {
         logger.debug("Running " + name);
-        List<BigDecimal> inputCopy = inputData.getDataAsDouble(true).stream().sorted(Comparator.naturalOrder()).toList();
+        if(inputData.getSize() > 0 && !inputData.getDataAsDouble(true).isEmpty()) {
+            List<BigDecimal> inputCopy = inputData.getDataAsDouble(true).stream().sorted(Comparator.naturalOrder()).toList();
 
-        return inputCopy.get(BigDecimal.valueOf(inputCopy.size() / 2).setScale(0, RoundingMode.HALF_UP).intValue());
+            return inputCopy.get(BigDecimal.valueOf(inputCopy.size() / 2).setScale(0, RoundingMode.HALF_UP).intValue());
+        }
+        return null;
     }
 }

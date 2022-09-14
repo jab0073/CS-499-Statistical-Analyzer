@@ -19,6 +19,7 @@ public class LeastSquareLine implements IMeasure<String> {
     public String function(DataSet inputData) {
         String name = "least square line";
         logger.debug("Running " + name);
+        if(inputData != null && inputData.getSize() >= 2) {
             List<BigDecimal> x = inputData.getSample(0).getDataAsDouble(true);
             List<BigDecimal> y = inputData.getSample(1).getDataAsDouble(true);
             BigDecimal xSum = x.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -27,7 +28,7 @@ public class LeastSquareLine implements IMeasure<String> {
             BigDecimal sxsy = BigDecimal.ZERO;
             // sum of square of x
             BigDecimal sx2 = BigDecimal.ZERO;
-            for (int i = 0; i < n ; i++) {
+            for (int i = 0; i < n; i++) {
                 sxsy = sxsy.add(x.get(i).multiply(y.get(i)));
                 sx2 = sx2.add(x.get(i).multiply(x.get(i)));
             }
@@ -39,5 +40,7 @@ public class LeastSquareLine implements IMeasure<String> {
             BigDecimal a = yMean.subtract(b.multiply(xMean));
 
             return "Y=" + a.doubleValue() + "+" + b.doubleValue() + "X";
+        }
+        return null;
     }
 }
