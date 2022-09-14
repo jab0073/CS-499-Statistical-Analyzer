@@ -1,6 +1,7 @@
 package TableUtilities;
 
 import BackEndUtilities.DataSet;
+import BackEndUtilities.Sample;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -82,7 +83,7 @@ public class DataTable {
      * @param ds The DataSet object that contains the data to be added to the row.
      * @return A Row object
      */
-    public Row addRow(DataSet ds) {
+    public Row addRow(Sample ds) {
         Row row = addRowObj();
         ds.getData().forEach(row::addCell);
         return row;
@@ -232,8 +233,8 @@ public class DataTable {
      *
      * @return A DataSet object containing the data from the selected cells.
      */
-    public DataSet selectionToDataSet() {
-        DataSet ds = new DataSet();
+    public Sample selectionToSample() {
+        Sample ds = new Sample();
         ds.addData(this.selectedCells.stream().map(c -> c.data).collect(Collectors.toList()));
         return ds;
     }

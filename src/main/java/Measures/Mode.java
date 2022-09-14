@@ -1,30 +1,26 @@
 package Measures;
-import Interfaces.IMeasureBigDecimal;
+import Interfaces.IMeasure;
 import BackEndUtilities.DataSet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * Measure to calculate Mode
  */
-public class Mode implements IMeasureBigDecimal {
-    private String name = "mode";
+public class Mode implements IMeasure<BigDecimal> {
+    private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
+    private final String name = "mode";
 
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
 
     @Override
     public BigDecimal function(DataSet inputData) {
+        logger.debug("Running " + name);
         HashMap<BigDecimal, Integer> map = new HashMap<>();
-        BigDecimal result = BigDecimal.valueOf(-999), max = BigDecimal.ONE;
+        BigDecimal result = BigDecimal.valueOf(-9999), max = BigDecimal.ONE;
         for (BigDecimal arrayItem : inputData.getDataAsDouble(true)) {
             if (map.putIfAbsent(arrayItem, 1) != null) {
                 int count = map.get(arrayItem) + 1;
@@ -35,6 +31,6 @@ public class Mode implements IMeasureBigDecimal {
                 }
             }
         }
-        return result;
+        return !BigDecimal.valueOf(-9999).equals(result) ? result : null;
     }
 }

@@ -1,8 +1,8 @@
 package TableUtilities;
 
 import BackEndUtilities.DataSet;
+import BackEndUtilities.Sample;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +16,7 @@ public class Row implements Cloneable{
         this.cells = new ArrayList<>();
     }
 
-    public Row(int index, DataSet data) {
+    public Row(int index, Sample data) {
         this.index = index;
         this.cells = new ArrayList<>();
         this.cells = data.getData().stream().map(d -> {
@@ -42,8 +42,8 @@ public class Row implements Cloneable{
         cells.add(cell);
     }
 
-    public DataSet toDataSet() {
-        DataSet ds = new DataSet();
+    public Sample toSample() {
+        Sample ds = new Sample();
         for(Cell cell : this.cells) {
             ds.addData(cell.data);
         }

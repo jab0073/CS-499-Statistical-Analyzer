@@ -1,5 +1,7 @@
 package BackEndUtilities;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mariuszgromada.math.mxparser.*;
 
 import java.math.BigDecimal;
@@ -7,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Expressions {
+    private static final Logger logger = LogManager.getLogger(Sample.class.getName());
 
     /**
      * It takes a string expression and a list of arguments and returns the result of the expression
@@ -15,12 +18,26 @@ public class Expressions {
      * @return The result of the expression.
      */
     public static double eval(String expression, String... arguments) {
+        logger.debug("Evaluating expressions");
         Expression exp = new Expression(expression);
         for (String argues : arguments) {
             Argument arg = new Argument(argues);
             exp.addArguments(arg);
         }
         return exp.calculate();
+    }
+
+    public static BigDecimal eval(String expression, List<String> arguments) {
+        logger.debug("Evaluating expressions");
+        Expression exp = new Expression(expression);
+        for (String argues : arguments) {
+            Argument arg = new Argument(argues);
+            exp.addArguments(arg.clone());
+        }
+
+        System.out.println(exp.calculate());
+
+        return BigDecimal.valueOf(exp.calculate());
     }
 
     /**
@@ -30,6 +47,7 @@ public class Expressions {
      * @return The result of the expression.
      */
     public static double eval(String expression) {
+        logger.debug("Evaluating expressions");
         Expression exp = new Expression(expression);
         return exp.calculate();
     }
@@ -41,7 +59,8 @@ public class Expressions {
      * @param dataset The dataset to be evaluated.
      * @return A list of BigDecimal values.
      */
-    public static List<BigDecimal> eval(DataSet dataset) {
+    public static List<BigDecimal> eval(Sample dataset) {
+        logger.debug("Evaluating expressions");
         List<Expression> exps = dataset.getData().stream().map(d -> {
             Expression exp = new Expression(d);
             for(String var: dataset.getVariables()) {
@@ -59,10 +78,11 @@ public class Expressions {
      * calculate the value of each expression and return a list of the results
      *
      * @param expressions A list of expressions to evaluate.
-     * @param variables ["x", "y", "z"]
+     * @param variables ex. ["x=2", "y=3", "z=4"]
      * @return A list of BigDecimal values.
      */
     public static List<BigDecimal> eval(List<String> expressions, List<String> variables) {
+        logger.debug("Evaluating expressions");
         List<Expression> exps = expressions.stream().map(d -> {
             Expression exp = new Expression(d);
             variables.forEach(v -> {

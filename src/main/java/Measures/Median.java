@@ -1,6 +1,8 @@
 package Measures;
-import Interfaces.IMeasureBigDecimal;
+import Interfaces.IMeasure;
 import BackEndUtilities.DataSet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -10,23 +12,18 @@ import java.util.List;
 /**
  * Measure to calculate Median
  */
-public class Median implements IMeasureBigDecimal {
-    private String name = "median";
+public class Median implements IMeasure<BigDecimal> {
+    private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
 
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
+    private final String name = "median";
     @Override
     public BigDecimal function(DataSet inputData) {
-        List<BigDecimal> inputCopy = inputData.getDataAsDouble(true).stream().sorted(Comparator.naturalOrder()).toList();
+        logger.debug("Running " + name);
+        if(inputData.getSize() > 0 && !inputData.getDataAsDouble(true).isEmpty()) {
+            List<BigDecimal> inputCopy = inputData.getDataAsDouble(true).stream().sorted(Comparator.naturalOrder()).toList();
 
-        return inputCopy.get(BigDecimal.valueOf(inputCopy.size() / 2).setScale(0, RoundingMode.HALF_UP).intValue());
+            return inputCopy.get(BigDecimal.valueOf(inputCopy.size() / 2).setScale(0, RoundingMode.HALF_UP).intValue());
+        }
+        return null;
     }
 }

@@ -2,7 +2,6 @@ package Interfaces;
 
 import BackEndUtilities.DataSet;
 
-import java.math.BigDecimal;
 
 /**
  * Top Level interface that all measure interfaces extend.
@@ -13,12 +12,9 @@ import java.math.BigDecimal;
  * that interface, then in the top level function add a new check for if
  * the appropriate function returned null or not.
  */
-public interface IMeasure {
+public interface IMeasure<R> {
     String name = "";
 
-    void setName(String name);
+    R function(DataSet inputData);
 
-    String getName();
-
-    Object function(DataSet inputData);
 }
