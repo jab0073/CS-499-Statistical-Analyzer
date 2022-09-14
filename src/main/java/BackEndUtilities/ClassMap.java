@@ -53,7 +53,7 @@ public class ClassMap {
             case "probability distribution" -> ProbabilityDistribution.class;
             case "variance" -> Variance.class;
             case "standard deviation" -> StdDiv.class;
-            case "binomial distribution" -> BinomialDistribution.class;
+            case "binomial distribution" -> BinomialDist.class;
             case "coefficient of variance" -> CoefficientOfVariance.class;
             //TODO: add rest of measures as they're defined
             default -> null;

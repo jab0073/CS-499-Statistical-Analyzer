@@ -2,6 +2,7 @@ package Interop;
 
 
 import BackEndUtilities.DataSet;
+import BackEndUtilities.Sample;
 import TableUtilities.DataTable;
 import TableUtilities.Row;
 import com.opencsv.CSVParser;
@@ -34,7 +35,7 @@ public class UIServices {
         try (CSVReader reader = new CSVReader(new FileReader(file))) {
             List<String[]> r = reader.readAll();
             r.forEach(x -> {
-                DataSet ds = new DataSet();
+                Sample ds = new Sample();
                 ds.addData(Arrays.asList(x));
                 int index = r.indexOf(x);
                 Row row = new Row(index, ds);
@@ -79,7 +80,7 @@ public class UIServices {
                 .build()){
             List<String[]> r = reader.readAll();
             r.forEach(x -> {
-                DataSet ds = new DataSet();
+                Sample ds = new Sample();
                 ds.addData(Arrays.asList(x));
                 int index = r.indexOf(x);
                 Row row = new Row(index, ds);
@@ -122,7 +123,7 @@ public class UIServices {
 
         DataTable dt = new DataTable();
         for (org.apache.poi.ss.usermodel.Row cells : sheet) {
-            DataSet ds = new DataSet();
+            Sample ds = new Sample();
 
             Iterator<org.apache.poi.ss.usermodel.Cell> cellIterator = cells.cellIterator();
             while (cellIterator.hasNext()) {

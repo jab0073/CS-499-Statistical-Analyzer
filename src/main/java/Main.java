@@ -21,15 +21,18 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        DataSet ds = dt.getRow(0).toDataSet();
-        // ds.addData(Arrays.asList("x*12", "y/3", "y*12", "x/3", "12", "19", "72"));
-        ds.addVariables(Arrays.asList("x=3", "y=12"));
-        BigDecimal output = (BigDecimal) FunctionCaller.measureRunner("standard deviation", ds);
+        Sample ds = dt.getRow(0).toSample();
+        //DataSet ds = new DataSet();
 
-        List<BigDecimal> value = Expressions.eval(ds);
-        value.sort(Comparator.naturalOrder());
-        value.forEach(System.out::println);
-        System.out.println("standard deviation: " + output);
+        ds.addVariables(Arrays.asList("n=20000", "p=.5"));
+
+
+        BigDecimal output = (BigDecimal) FunctionCaller.measureRunner("binomial distribution", ds);
+
+        //List<BigDecimal> value = Expressions.eval(ds);
+        //value.sort(Comparator.naturalOrder());
+        //value.forEach(System.out::println);
+        System.out.println("bd: " + output);
         logger.debug("Leaving Main.");
     }
 }

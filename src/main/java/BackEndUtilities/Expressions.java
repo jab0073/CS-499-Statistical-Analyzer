@@ -23,6 +23,18 @@ public class Expressions {
         return exp.calculate();
     }
 
+    public static BigDecimal eval(String expression, List<String> arguments) {
+        Expression exp = new Expression(expression);
+        for (String argues : arguments) {
+            Argument arg = new Argument(argues);
+            exp.addArguments(arg.clone());
+        }
+
+        System.out.println(exp.calculate());
+
+        return BigDecimal.valueOf(exp.calculate());
+    }
+
     /**
      * It takes a string, parses it, evaluates the expression, and returns a double
      *
@@ -41,7 +53,7 @@ public class Expressions {
      * @param dataset The dataset to be evaluated.
      * @return A list of BigDecimal values.
      */
-    public static List<BigDecimal> eval(DataSet dataset) {
+    public static List<BigDecimal> eval(Sample dataset) {
         List<Expression> exps = dataset.getData().stream().map(d -> {
             Expression exp = new Expression(d);
             for(String var: dataset.getVariables()) {

@@ -1,6 +1,7 @@
 package Measures;
 
 import BackEndUtilities.DataSet;
+import BackEndUtilities.Sample;
 import Interfaces.IMeasureString;
 
 import java.math.BigDecimal;
@@ -25,11 +26,11 @@ public class LeastSquareLine implements IMeasureString {
 
     @Override
     public String function(DataSet inputData) {
-        List<BigDecimal> x = inputData.getDataAsDouble(true);
-        List<BigDecimal> y = inputData.getAdditionalDataAsDouble(true);
+        List<BigDecimal> x = inputData.getSample(0).getDataAsDouble(true);
+        List<BigDecimal> y = inputData.getSample(1).getDataAsDouble(true);
         BigDecimal xSum = x.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal ySum = y.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-        int n = inputData.getData().size();
+        int n = inputData.getSize();
         BigDecimal sxsy = BigDecimal.ZERO;
         // sum of square of x
         BigDecimal sx2 = BigDecimal.ZERO;
