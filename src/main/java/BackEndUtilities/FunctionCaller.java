@@ -16,15 +16,16 @@ public final class FunctionCaller {
      * @return The result of the measure.
      */
     public static Object measureRunner(String measureName, DataSet arg) {
-        Class<? extends IMeasure> measure = getMeasureClass(measureName);
-        IMeasure msr;
+        Class<? extends IMeasure<?>> measure = getMeasureClass(measureName);
+        IMeasure<?> msr;
         try {
-            msr = measure.getDeclaredConstructor().newInstance();
+            msr = measure != null ? measure.getDeclaredConstructor().newInstance() : null;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
-        return msr.function(arg);
+        return msr != null ? msr.function(arg) : null;
+
     }
 
 }

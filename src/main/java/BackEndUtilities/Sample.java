@@ -1,7 +1,11 @@
 package BackEndUtilities;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -9,24 +13,31 @@ import java.util.stream.Collectors;
 public class Sample implements Cloneable{
     private List<String> data;
     private List<String> variables;
-    private int size;
+    private static final Logger logger = LogManager.getLogger(Sample.class.getName());
+
 
     public Sample() {
+        logger.debug("Creating empty Sample");
         this.data = new ArrayList<>();
         this.variables = new ArrayList<>();
-        this.size = 0;
     }
 
     public Sample(List<Double> data) {
+        logger.debug("Creating Sample with size of " + data.size());
         this.data = data.stream().map(String::valueOf).toList();
         this.variables = new ArrayList<>();
-        this.size = data.size();
+    }
+
+    public Sample(Double... data) {
+        this.data = Arrays.stream(data).map(String::valueOf).toList();
+        logger.debug("Creating Sample with size of " + this.data.size());
+        this.variables = new ArrayList<>();
     }
 
     public Sample(List<Double> data, List<String> variables) {
         this.data = data.stream().map(String::valueOf).toList();
+        logger.debug("Creating Sample with size of " + this.data.size());
         this.variables = variables;
-        this.size = data.size();
     }
 
     /**
@@ -74,7 +85,6 @@ public class Sample implements Cloneable{
      */
     public void setData(List<String> data) {
         this.data = data;
-        this.size = data.size();
     }
 
     /**
@@ -84,7 +94,6 @@ public class Sample implements Cloneable{
      */
     public void addData(String data) {
         this.data.add(data);
-        this.size += 1;
     }
 
     /**
@@ -93,7 +102,6 @@ public class Sample implements Cloneable{
      */
     public void addData(List<String> data) {
         this.data.addAll(data);
-        this.size += data.size();
     }
 
 
@@ -165,7 +173,7 @@ public class Sample implements Cloneable{
      * @return The size of the array.
      */
     public int getSize() {
-        return this.size;
+        return this.data.size();
     }
 
     @Override
@@ -183,9 +191,9 @@ public class Sample implements Cloneable{
     @Override
     public String toString() {
         return "Sample{" +
-                "data=" + data +
-                ", variables=" + variables +
-                ", size=" + size +
+                "data=" + this.data +
+                ", variables=" + this.variables +
+                ", size=" + this.getSize() +
                 '}';
     }
 

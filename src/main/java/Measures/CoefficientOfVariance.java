@@ -1,6 +1,8 @@
 package Measures;
-import Interfaces.IMeasureBigDecimal;
+import Interfaces.IMeasure;
 import BackEndUtilities.DataSet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -8,21 +10,13 @@ import java.math.RoundingMode;
 /**
  * Measure to calculate Coefficient of Variance
  */
-public class CoefficientOfVariance implements IMeasureBigDecimal {
-    private String name = "coefficient of variance";
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
+public class CoefficientOfVariance implements IMeasure<BigDecimal> {
+    private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
 
     @Override
     public BigDecimal function(DataSet inputData) {
+        String name = "coefficient of variance";
+        logger.debug("Running " + name);
         StdDiv stddiv = new StdDiv();
         Mean mn = new Mean();
 

@@ -1,7 +1,9 @@
 package Measures;
 
 import BackEndUtilities.DataSet;
-import Interfaces.IMeasureBigDecimal;
+import Interfaces.IMeasure;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -9,21 +11,13 @@ import java.math.RoundingMode;
 /**
  * Measure to calculate Variance
  */
-public class Variance implements IMeasureBigDecimal {
-
+public class Variance implements IMeasure<BigDecimal> {
+    private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     String name = "variance";
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
 
     @Override
     public BigDecimal function(DataSet inputData) {
+        logger.debug("Running" + name);
         Mean mn = new Mean();
         BigDecimal mean = mn.function(inputData);
         return inputData.getDataAsDouble(true)
