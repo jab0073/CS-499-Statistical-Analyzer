@@ -1,6 +1,7 @@
 package Measures;
 import Interfaces.IMeasure;
 import BackEndUtilities.DataSet;
+import BackEndUtilities.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public class Percentiles implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
-    private final String name = "percentiles";
+    private final String name = Constants.percentiles;
 
     @Override
     public BigDecimal function(DataSet inputData) {

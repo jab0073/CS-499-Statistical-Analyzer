@@ -1,5 +1,6 @@
 package Measures;
 
+import BackEndUtilities.Constants;
 import BackEndUtilities.DataSet;
 import Interfaces.IMeasure;
 import org.apache.logging.log4j.LogManager;
@@ -13,7 +14,7 @@ import java.math.RoundingMode;
  */
 public class Variance implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
-    String name = "variance";
+    String name = Constants.variance;
 
     @Override
     public BigDecimal function(DataSet inputData) {

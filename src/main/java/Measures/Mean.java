@@ -1,4 +1,5 @@
 package Measures;
+import BackEndUtilities.Constants;
 import Interfaces.IMeasure;
 import BackEndUtilities.DataSet;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +16,7 @@ public class Mean implements IMeasure<BigDecimal> {
 
     @Override
     public BigDecimal function(DataSet inputData) {
-        String name = "mean";
+        String name = Constants.mean;
         logger.debug("Running " + name);
         if (inputData.getSize() != 0 && !inputData.getDataAsDouble(true).isEmpty()) {
             return inputData.getDataAsDouble(true).stream().reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(inputData.getSize()), RoundingMode.HALF_UP);

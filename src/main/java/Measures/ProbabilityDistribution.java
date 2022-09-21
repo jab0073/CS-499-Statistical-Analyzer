@@ -1,4 +1,5 @@
 package Measures;
+import BackEndUtilities.Constants;
 import Interfaces.IMeasure;
 import BackEndUtilities.DataSet;
 import org.apache.logging.log4j.LogManager;
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
  */
 public class ProbabilityDistribution implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
-    private final String name = "probability distribution";
+    private final String name = Constants.probability;
 
     @Override
     public BigDecimal function(DataSet inputData) {
