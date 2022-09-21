@@ -12,6 +12,8 @@ __Statistical Analyzer__
   - [Team Info](https://github.com/jab0073/CS-499-Statistical-Analyzer#team-information)
   - [Reports](https://github.com/jab0073/CS-499-Statistical-Analyzer#reports)
   - [Scrum Points](https://github.com/jab0073/CS-499-Statistical-Analyzer#scrum-point-values)
+- Code of Conduct
+  - [Code of Conduct](https://github.com/jab0073/CS-499-Statistical-Analyzer/blob/d3f18fc4aacdf611a6cfe86dbde909e29ea32e5c/CODE_OF_CONDUCT.md)
 - Code Documentation
   - TBA
 
