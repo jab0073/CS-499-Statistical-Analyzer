@@ -13,7 +13,7 @@ public class ClassMap {
     private static final Logger logger = LogManager.getLogger(ClassMap.class.getName());
 
     /**
-     * It takes a string as input and returns a class that implements the IMeasure interface
+     * Takes a string as input and returns a class that implements the IMeasure interface
      *
      * @param measure the name of the measure to be returned
      * @return The class of the measure.

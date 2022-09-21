@@ -9,9 +9,12 @@ import static BackEndUtilities.ClassMap.getMeasureClass;
 public final class FunctionCaller {
 
     /**
-     * It takes a measure name and a data set, and returns the result of running the measure on the data set
+     * Takes a measure name and a data set,
+     * and returns the result of running the
+     * measure on the data set
      *
-     * @param measureName the name of the measure you want to run.
+     * @param measureName the name of the measure
+     *                    you want to run.
      * @param arg the data set to be measured
      * @return The result of the measure.
      */
