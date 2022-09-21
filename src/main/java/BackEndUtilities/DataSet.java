@@ -54,7 +54,7 @@ public class DataSet implements Cloneable{
     }
 
     public Sample getSample(int index) throws IndexOutOfBoundsException {
-        if(index > 0 && index < this.samples.size()) {
+        if(index >= 0 && index < this.samples.size()) {
             return this.samples.get(index);
         }
         throw new IndexOutOfBoundsException();
