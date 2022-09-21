@@ -21,12 +21,15 @@ public class LeastSquareLineTest {
 
     @Test
     public void proper() {
-        ds.addSample(new Sample(1.0,2.0,3.0));
+        ds.addSample(new Sample(1.0, 2.0, 3.0));
         ds.addSample(new Sample(4.0, 5.0, 6.0));
 
         String value = (String) FunctionCaller.measureRunner("least square line", ds);
+        logger.debug(value);
+
         assert value != null;
-        assert value.equals("Y=SOMETHING");
+        assert value.equals("Y=3.0+1.0X");
+
         String functionName = new Throwable().getStackTrace()[0].getMethodName();
         logger.debug(functionName + " returned expected results.");
     }
@@ -61,7 +64,6 @@ public class LeastSquareLineTest {
 
     @Test
     public void nullDataSet() {
-        DataSet ds2 = null;
         BigDecimal value = (BigDecimal) FunctionCaller.measureRunner("least square line", null);
         assert value == null;
         String functionName = new Throwable().getStackTrace()[0].getMethodName();

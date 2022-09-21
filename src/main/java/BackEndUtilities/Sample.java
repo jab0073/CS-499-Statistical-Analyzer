@@ -34,6 +34,12 @@ public class Sample implements Cloneable{
         this.variables = new ArrayList<>();
     }
 
+    public Sample(String... data) {
+        this.data = Arrays.asList(data);
+        logger.debug("Creating Sample with size of " + this.data.size());
+        this.variables = new ArrayList<>();
+    }
+
     public Sample(List<Double> data, List<String> variables) {
         this.data = data.stream().map(String::valueOf).toList();
         logger.debug("Creating Sample with size of " + this.data.size());
@@ -56,7 +62,7 @@ public class Sample implements Cloneable{
      * @param evaluate If true, the expressions stored in the DataSet will be evaluated before returning the data.
      * @return A list of BigDecimal objects.
      */
-    public List<BigDecimal> getDataAsDouble(Boolean evaluate) {
+    public List<BigDecimal> getDataAsBigDecimal(Boolean evaluate) {
         if(evaluate) {
             return Expressions.eval(this);
         }

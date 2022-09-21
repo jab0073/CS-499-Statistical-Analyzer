@@ -31,14 +31,13 @@ public class DataSet implements Cloneable{
     }
 
     public void addSample(Sample sample) {
-        this.samples.add(sample);
+        if(sample != null)
+            this.samples.add(sample);
     }
 
     public void addSample(int index, Sample sample) {
-        if(index > 0 && index < this.samples.size()) {
+        if(sample != null)
             this.samples.add(index, sample);
-        }
-        throw new IndexOutOfBoundsException();
     }
 
     public List<Sample> getSamples() {
@@ -54,14 +53,14 @@ public class DataSet implements Cloneable{
     }
 
     public Sample getSample(int index) throws IndexOutOfBoundsException {
-        if(index > 0 && index < this.samples.size()) {
+        if(index >= 0 && index < this.samples.size()) {
             return this.samples.get(index);
         }
         throw new IndexOutOfBoundsException();
     }
 
     public List<BigDecimal> getDataAsDouble(Boolean evaluate) {
-        return this.samples.stream().map(s -> s.getDataAsDouble(evaluate)).toList().stream().flatMap(List::stream).collect(Collectors.toList());
+        return this.samples.stream().map(s -> s.getDataAsBigDecimal(evaluate)).toList().stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
     public int getSize() {
