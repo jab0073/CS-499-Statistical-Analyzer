@@ -1,4 +1,5 @@
 package Measures;
+import BackEndUtilities.Constants;
 import Interfaces.IMeasure;
 import BackEndUtilities.DataSet;
 
@@ -13,7 +14,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class BinomialDist implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
-    private final String name = "binomial distribution";
+    private final String name = Constants.binomial;
 
     @Override
     public BigDecimal function(DataSet inputData) {

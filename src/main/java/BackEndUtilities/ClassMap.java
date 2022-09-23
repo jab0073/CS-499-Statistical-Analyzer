@@ -13,7 +13,7 @@ public class ClassMap {
     private static final Logger logger = LogManager.getLogger(ClassMap.class.getName());
 
     /**
-     * It takes a string as input and returns a class that implements the IMeasure interface
+     * Takes a string as input and returns a class that implements the IMeasure interface
      *
      * @param measure the name of the measure to be returned
      * @return The class of the measure.
@@ -21,16 +21,16 @@ public class ClassMap {
     public static Class<? extends IMeasure<?>> getMeasureClass(String measure) {
         logger.debug("Getting class for " + measure);
         return switch (measure) {
-            case "mean" -> Mean.class;
-            case "median" -> Median.class;
-            case "mode" -> Mode.class;
-            case "percentiles" -> Percentiles.class;
-            case "probability distribution" -> ProbabilityDistribution.class;
-            case "variance" -> Variance.class;
-            case "standard deviation" -> StdDiv.class;
-            case "binomial distribution" -> BinomialDist.class;
-            case "coefficient of variance" -> CoefficientOfVariance.class;
-            case "least square line" -> LeastSquareLine.class;
+            case Constants.mean -> Mean.class;
+            case Constants.median -> Median.class;
+            case Constants.mode -> Mode.class;
+            case Constants.percentiles -> Percentiles.class;
+            case Constants.probability -> ProbabilityDistribution.class;
+            case Constants.variance -> Variance.class;
+            case Constants.std -> StdDiv.class;
+            case Constants.binomial -> BinomialDist.class;
+            case Constants.coefficient -> CoefficientOfVariance.class;
+            case Constants.least -> LeastSquareLine.class;
             //TODO: add rest of measures as they're defined
             default -> {
                 logger.error("Class not found");

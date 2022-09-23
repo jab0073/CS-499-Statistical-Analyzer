@@ -1,5 +1,6 @@
 package Measures;
 
+import BackEndUtilities.Constants;
 import BackEndUtilities.DataSet;
 import Interfaces.IMeasure;
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +28,7 @@ public class LeastSquareLine implements IMeasure<String> {
     }
     @Override
     public String function(DataSet inputData) {
-        String name = "least square line";
+        String name = Constants.least;
         logger.debug("Running " + name);
 
         SimpleRegression sr = new SimpleRegression(true);

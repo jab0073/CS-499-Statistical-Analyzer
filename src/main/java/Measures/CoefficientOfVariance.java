@@ -1,4 +1,5 @@
 package Measures;
+import BackEndUtilities.Constants;
 import Interfaces.IMeasure;
 import BackEndUtilities.DataSet;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +16,7 @@ public class CoefficientOfVariance implements IMeasure<BigDecimal> {
 
     @Override
     public BigDecimal function(DataSet inputData) {
-        String name = "coefficient of variance";
+        String name = Constants.coefficient;
         logger.debug("Running " + name);
         StdDiv stddiv = new StdDiv();
         Mean mn = new Mean();
