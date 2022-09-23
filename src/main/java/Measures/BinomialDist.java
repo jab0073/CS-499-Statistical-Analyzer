@@ -23,7 +23,7 @@ public class BinomialDist implements IMeasure<BigDecimal> {
 
         double p = Double.parseDouble(inputData.getSample(0).getVariables().stream().filter(s -> s.startsWith("p")).map(s-> s.substring(2)).findFirst().get());
 
-        String expression = "(n!/((n-x)!*x!))*p^x*q^(n-x)";
+        // (n!/((n-x)!*x!))*p^x*q^(n-x)
 
         BinomialDistribution bd = new BinomialDistribution(n, p);
 

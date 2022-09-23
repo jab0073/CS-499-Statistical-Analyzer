@@ -31,7 +31,11 @@ public class ClassMap {
             case Constants.binomial -> BinomialDist.class;
             case Constants.coefficient -> CoefficientOfVariance.class;
             case Constants.least -> LeastSquareLine.class;
-            //TODO: add rest of measures as they're defined
+            case Constants.chi -> ChiSquare.class;
+            case Constants.correlation -> CorrelationCoefficient.class;
+            case Constants.sign -> SignTest.class;
+            case Constants.spearman -> SpearmanRank.class;
+            case Constants.rank -> RankSum.class;
             default -> {
                 logger.error("Class not found");
                 yield null;
