@@ -15,13 +15,13 @@ import java.util.List;
  */
 public class Median implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
-
-    private final String name = Constants.median;
+    private final int minimumSamples = 1;
+    public final String name = Constants.median;
     @Override
     public BigDecimal function(DataSet inputData) {
         logger.debug("Running " + name);
-        if(inputData.getSize() > 0 && !inputData.getDataAsDouble(true).isEmpty()) {
-            List<BigDecimal> inputCopy = inputData.getDataAsDouble(true).stream().sorted(Comparator.naturalOrder()).toList();
+        if(inputData.getSize() > 0 && !inputData.getAllDataAsDouble().isEmpty()) {
+            List<BigDecimal> inputCopy = inputData.getAllDataAsDouble().stream().sorted(Comparator.naturalOrder()).toList();
 
             return inputCopy.get(BigDecimal.valueOf(inputCopy.size() / 2).setScale(0, RoundingMode.HALF_UP).intValue());
         }

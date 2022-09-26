@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 
 public class SpearmanRank implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
+    private final int minimumSamples = 2;
     @Override
     public BigDecimal function(DataSet inputData) {
         String name = Constants.spearman;

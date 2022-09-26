@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 public class ProbabilityDistribution implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     private final String name = Constants.probability;
+    public final int minimumSamples = 2;
 
     @Override
     public BigDecimal function(DataSet inputData) {

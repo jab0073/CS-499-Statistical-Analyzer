@@ -12,26 +12,29 @@ public class Main {
     public static void main(String[] args) {
         logger.debug("Starting Main.");
         DataTable dt = new DataTable();
-        dt.addRow(new Sample(1.0,2.0,3.0));
         /*try {
             dt = UIServices.fromXLSX("Sample Table", "C:\\Users\\jusbus6p\\Desktop\\testingcsv.xlsx", 0);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }*/
 
-        Sample sample = dt.getRow(0).toSample();
+        Sample sample = new Sample("1+n", "6000*p", "5+p*100000/n");
         DataSet ds = new DataSet();
 
-        sample.addVariables(Arrays.asList("n=20000", "p=.5"));
+        Expressions.enableEvaluation();
+
+        Arrays.asList("n=20000", "p=.5").forEach(a->Expressions.addArguement(a.split("=")[0], a.split("=")[1]));
 
         ds.addSample(sample);
 
-        BigDecimal output = (BigDecimal) FunctionCaller.measureRunner("standard deviation", ds);
+        String testMeasure = Constants.mean;
+
+        BigDecimal output = (BigDecimal) FunctionCaller.measureRunner(testMeasure, ds);
 
         //List<BigDecimal> value = Expressions.eval(ds);
         //value.sort(Comparator.naturalOrder());
         //value.forEach(System.out::println);
-        System.out.println("std dev: " + output);
+        System.out.println(testMeasure + ": " + output);
         logger.debug("Leaving Main.");
     }
 }

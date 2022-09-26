@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 
 public class RankSum implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
+    public final int minimumSamples = 2;
     @Override
     public BigDecimal function(DataSet inputData) {
         String name = Constants.rank;

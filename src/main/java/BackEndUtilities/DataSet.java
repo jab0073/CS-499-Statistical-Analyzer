@@ -33,11 +33,13 @@ public class DataSet implements Cloneable{
     public void addSample(Sample sample) {
         if(sample != null)
             this.samples.add(sample);
+        logger.debug("Sample of size " + (sample != null ? sample.getSize() : 0) + " added to dataset");
     }
 
     public void addSample(int index, Sample sample) {
         if(sample != null)
             this.samples.add(index, sample);
+        logger.debug("Sample of size " + (sample != null ? sample.getSize() : 0) + " added to dataset");
     }
 
     public List<Sample> getSamples() {
@@ -59,8 +61,8 @@ public class DataSet implements Cloneable{
         throw new IndexOutOfBoundsException();
     }
 
-    public List<BigDecimal> getDataAsDouble(Boolean evaluate) {
-        return this.samples.stream().map(s -> s.getDataAsBigDecimal(evaluate)).toList().stream().flatMap(List::stream).collect(Collectors.toList());
+    public List<BigDecimal> getAllDataAsDouble() {
+        return this.samples.stream().map(Sample::getDataAsBigDecimal).toList().stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
     public int getSize() {

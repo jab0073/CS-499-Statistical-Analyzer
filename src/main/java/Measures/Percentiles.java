@@ -1,4 +1,5 @@
 package Measures;
+import BackEndUtilities.Expressions;
 import Interfaces.IMeasure;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Constants;
@@ -16,16 +17,16 @@ import java.util.List;
 public class Percentiles implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     private final String name = Constants.percentiles;
-
+    public final int minimumSamples = 1;
     @Override
     public BigDecimal function(DataSet inputData) {
         logger.debug("Running " + name);
 
-        List<BigDecimal> data = inputData.getDataAsDouble(true);
+        List<BigDecimal> data = inputData.getAllDataAsDouble();
         Collections.sort(data);
 
         int n = data.size();
-        double x = Double.parseDouble(inputData.getSample(0).getVariables().stream().filter(s -> s.startsWith("x")).map(s-> s.substring(2)).findFirst().get());
+        double x = Double.parseDouble(Expressions.getArgument("x"));
 
         double px = (x*(n+1))/100;
         px = Math.round(px);
