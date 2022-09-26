@@ -29,8 +29,8 @@ public class Expressions {
         return Expressions.evaluate;
     }
 
-    public static void addArguement(String variable, String value) {
-        Pair toAdd = new PairBuilder().setVariable(variable).createPair();
+    public static void addArgument(String variable, String value) {
+        Pair toAdd = new Pair(variable);
         if(!Expressions.arguements.contains(toAdd)) {
             toAdd.setValue(value);
             Expressions.arguements.add(toAdd);
@@ -101,7 +101,7 @@ public class Expressions {
             return exp;
         }).toList();
 
-        return exps.stream().map(Expression::calculate).map(BigDecimal::valueOf).collect(Collectors.toList());
+        return exps.stream().map(Expression::calculate).peek(System.out::println).map(BigDecimal::valueOf).collect(Collectors.toList());
     }
 
     /**
