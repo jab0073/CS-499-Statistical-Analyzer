@@ -17,6 +17,8 @@ import java.util.List;
  */
 public class LeastSquareLine implements IMeasure<String> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
+    public final int minimumSamples = 2;
+
     public double[][] pair(double[] arr1, double[] arr2) {
         double[][] paired = new double[arr1.length][2];
         for(int i = 0 ; i < arr1.length ; i++) {
@@ -37,8 +39,8 @@ public class LeastSquareLine implements IMeasure<String> {
         List<BigDecimal> y;
         if(inputData != null && inputData.getNumberOfSamples() >= 2) {
             try {
-                 x = inputData.getSample(0).getDataAsBigDecimal(true);
-                 y = inputData.getSample(1).getDataAsBigDecimal(true);
+                 x = inputData.getSample(0).getDataAsBigDecimal();
+                 y = inputData.getSample(1).getDataAsBigDecimal();
 
             }
             catch(IndexOutOfBoundsException e) {

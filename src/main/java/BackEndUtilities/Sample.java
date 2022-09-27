@@ -1,5 +1,6 @@
 package BackEndUtilities;
 
+import Interfaces.IValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,38 +13,38 @@ import java.util.stream.Collectors;
 
 public class Sample implements Cloneable{
     private List<String> data;
-    private List<String> variables;
     private static final Logger logger = LogManager.getLogger(Sample.class.getName());
+    public IValidator.ValidationStatus status;
 
 
     public Sample() {
         logger.debug("Creating empty Sample");
         this.data = new ArrayList<>();
-        this.variables = new ArrayList<>();
+        this.status = IValidator.ValidationStatus.NOT_VALIDATED;
     }
 
     public Sample(List<Double> data) {
         logger.debug("Creating Sample with size of " + data.size());
         this.data = data.stream().map(String::valueOf).toList();
-        this.variables = new ArrayList<>();
+        this.status = IValidator.ValidationStatus.NOT_VALIDATED;
     }
 
     public Sample(Double... data) {
         this.data = Arrays.stream(data).map(String::valueOf).toList();
         logger.debug("Creating Sample with size of " + this.data.size());
-        this.variables = new ArrayList<>();
+        this.status = IValidator.ValidationStatus.NOT_VALIDATED;
     }
 
     public Sample(String... data) {
         this.data = Arrays.asList(data);
         logger.debug("Creating Sample with size of " + this.data.size());
-        this.variables = new ArrayList<>();
+        this.status = IValidator.ValidationStatus.NOT_VALIDATED;
     }
 
     public Sample(List<Double> data, List<String> variables) {
         this.data = data.stream().map(String::valueOf).toList();
         logger.debug("Creating Sample with size of " + this.data.size());
-        this.variables = variables;
+        this.status = IValidator.ValidationStatus.NOT_VALIDATED;
     }
 
     /**
@@ -59,11 +60,10 @@ public class Sample implements Cloneable{
      * If evaluate is true, return the result of evaluating the expression, otherwise return the data as a list of
      * BigDecimal
      *
-     * @param evaluate If true, the expressions stored in the DataSet will be evaluated before returning the data.
      * @return A list of BigDecimal objects.
      */
-    public List<BigDecimal> getDataAsBigDecimal(Boolean evaluate) {
-        if(evaluate) {
+    public List<BigDecimal> getDataAsBigDecimal() {
+        if(Expressions.isEvaluationOn()) {
             return Expressions.eval(this);
         }
         else {
@@ -112,42 +112,6 @@ public class Sample implements Cloneable{
 
 
     /**
-     * This function returns a list of strings that represent the variables to be used in the expressions
-     *
-     * @return A list of variables
-     */
-    public List<String> getVariables() {
-        return variables;
-    }
-
-    /**
-     * This function sets the variables of the class to the variables passed in.
-     *
-     * @param variables A list of variables.
-     */
-    public void setVariables(List<String> variables) {
-        this.variables = variables;
-    }
-
-    /**
-     * This function adds a variable to the list of variables.
-     *
-     * @param variable The variable to be added to the list of variables.
-     */
-    public void addVariables(String variable) {
-        this.variables.add(variable);
-    }
-
-    /**
-     * This function adds a list of variables to the list of variables.
-     *
-     * @param variables The list of variables to add to the existing variables.
-     */
-    public void addVariables(List<String> variables) {
-        this.variables.addAll(variables);
-    }
-
-    /**
      * Convert a list of doubles to a DataSet.
      *
      * @param data The data to be used for the DataSet.
@@ -156,20 +120,6 @@ public class Sample implements Cloneable{
     public static Sample fromDoubleList(List<Double> data) {
         Sample ds = new Sample();
         ds.data = data.stream().map(String::valueOf).collect(Collectors.toList());
-        return ds;
-    }
-
-    /**
-     * It takes a list of doubles and a list of variables, and returns a DataSet object
-     *
-     * @param data a list of data.
-     * @param variables A list of variables for the data set.
-     * @return A DataSet object
-     */
-    public static Sample fromDoubleList(List<Double> data, List<String> variables) {
-        Sample ds = new Sample();
-        ds.data = data.stream().map(String::valueOf).collect(Collectors.toList());
-        ds.variables = variables;
         return ds;
     }
 
@@ -186,19 +136,18 @@ public class Sample implements Cloneable{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Sample sample)) return false;
-        return getData().equals(sample.getData()) && getVariables().equals(sample.getVariables());
+        return getData().equals(sample.getData());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getData(), getVariables());
+        return Objects.hash(getData());
     }
 
     @Override
     public String toString() {
         return "Sample{" +
                 "data=" + this.data +
-                ", variables=" + this.variables +
                 ", size=" + this.getSize() +
                 '}';
     }

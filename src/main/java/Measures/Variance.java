@@ -15,6 +15,7 @@ import java.math.RoundingMode;
 public class Variance implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     String name = Constants.variance;
+    private final int minimumSamples = 1;
 
     @Override
     public BigDecimal function(DataSet inputData) {
@@ -22,7 +23,7 @@ public class Variance implements IMeasure<BigDecimal> {
         Mean mn = new Mean();
         BigDecimal mean = mn.function(inputData);
         if(mean != null) {
-            return inputData.getDataAsDouble(true)
+            return inputData.getAllDataAsDouble()
                     .stream()
                     .map(d -> BigDecimal.valueOf(Math.pow(d.subtract(mean).doubleValue(), 2)))
                     .reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(inputData.getSize() - 1), RoundingMode.HALF_UP);

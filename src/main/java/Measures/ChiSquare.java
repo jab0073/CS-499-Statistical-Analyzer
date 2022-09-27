@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 public class ChiSquare implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
-
+    public final int minimumSamples = 1;
     @Override
     public BigDecimal function(DataSet inputData) {
         String name = Constants.chi;

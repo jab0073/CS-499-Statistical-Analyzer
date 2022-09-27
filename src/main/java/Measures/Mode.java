@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.Objects;
 
 /**
  * Measure to calculate Mode
@@ -15,14 +14,14 @@ import java.util.Objects;
 public class Mode implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     private final String name = Constants.mode;
-
+    public final int minimumSamples = 1;
 
     @Override
     public BigDecimal function(DataSet inputData) {
         logger.debug("Running " + name);
         HashMap<BigDecimal, Integer> map = new HashMap<>();
         BigDecimal result = BigDecimal.valueOf(-9999), max = BigDecimal.ONE;
-        for (BigDecimal arrayItem : inputData.getDataAsDouble(true)) {
+        for (BigDecimal arrayItem : inputData.getAllDataAsDouble()) {
             if (map.putIfAbsent(arrayItem, 1) != null) {
                 int count = map.get(arrayItem) + 1;
                 map.put(arrayItem, count);

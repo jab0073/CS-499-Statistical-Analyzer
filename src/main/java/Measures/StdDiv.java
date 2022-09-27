@@ -16,6 +16,7 @@ import java.math.RoundingMode;
 public class StdDiv implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     private final String name = Constants.std;
+    private final int minimumSamples = 1;
 
     @Override
     public BigDecimal function(DataSet inputData) {
