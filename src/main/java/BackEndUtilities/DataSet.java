@@ -1,5 +1,6 @@
 package BackEndUtilities;
 
+import Interfaces.IValidator;
 import TableUtilities.DataTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,20 +15,25 @@ public class DataSet implements Cloneable{
 
     private List<Sample> samples;
     private static final Logger logger = LogManager.getLogger(DataSet.class.getName());
+    public IValidator.ValidationStatus status;
+
 
     public DataSet(){
         logger.debug("Creating empty DataSet");
         this.samples = new ArrayList<>();
+        this.status = IValidator.ValidationStatus.NOT_VALIDATED;
     }
 
     public DataSet(List<Sample> samples) {
         logger.debug("Creating DataSet with size of " + samples.size());
         this.samples = samples;
+        this.status = IValidator.ValidationStatus.NOT_VALIDATED;
     }
 
     public DataSet(Sample[] samples) {
         this.samples = Arrays.asList(samples);
         logger.debug("Creating DataSet with size of " + this.samples.size());
+        this.status = IValidator.ValidationStatus.NOT_VALIDATED;
     }
 
     public void addSample(Sample sample) {

@@ -1,7 +1,7 @@
 package TableUtilities;
 
-import BackEndUtilities.DataSet;
 import BackEndUtilities.Sample;
+import Interfaces.IValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 public class DataTable {
     private static final Logger logger = LogManager.getLogger(DataTable.class.getName());
+    public IValidator.ValidationStatus status;
     private List<Row> rows;
 
     private List<Column> columns;
@@ -24,6 +25,8 @@ public class DataTable {
         this.columns = new ArrayList<>();
         this.tableName = "";
         this.size = 0;
+        this.selectedCells = new ArrayList<>();
+        this.status = IValidator.ValidationStatus.NOT_VALIDATED;
     }
 
     public DataTable(String tableName) {
@@ -32,6 +35,8 @@ public class DataTable {
         this.columns = new ArrayList<>();
         this.tableName = tableName;
         this.size = 0;
+        this.selectedCells = new ArrayList<>();
+        this.status = IValidator.ValidationStatus.NOT_VALIDATED;
     }
 
     /**

@@ -3,7 +3,7 @@ package TableUtilities;
 import java.util.Objects;
 
 public class Cell {
-    public enum CellStatus {NONE, WARNING, ERROR, TRIGGERED, NOT_TRIGGERED, SET}
+    public enum CellStatus {NONE, WARNING, ERROR}
     public int row;
     public int column;
     public String data;

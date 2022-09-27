@@ -1,5 +1,6 @@
 package BackEndUtilities;
 
+import Interfaces.IValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,31 +14,37 @@ import java.util.stream.Collectors;
 public class Sample implements Cloneable{
     private List<String> data;
     private static final Logger logger = LogManager.getLogger(Sample.class.getName());
+    public IValidator.ValidationStatus status;
 
 
     public Sample() {
         logger.debug("Creating empty Sample");
         this.data = new ArrayList<>();
+        this.status = IValidator.ValidationStatus.NOT_VALIDATED;
     }
 
     public Sample(List<Double> data) {
         logger.debug("Creating Sample with size of " + data.size());
         this.data = data.stream().map(String::valueOf).toList();
+        this.status = IValidator.ValidationStatus.NOT_VALIDATED;
     }
 
     public Sample(Double... data) {
         this.data = Arrays.stream(data).map(String::valueOf).toList();
         logger.debug("Creating Sample with size of " + this.data.size());
+        this.status = IValidator.ValidationStatus.NOT_VALIDATED;
     }
 
     public Sample(String... data) {
         this.data = Arrays.asList(data);
         logger.debug("Creating Sample with size of " + this.data.size());
+        this.status = IValidator.ValidationStatus.NOT_VALIDATED;
     }
 
     public Sample(List<Double> data, List<String> variables) {
         this.data = data.stream().map(String::valueOf).toList();
         logger.debug("Creating Sample with size of " + this.data.size());
+        this.status = IValidator.ValidationStatus.NOT_VALIDATED;
     }
 
     /**
