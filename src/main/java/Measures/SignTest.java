@@ -3,36 +3,56 @@ package Measures;
 import BackEndUtilities.Constants;
 import BackEndUtilities.DataSet;
 import Interfaces.IMeasure;
-import org.apache.commons.math3.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
 
-public class SignTest implements IMeasure<Pair<Integer, Integer>> {
+public class SignTest implements IMeasure<String> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
+    private final String name = Constants.sign;
     public final int minimumSamples = 2;
 
     @Override
-    public Pair<Integer, Integer> function(DataSet inputData) {
-        String name = Constants.sign;
+    public String function(DataSet inputData) {
         logger.debug("Running " + name);
 
-        List<Double> subtracted = new ArrayList<>();
+        StringBuilder result = new StringBuilder();
+        List<BigDecimal> x;
+        List<BigDecimal> y;
+        if (inputData != null && inputData.getNumberOfSamples() >= 2) {
+            try {
+                x = inputData.getSample(0).getDataAsBigDecimal();
+                y = inputData.getSample(1).getDataAsBigDecimal();
 
-        for(int i = 0 ; i < inputData.getSample(0).getSize() ; i++) {
-            double value1 = Double.parseDouble(inputData.getSample(0).getData().get(i));
-            double value2 = Double.parseDouble(inputData.getSample(1).getData().get(i));
-            subtracted.add(value2 - value1);
+            } catch (IndexOutOfBoundsException e) {
+                logger.debug("Out of Bounds Exception");
+                return null;
+            }
+
+            int size = Math.min(x.size(), y.size());
+
+            for(int i = 0; i < size; i++){
+                BigDecimal a = x.get(i);
+                BigDecimal b = y.get(i);
+
+                result.append(a).append(", ").append(b).append(", ");
+
+                if(a.compareTo(b) < 0){
+                    result.append("-");
+                }else if(a.compareTo(b) > 0){
+                    result.append("+");
+                }else{
+                    result.append("N/A");
+                }
+
+                result.append("\n");
+            }
         }
 
-        int positive = subtracted.stream().filter(d-> {
-            return d >= 0;
-        }).toList().size();
+        return result.toString();
 
-        int negative = subtracted.size() - positive;
-
-        return new Pair<>(positive, negative);
     }
+
 }
