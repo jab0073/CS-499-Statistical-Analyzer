@@ -2,6 +2,7 @@ package BackEndUtilities;
 
 import Interfaces.IValidator;
 import TableUtilities.DataTable;
+import Validators.DataValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -67,8 +68,8 @@ public class DataSet implements Cloneable{
         throw new IndexOutOfBoundsException();
     }
 
-    public List<BigDecimal> getAllDataAsDouble() {
-        return this.samples.stream().map(Sample::getDataAsBigDecimal).toList().stream().flatMap(List::stream).collect(Collectors.toList());
+    public List<Double> getAllDataAsDouble() {
+        return this.samples.stream().map(Sample::getDataAsDouble).toList().stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
     public int getSize() {
@@ -105,6 +106,10 @@ public class DataSet implements Cloneable{
             ds.addSample(s);
         });
         return ds;
+    }
+
+    public boolean validate() {
+        return DataValidator.validate(this);
     }
 
     @Override

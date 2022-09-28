@@ -34,7 +34,7 @@ public class Expressions {
         if(!Expressions.arguements.contains(toAdd)) {
             toAdd.setValue(value);
             Expressions.arguements.add(toAdd);
-            logger.debug("Argument added.");
+            logger.debug("Argument added: " + toAdd.get());
         }
         else {
             logger.debug("Argument variable already exists.");
@@ -43,6 +43,11 @@ public class Expressions {
 
     public static String getArgument(String variable) {
         return Expressions.arguements.stream().filter(a -> variable.equals(a.getVariable())).map(Pair::getValue).toList().get(0);
+    }
+
+    public static boolean ensureArgument(String variable) {
+        return arguements.contains(new Pair(variable));
+        //return !Expressions.arguements.stream().filter(a -> variable.equals(a.getVariable())).map(Pair::getValue).toList().isEmpty();
     }
 
     public static List<Pair> getArguements() {
@@ -87,7 +92,7 @@ public class Expressions {
      * @param dataset The dataset to be evaluated.
      * @return A list of BigDecimal values.
      */
-    public static List<BigDecimal> eval(Sample dataset) {
+    public static List<Double> eval(Sample dataset) {
         logger.debug("Evaluating expressions");
 
         List<Expression> exps = dataset.getData().stream().map(d -> {
@@ -101,7 +106,7 @@ public class Expressions {
             return exp;
         }).toList();
 
-        return exps.stream().map(Expression::calculate).peek(System.out::println).map(BigDecimal::valueOf).collect(Collectors.toList());
+        return exps.stream().map(Expression::calculate).peek(System.out::println).collect(Collectors.toList());
     }
 
     /**
@@ -111,7 +116,7 @@ public class Expressions {
      * @param expressions A list of expressions to evaluate.
      * @return A list of BigDecimal values.
      */
-    public static List<BigDecimal> eval(List<String> expressions) {
+    public static List<Double> eval(List<String> expressions) {
         logger.debug("Evaluating expressions");
         List<Expression> exps = expressions.stream().map(d -> {
             Expression exp = new Expression(d);
@@ -123,6 +128,6 @@ public class Expressions {
             }
             return exp;
         }).toList();
-        return exps.stream().map(Expression::calculate).map(BigDecimal::valueOf).collect(Collectors.toList());
+        return exps.stream().map(Expression::calculate).collect(Collectors.toList());
     }
 }
