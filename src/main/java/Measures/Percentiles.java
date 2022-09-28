@@ -14,6 +14,7 @@ import java.util.List;
  * Measure to calculate Percentiles
  * Formula: Px = [x(n+1)]/100
  */
+@Deprecated
 public class Percentiles implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     private final String name = Constants.percentiles;

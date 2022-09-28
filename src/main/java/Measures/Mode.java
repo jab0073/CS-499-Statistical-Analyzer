@@ -11,6 +11,7 @@ import java.util.HashMap;
 /**
  * Measure to calculate Mode
  */
+@Deprecated
 public class Mode implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     private final String name = Constants.mode;

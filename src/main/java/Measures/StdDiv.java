@@ -13,6 +13,7 @@ import java.math.RoundingMode;
 /**
  * Measure to calculate Standard Deviation
  */
+@Deprecated
 public class StdDiv implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     private final String name = Constants.std;

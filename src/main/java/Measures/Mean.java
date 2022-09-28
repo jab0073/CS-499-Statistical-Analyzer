@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * Measure to calculate Mean
  */
+@Deprecated
 public class Mean implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
 

@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import java.math.BigDecimal;
 import java.util.List;
 
+@Deprecated
 public class SignTest implements IMeasure<String> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     private final String name = Constants.sign;

@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 /**
  * Measure to calculate Probability Distribution
  */
+@Deprecated
 public class ProbabilityDistribution implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     private final String name = Constants.probability;

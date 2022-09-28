@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import static BackEndUtilities.ClassMap.getMeasureClass;
 
+@Deprecated
 public final class FunctionCaller {
 
     /**

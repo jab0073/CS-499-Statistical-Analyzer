@@ -11,6 +11,7 @@ import java.math.RoundingMode;
 /**
  * Measure to calculate Coefficient of Variance
  */
+@Deprecated
 public class CoefficientOfVariance implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     public final int minimumSamples = 1;

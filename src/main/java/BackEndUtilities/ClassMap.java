@@ -5,10 +5,13 @@ import Measures.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.Method;
+
 
 /**
  * Utility Class that is used to get the Class object of the required measure.
  */
+@Deprecated
 public class ClassMap {
     private static final Logger logger = LogManager.getLogger(ClassMap.class.getName());
 

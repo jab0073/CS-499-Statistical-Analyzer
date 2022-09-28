@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * Measure to calculate Median
  */
+@Deprecated
 public class Median implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     private final int minimumSamples = 1;

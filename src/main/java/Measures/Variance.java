@@ -12,6 +12,7 @@ import java.math.RoundingMode;
 /**
  * Measure to calculate Variance
  */
+@Deprecated
 public class Variance implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     String name = Constants.variance;

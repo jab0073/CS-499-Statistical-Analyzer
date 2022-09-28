@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Measure to calculate Binomial Distribution
  */
+@Deprecated
 public class BinomialDist implements IMeasure<BigDecimal> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     private final String name = Constants.binomial;

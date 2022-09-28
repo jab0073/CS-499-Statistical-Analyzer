@@ -15,6 +15,7 @@ import java.util.List;
 /**
  * Measure to calculate Least Square Line
  */
+@Deprecated
 public class LeastSquareLine implements IMeasure<String> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     public final int minimumSamples = 2;

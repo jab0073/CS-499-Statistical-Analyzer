@@ -1,6 +1,7 @@
 package BackEndUtilities;
 
 import Interfaces.IValidator;
+import Validators.DataValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -130,6 +131,10 @@ public class Sample implements Cloneable{
      */
     public int getSize() {
         return this.data.size();
+    }
+
+    public boolean validate() {
+        return DataValidator.validate(this);
     }
 
     @Override

@@ -2,6 +2,7 @@ package BackEndUtilities;
 
 import Interfaces.IValidator;
 import TableUtilities.DataTable;
+import Validators.DataValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -105,6 +106,10 @@ public class DataSet implements Cloneable{
             ds.addSample(s);
         });
         return ds;
+    }
+
+    public boolean validate() {
+        return DataValidator.validate(this);
     }
 
     @Override
