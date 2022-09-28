@@ -1,23 +1,24 @@
 import BackEndUtilities.*;
 import Interop.UIServices;
+import Measures.Measures;
 import TableUtilities.DataTable;
 import TableUtilities.Row;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
         logger.debug("Starting Main.");
-        DataTable dt = new DataTable();
-        dt = UIServices.fromCSV("Sample Table", "/Users/justin/Desktop/test.csv");
+        DataTable dt;
+
+        String inputTestCSV = "/Users/justin/Desktop/test.csv";
+
+        dt = UIServices.fromCSV("Sample Table", inputTestCSV);
 
         //Sample sample = new Sample("1+n", "6000*p", "5+p*100000/n");
         assert dt != null;
@@ -26,15 +27,19 @@ public class Main {
         DataSet ds = new DataSet();
         ls.forEach(ds::addSample);
 
-        Expressions.enableEvaluation();
+        Expressions.disableEvaluation();
 
         Arrays.asList("n=20000", "p=.5").forEach(a->Expressions.addArgument(a.split("=")[0], a.split("=")[1]));
 
         //ds.addSample(sample);
 
-        String testMeasure = Constants.mean;
+        String testMeasure = Constants.mode;
 
-        BigDecimal output = (BigDecimal) FunctionCaller.measureRunner(testMeasure, ds);
+        Measures.setInputData(ds);
+
+        Object output = Measures.run(testMeasure);
+
+        //BigDecimal output = (BigDecimal) FunctionCaller.measureRunner(testMeasure, ds);
 
         //List<BigDecimal> value = Expressions.eval(ds);
         //value.sort(Comparator.naturalOrder());
