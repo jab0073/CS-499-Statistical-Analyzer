@@ -23,6 +23,12 @@ public class Constants {
     public static final String variance = "variance";
 
     public static List<String> getAllConstants() {
-        return Arrays.stream(Constants.class.getDeclaredFields()).map(Field::getName).collect(Collectors.toList());
+        return Arrays.stream(Constants.class.getDeclaredFields()).map(Field::getName).map(f-> {
+            try {
+                return Constants.class.getDeclaredField(f).get(Expressions.class).toString();
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toList());
     }
 }

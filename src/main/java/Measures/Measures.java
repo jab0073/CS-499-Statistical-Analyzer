@@ -21,7 +21,6 @@ import org.apache.logging.log4j.Logger;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Measures {
     private static DataSet inputData;
@@ -54,7 +53,7 @@ public class Measures {
 
         ChiSquaredDistribution csd = new ChiSquaredDistribution(dof);
 
-        return inputData.getAllDataAsDouble().stream().map(d -> csd.probability(d.intValue())).toList();
+        return inputData.getAllDataAsDouble().stream().map(d -> csd.density(d.intValue())).toList();
     }
 
     private static Double CoefficientOfVariance() {
@@ -80,7 +79,6 @@ public class Measures {
             paired[i][0] = arr1[i];
             paired[i][1] = arr2[i];
         }
-
         return paired;
     }
 
@@ -96,7 +94,7 @@ public class Measures {
         Double[] yArray = y.toArray(Double[]::new);
 
         double[][] xyArray = pair(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
-        logger.debug("Operating on: " + Arrays.deepToString(xyArray));
+        //logger.debug("Operating on: " + Arrays.deepToString(xyArray));
         sr.addData(xyArray);
 
         return "Y=" + sr.getIntercept() + "+" + sr.getSlope() + "X";
@@ -268,39 +266,40 @@ public class Measures {
 
     public static boolean isValidFor(String measure) {
         if (inputData != null) {
+            logger.debug("DataSet is not null and has " + inputData.getNumberOfSamples() + " data points");
             return switch (measure) {
                 case Constants.binomial -> {
-                    yield Measures.inputData.getSize() >= 1 && Expressions.ensureArgument("n") && Expressions.ensureArgument("p");
+                    yield Measures.inputData.getNumberOfSamples() >= 1 && Expressions.ensureArgument("n") && Expressions.ensureArgument("p");
                 }
                 case Constants.variance, Constants.std, Constants.mode, Constants.median, Constants.mean, Constants.coefficient -> {
-                    yield Measures.inputData.getSize() >= 1;
+                    yield Measures.inputData.getNumberOfSamples() >= 1;
                 }
                 case Constants.percentiles -> {
-                    yield Measures.inputData.getSize() >= 1 && Expressions.ensureArgument("x");
+                    yield Measures.inputData.getNumberOfSamples() >= 1 && Expressions.ensureArgument("x");
                 }
                 case Constants.chi -> {
-                    yield Measures.inputData.getSize() >= 2;
+                    yield Measures.inputData.getNumberOfSamples() >= 2 && Expressions.ensureArgument("d");
                 }
                 case Constants.correlation -> {
-                    yield Measures.inputData.getSize() >= 2;
+                    yield Measures.inputData.getNumberOfSamples() >= 2;
                 }
                 case Constants.least -> {
-                    yield Measures.inputData.getSize() >= 2;
+                    yield Measures.inputData.getNumberOfSamples() >= 2;
                 }
                 case Constants.rank -> {
-                    yield Measures.inputData.getSize() >= 2;
+                    yield Measures.inputData.getNumberOfSamples() >= 2;
                 }
                 case Constants.sign -> {
-                    yield Measures.inputData.getSize() >= 2;
+                    yield Measures.inputData.getNumberOfSamples() >= 2;
                 }
                 case Constants.probability -> {
-                    yield Measures.inputData.getSize() >= 1 && Expressions.ensureArgument("x");
+                    yield Measures.inputData.getNumberOfSamples() >= 1 && Expressions.ensureArgument("x");
                 }
                 case Constants.spearman -> {
-                    yield Measures.inputData.getSize() >= 2;
+                    yield Measures.inputData.getNumberOfSamples() >= 2;
                 }
                 default -> {
-                    logger.error("Requested measure unsupported");
+                    logger.error("Invalid measure passed to isValidFor: " + measure);
                     yield false;
                 }
             };
@@ -328,12 +327,12 @@ public class Measures {
                 case Constants.std -> StandardDeviation();
                 case Constants.variance -> Variance();
                 default -> {
-                    logger.error("Requested measure unsupported");
+                    logger.error("Invalid measure passed to run:" + measure);
                     yield null;
                 }
             };
         }
-        logger.error("Invalid dataset for requested measure");
+        logger.error("Error running measure: " + measure);
         return null;
     }
 

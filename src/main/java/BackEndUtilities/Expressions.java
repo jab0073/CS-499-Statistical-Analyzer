@@ -46,7 +46,8 @@ public class Expressions {
     }
 
     public static boolean ensureArgument(String variable) {
-        return !Expressions.arguements.stream().filter(a -> variable.equals(a.getVariable())).map(Pair::getValue).toList().isEmpty();
+        return arguements.contains(new Pair(variable));
+        //return !Expressions.arguements.stream().filter(a -> variable.equals(a.getVariable())).map(Pair::getValue).toList().isEmpty();
     }
 
     public static List<Pair> getArguements() {
