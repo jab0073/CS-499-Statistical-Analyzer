@@ -26,6 +26,12 @@ public class Measures {
     private static DataSet inputData;
     private static final Logger logger = LogManager.getLogger(Measures.class.getName());
 
+    private static boolean isBiasCorrected = false;
+
+    public static void setBiasCorrected(boolean b) {
+        isBiasCorrected = b;
+    }
+
     public static void setInputData(DataSet inputData) {
         Measures.inputData = inputData;
     }
@@ -146,8 +152,6 @@ public class Measures {
         Percentile p = new Percentile();
         p.setData(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
 
-
-
         /*List<Double> data = inputData.getAllDataAsDouble();
         Collections.sort(data);
 
@@ -235,14 +239,10 @@ public class Measures {
     private static Double StandardDeviation() {
         logger.debug("Running " + Constants.std);
 
-        //Double variance = Measures.Variance();
-
         StandardDeviation std = new StandardDeviation();
         std.setData(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
+        std.setBiasCorrected(isBiasCorrected);
         return std.evaluate();
-
-        /*assert variance != null;
-        return Math.sqrt(variance);*/
     }
 
     private static Double Variance() {
@@ -250,18 +250,12 @@ public class Measures {
 
         Variance v = new Variance();
 
+        v.setBiasCorrected(isBiasCorrected);
+
         v.setData(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
 
         return v.evaluate();
-        
-        /*Double mean = Measures.Mean();
-        if(mean != null) {
-            return inputData.getAllDataAsDouble()
-                    .stream()
-                    .map(d -> BigDecimal.valueOf(Math.pow(d - mean, 2)))
-                    .reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(inputData.getSize() - 1), RoundingMode.HALF_UP).doubleValue();
-        }
-        return null;*/
+
     }
 
     public static boolean isValidFor(String measure) {

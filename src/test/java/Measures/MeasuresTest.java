@@ -4,26 +4,25 @@ import BackEndUtilities.Constants;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.Sample;
-import org.apache.commons.math3.analysis.function.Exp;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
-import org.mariuszgromada.math.mxparser.Constant;
 
 import java.util.List;
 
 public class MeasuresTest {
     private DataSet ds;
     private static final Logger logger = LogManager.getLogger(MeasuresTest.class.getName());
+
     @Before
     public void setup() {
         ds = new DataSet();
         ds.addSample(new Sample(1.0, 2.0, 3.0, 5.0, 100.0, 3000.0));
         ds.addSample(new Sample(12.0, 54.0, 100.0, 7.0, 13.0, 99.9));
         Expressions.addArgument("n", "10");
-        Expressions.addArgument("p", ".6");
-        Expressions.addArgument("x", "5");
+        Expressions.addArgument("p", "0.6");
+        Expressions.addArgument("x", "80");
         Expressions.addArgument("d", "6");
 
         Measures.setInputData(ds);
@@ -38,5 +37,24 @@ public class MeasuresTest {
             assert result != null;
             logger.debug(m + ": " + result);
         });
+    }
+
+    @Test
+    public void testStandardDeviation() {
+        DataSet otherDS = new DataSet();
+        otherDS.addSample(new Sample(1.0, 2.0, 3.0, 4.0, 5.0));
+        Measures.setInputData(otherDS);
+        Object population = Measures.run(Constants.std);
+        Double populationD = (Double) population;
+        assert populationD != null;
+        assert populationD.equals(1.4142135623730951);
+        logger.debug("population " + Constants.std + ": " + population);
+
+        Measures.setBiasCorrected(true);
+        Object sample = Measures.run(Constants.std);
+        Double sampleD = (Double) sample;
+        assert sampleD != null;
+        assert sampleD.equals(1.5811388300841898);
+        logger.debug("sample " + Constants.std + ": " + sample);
     }
 }

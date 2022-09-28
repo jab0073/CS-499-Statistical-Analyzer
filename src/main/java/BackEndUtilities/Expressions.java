@@ -34,7 +34,7 @@ public class Expressions {
         if(!Expressions.arguements.contains(toAdd)) {
             toAdd.setValue(value);
             Expressions.arguements.add(toAdd);
-            logger.debug("Argument added.");
+            logger.debug("Argument added: " + toAdd.get());
         }
         else {
             logger.debug("Argument variable already exists.");
