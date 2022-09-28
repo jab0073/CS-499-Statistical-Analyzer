@@ -36,20 +36,20 @@ public class LeastSquareLine implements IMeasure<String> {
 
         SimpleRegression sr = new SimpleRegression(true);
 
-        List<BigDecimal> x;
-        List<BigDecimal> y;
+        List<Double> x;
+        List<Double> y;
         if(inputData != null && inputData.getNumberOfSamples() >= 2) {
             try {
-                 x = inputData.getSample(0).getDataAsBigDecimal();
-                 y = inputData.getSample(1).getDataAsBigDecimal();
+                 x = inputData.getSample(0).getDataAsDouble();
+                 y = inputData.getSample(1).getDataAsDouble();
 
             }
             catch(IndexOutOfBoundsException e) {
                 logger.debug("Out of Bounds Exception");
                 return null;
             }
-            Double[] xArray = x.stream().map(BigDecimal::doubleValue).toArray(Double[]::new);
-            Double[] yArray = y.stream().map(BigDecimal::doubleValue).toArray(Double[]::new);
+            Double[] xArray = x.toArray(Double[]::new);
+            Double[] yArray = y.toArray(Double[]::new);
 
             double[][] xyArray = pair(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
             logger.debug("Operating on: " + Arrays.deepToString(xyArray));

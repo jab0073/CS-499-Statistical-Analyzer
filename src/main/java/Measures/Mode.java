@@ -12,26 +12,26 @@ import java.util.HashMap;
  * Measure to calculate Mode
  */
 @Deprecated
-public class Mode implements IMeasure<BigDecimal> {
+public class Mode implements IMeasure<Double> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     private final String name = Constants.mode;
     public final int minimumSamples = 1;
 
     @Override
-    public BigDecimal function(DataSet inputData) {
+    public Double function(DataSet inputData) {
         logger.debug("Running " + name);
-        HashMap<BigDecimal, Integer> map = new HashMap<>();
-        BigDecimal result = BigDecimal.valueOf(-9999), max = BigDecimal.ONE;
-        for (BigDecimal arrayItem : inputData.getAllDataAsDouble()) {
+        HashMap<Double, Integer> map = new HashMap<>();
+        double result = -9999.0, max = 1.0;
+        for (Double arrayItem : inputData.getAllDataAsDouble()) {
             if (map.putIfAbsent(arrayItem, 1) != null) {
                 int count = map.get(arrayItem) + 1;
                 map.put(arrayItem, count);
-                if (count > max.doubleValue()) {
-                    max = BigDecimal.valueOf(count);
+                if (count > max) {
+                    max = count;
                     result = arrayItem;
                 }
             }
         }
-        return !BigDecimal.valueOf(-9999).equals(result) ? result : null;
+        return !Double.valueOf(-9999).equals(result) ? result : null;
     }
 }

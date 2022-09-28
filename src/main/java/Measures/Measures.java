@@ -5,14 +5,23 @@ import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.distribution.BinomialDistribution;
+import org.apache.commons.math3.distribution.ChiSquaredDistribution;
+import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.stat.inference.MannWhitneyUTest;
+import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
+import org.apache.commons.math3.stat.descriptive.rank.Percentile;
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
+import org.apache.commons.math3.stat.descriptive.moment.Variance;
+import org.apache.commons.math3.stat.StatUtils;
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Measures {
     private static DataSet inputData;
@@ -33,145 +42,159 @@ public class Measures {
 
         double p = Double.parseDouble(Expressions.getArgument("p"));
 
-        // (n!/((n-x)!*x!))*p^x*q^(n-x)
-
         BinomialDistribution bd = new BinomialDistribution(n, p);
 
         return inputData.getAllDataAsDouble().stream().map(d -> bd.probability(d.intValue())).toList();
     }
-    
-    private static Object ChiSquare() {
-        logger.debug("Running " + Constants.chi);
-        return null;
-    }
-    
-    private static BigDecimal CoefficientOfVariance() {
-        logger.debug("Running " + Constants.coefficient);
-        BigDecimal stddiv = StandardDeviation();
-        BigDecimal mn = Mean();
 
-        return (stddiv.divide(mn, RoundingMode.HALF_UP)).multiply(BigDecimal.valueOf(100.0));
+    private static List<Double> ChiSquare() {
+        logger.debug("Running " + Constants.chi);
+
+        double dof = Double.parseDouble(Expressions.getArgument("d"));
+
+        ChiSquaredDistribution csd = new ChiSquaredDistribution(dof);
+
+        return inputData.getAllDataAsDouble().stream().map(d -> csd.probability(d.intValue())).toList();
     }
-    
+
+    private static Double CoefficientOfVariance() {
+        logger.debug("Running " + Constants.coefficient);
+        Double stddiv = StandardDeviation();
+        Double mean = Mean();
+        return (stddiv / mean) * (100.0);
+    }
+
     private static Object CorrelationCoefficient() {
         logger.debug("Running " + Constants.correlation);
-        return null;
+        PearsonsCorrelation pc = new PearsonsCorrelation();
+
+        Double[] xList = inputData.getSample(0).getDataAsDouble().toArray(Double[]::new);
+        Double[] yList = inputData.getSample(1).getDataAsDouble().toArray(Double[]::new);
+
+        return pc.correlation(ArrayUtils.toPrimitive(xList), ArrayUtils.toPrimitive(yList));
     }
 
     private static double[][] pair(double[] arr1, double[] arr2) {
         double[][] paired = new double[arr1.length][2];
-        for(int i = 0 ; i < arr1.length ; i++) {
+        for (int i = 0; i < arr1.length; i++) {
             paired[i][0] = arr1[i];
             paired[i][1] = arr2[i];
         }
 
         return paired;
     }
-    
+
     private static String LeastSquareLine() {
         logger.debug("Running " + Constants.least);
 
         SimpleRegression sr = new SimpleRegression(true);
 
-        List<BigDecimal> x;
-        List<BigDecimal> y;
-        if(inputData != null && inputData.getNumberOfSamples() >= 2) {
-            try {
-                x = inputData.getSample(0).getDataAsBigDecimal();
-                y = inputData.getSample(1).getDataAsBigDecimal();
+        List<Double> x = inputData.getSample(0).getDataAsDouble();
+        List<Double> y = inputData.getSample(1).getDataAsDouble();
 
-            }
-            catch(IndexOutOfBoundsException e) {
-                logger.debug("Out of Bounds Exception");
-                return null;
-            }
-            Double[] xArray = x.stream().map(BigDecimal::doubleValue).toArray(Double[]::new);
-            Double[] yArray = y.stream().map(BigDecimal::doubleValue).toArray(Double[]::new);
+        Double[] xArray = x.toArray(Double[]::new);
+        Double[] yArray = y.toArray(Double[]::new);
 
-            double[][] xyArray = pair(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
-            logger.debug("Operating on: " + Arrays.deepToString(xyArray));
-            sr.addData(xyArray);
+        double[][] xyArray = pair(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
+        logger.debug("Operating on: " + Arrays.deepToString(xyArray));
+        sr.addData(xyArray);
 
-            return "Y=" + sr.getIntercept() + "+" + sr.getSlope() + "X";
-        }
-        return null;
+        return "Y=" + sr.getIntercept() + "+" + sr.getSlope() + "X";
     }
-    
-    private static BigDecimal Mean() {
+
+    private static Double Mean() {
         logger.debug("Running " + Constants.mean);
-        if(inputData.getSize() >= 1) {
-            List<BigDecimal> data = inputData.getAllDataAsDouble();
-            if (inputData.getSize() != 0 && !data.isEmpty()) {
-                return data.stream()
-                        .reduce(BigDecimal.ZERO, BigDecimal::add)
-                        .divide(BigDecimal
-                                .valueOf(inputData.getSize()), RoundingMode.HALF_UP);
-            }
-        }
-        return null;
+        List<Double> data = inputData.getAllDataAsDouble();
+        return data.stream()
+                .mapToDouble(d -> d)
+                .sum()
+                / inputData.getSize();
     }
-    
-    private static BigDecimal Median() {
+
+    private static Double Median() {
         logger.debug("Running " + Constants.median);
-        if(inputData.getSize() > 0 && !inputData.getAllDataAsDouble().isEmpty()) {
-            List<BigDecimal> inputCopy = inputData.getAllDataAsDouble().stream().sorted(Comparator.naturalOrder()).toList();
+        if (inputData.getSize() > 0 && !inputData.getAllDataAsDouble().isEmpty()) {
+            List<Double> inputCopy = inputData.getAllDataAsDouble().stream().sorted(Comparator.naturalOrder()).toList();
 
             return inputCopy.get(BigDecimal.valueOf(inputCopy.size() / 2).setScale(0, RoundingMode.HALF_UP).intValue());
         }
         return null;
     }
-    
-    private static BigDecimal Mode() {
+
+    private static List<Double> Mode() {
         logger.debug("Running " + Constants.mode);
-        HashMap<BigDecimal, Integer> map = new HashMap<>();
-        BigDecimal result = BigDecimal.valueOf(-9999), max = BigDecimal.ONE;
-        for (BigDecimal arrayItem : inputData.getAllDataAsDouble()) {
+        Double[] values = inputData.getAllDataAsDouble().toArray(Double[]::new);
+
+        return Arrays.stream(StatUtils.mode(ArrayUtils.toPrimitive(values))).boxed().toList();
+
+        /*HashMap<Double, Integer> map = new HashMap<>();
+        double result = -9999.0, max = 1.0;
+        for (Double arrayItem : inputData.getAllDataAsDouble()) {
             if (map.putIfAbsent(arrayItem, 1) != null) {
                 int count = map.get(arrayItem) + 1;
                 map.put(arrayItem, count);
-                if (count > max.doubleValue()) {
-                    max = BigDecimal.valueOf(count);
+                if (count > max) {
+                    max = (double) count;
                     result = arrayItem;
                 }
             }
         }
-        return !BigDecimal.valueOf(-9999).equals(result) ? result : null;
+        return !Double.valueOf(-9999).equals(result) ? result : null;*/
     }
-    
-    private static BigDecimal Percentiles() {
+
+    private static Double Percentiles() {
         logger.debug("Running " + Constants.percentiles);
 
-        List<BigDecimal> data = inputData.getAllDataAsDouble();
+        Percentile p = new Percentile();
+        p.setData(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
+
+
+
+        /*List<Double> data = inputData.getAllDataAsDouble();
         Collections.sort(data);
 
-        int n = data.size();
+        int n = data.size();*/
         double x = Double.parseDouble(Expressions.getArgument("x"));
 
-        double px = (x*(n+1))/100;
+        /*double px = (x*(n+1))/100;
         px = Math.round(px);
-        return data.get((int)px-1);
+
+        return data.get((int)px-1);*/
+
+        return p.evaluate(x);
     }
-    
-    private static Object ProbabilityDistribution() {
+
+    private static Double ProbabilityDistribution() {
         logger.debug("Running " + Constants.probability);
-        return null;
+        Double mean = Mean();
+        Double std = StandardDeviation();
+        NormalDistribution nd = new NormalDistribution(mean, std);
+
+        double x = Double.parseDouble(Expressions.getArgument("x"));
+
+        return nd.density(x);
     }
-    
-    private static Object RankSum() {
+
+    private static Double RankSum() {
         logger.debug("Running " + Constants.rank);
-        return null;
+
+        MannWhitneyUTest mwut = new MannWhitneyUTest();
+        Double[] xList = inputData.getSample(0).getDataAsDouble().toArray(Double[]::new);
+        Double[] yList = inputData.getSample(1).getDataAsDouble().toArray(Double[]::new);
+
+        return mwut.mannWhitneyUTest(ArrayUtils.toPrimitive(xList), ArrayUtils.toPrimitive(yList));
     }
-    
+
     private static String SignTest() {
         logger.debug("Running " + Constants.sign);
 
         StringBuilder result = new StringBuilder();
-        List<BigDecimal> x;
-        List<BigDecimal> y;
+        List<Double> x;
+        List<Double> y;
         if (inputData != null && inputData.getNumberOfSamples() >= 2) {
             try {
-                x = inputData.getSample(0).getDataAsBigDecimal();
-                y = inputData.getSample(1).getDataAsBigDecimal();
+                x = inputData.getSample(0).getDataAsDouble();
+                y = inputData.getSample(1).getDataAsDouble();
 
             } catch (IndexOutOfBoundsException e) {
                 logger.debug("Out of Bounds Exception");
@@ -180,17 +203,17 @@ public class Measures {
 
             int size = Math.min(x.size(), y.size());
 
-            for(int i = 0; i < size; i++){
-                BigDecimal a = x.get(i);
-                BigDecimal b = y.get(i);
+            for (int i = 0; i < size; i++) {
+                Double a = x.get(i);
+                Double b = y.get(i);
 
                 result.append(a).append(", ").append(b).append(", ");
 
-                if(a.compareTo(b) < 0){
+                if (a.compareTo(b) < 0) {
                     result.append("-");
-                }else if(a.compareTo(b) > 0){
+                } else if (a.compareTo(b) > 0) {
                     result.append("+");
-                }else{
+                } else {
                     result.append("N/A");
                 }
 
@@ -200,59 +223,94 @@ public class Measures {
 
         return result.toString();
     }
-    
-    private static Object SpearmanRank() {
+
+    private static Double SpearmanRank() {
         logger.debug("Running " + Constants.spearman);
-        return null;
+
+        Double[] xList = inputData.getSample(0).getDataAsDouble().toArray(Double[]::new);
+        Double[] yList = inputData.getSample(1).getDataAsDouble().toArray(Double[]::new);
+
+        SpearmansCorrelation sc = new SpearmansCorrelation();
+        return sc.correlation(ArrayUtils.toPrimitive(xList), ArrayUtils.toPrimitive(yList));
     }
-    
-    private static BigDecimal StandardDeviation() {
+
+    private static Double StandardDeviation() {
         logger.debug("Running " + Constants.std);
-        Variance vnc = new Variance();
-        BigDecimal variance = Measures.Variance();
-        assert variance != null;
-        return variance.sqrt(new MathContext(10, RoundingMode.HALF_UP));
+
+        //Double variance = Measures.Variance();
+
+        StandardDeviation std = new StandardDeviation();
+        std.setData(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
+        return std.evaluate();
+
+        /*assert variance != null;
+        return Math.sqrt(variance);*/
     }
-    
-    private static BigDecimal Variance() {
+
+    private static Double Variance() {
         logger.debug("Running " + Constants.variance);
+
+        Variance v = new Variance();
+
+        v.setData(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
+
+        return v.evaluate();
         
-        BigDecimal mean = Measures.Mean();
+        /*Double mean = Measures.Mean();
         if(mean != null) {
             return inputData.getAllDataAsDouble()
                     .stream()
-                    .map(d -> BigDecimal.valueOf(Math.pow(d.subtract(mean).doubleValue(), 2)))
-                    .reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(inputData.getSize() - 1), RoundingMode.HALF_UP);
+                    .map(d -> BigDecimal.valueOf(Math.pow(d - mean, 2)))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(inputData.getSize() - 1), RoundingMode.HALF_UP).doubleValue();
         }
-        return null;
+        return null;*/
     }
 
     public static boolean isValidFor(String measure) {
+        if (inputData != null) {
             return switch (measure) {
-                case Constants.binomial, Constants.chi, Constants.coefficient, Constants.mean, Constants.median, Constants.mode, Constants.percentiles, Constants.std, Constants.variance -> {
+                case Constants.binomial -> {
+                    yield Measures.inputData.getSize() >= 1 && Expressions.ensureArgument("n") && Expressions.ensureArgument("p");
+                }
+                case Constants.variance, Constants.std, Constants.mode, Constants.median, Constants.mean, Constants.coefficient -> {
                     yield Measures.inputData.getSize() >= 1;
                 }
-                case Constants.correlation -> {
-                    yield Measures.inputData.getSize() >= 0;
+                case Constants.percentiles -> {
+                    yield Measures.inputData.getSize() >= 1 && Expressions.ensureArgument("x");
                 }
-                case Constants.least, Constants.rank, Constants.sign -> {
+                case Constants.chi -> {
+                    yield Measures.inputData.getSize() >= 2;
+                }
+                case Constants.correlation -> {
+                    yield Measures.inputData.getSize() >= 2;
+                }
+                case Constants.least -> {
+                    yield Measures.inputData.getSize() >= 2;
+                }
+                case Constants.rank -> {
+                    yield Measures.inputData.getSize() >= 2;
+                }
+                case Constants.sign -> {
                     yield Measures.inputData.getSize() >= 2;
                 }
                 case Constants.probability -> {
-                    yield Measures.inputData.getSize() >= -1;
+                    yield Measures.inputData.getSize() >= 1 && Expressions.ensureArgument("x");
                 }
                 case Constants.spearman -> {
-                    yield Measures.inputData.getSize() >= -2;
+                    yield Measures.inputData.getSize() >= 2;
                 }
                 default -> {
                     logger.error("Requested measure unsupported");
                     yield false;
                 }
             };
+        }
+        logger.error("DataSet not loaded");
+        return false;
     }
-    
+
     public static Object run(String measure) {
-        if(isValidFor(measure)) {
+        if (isValidFor(measure)) {
             return switch (measure) {
                 case Constants.binomial -> Binomial();
                 case Constants.chi -> ChiSquare();
@@ -280,7 +338,7 @@ public class Measures {
     }
 
     public static Class<?> getReturnType(String measure) {
-        return switch(measure) {
+        return switch (measure) {
             case Constants.binomial -> {
                 try {
                     yield Measures.class.getDeclaredMethod("Binomial").getReturnType();

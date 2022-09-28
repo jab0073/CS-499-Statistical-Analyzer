@@ -5,7 +5,6 @@ import Validators.DataValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -63,14 +62,14 @@ public class Sample implements Cloneable{
      *
      * @return A list of BigDecimal objects.
      */
-    public List<BigDecimal> getDataAsBigDecimal() {
+    public List<Double> getDataAsDouble() {
         if(Expressions.isEvaluationOn()) {
             return Expressions.eval(this);
         }
         else {
             return data.stream().map(s -> {
                 try {
-                    return new BigDecimal(s);
+                    return Double.parseDouble(s);
                 } catch (NumberFormatException e) {
                     return null;
                 }

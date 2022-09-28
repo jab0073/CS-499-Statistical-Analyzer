@@ -68,8 +68,8 @@ public class DataSet implements Cloneable{
         throw new IndexOutOfBoundsException();
     }
 
-    public List<BigDecimal> getAllDataAsDouble() {
-        return this.samples.stream().map(Sample::getDataAsBigDecimal).toList().stream().flatMap(List::stream).collect(Collectors.toList());
+    public List<Double> getAllDataAsDouble() {
+        return this.samples.stream().map(Sample::getDataAsDouble).toList().stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
     public int getSize() {

@@ -15,15 +15,15 @@ import java.util.List;
  * Formula: Px = [x(n+1)]/100
  */
 @Deprecated
-public class Percentiles implements IMeasure<BigDecimal> {
+public class Percentiles implements IMeasure<Double> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
     private final String name = Constants.percentiles;
     public final int minimumSamples = 1;
     @Override
-    public BigDecimal function(DataSet inputData) {
+    public Double function(DataSet inputData) {
         logger.debug("Running " + name);
 
-        List<BigDecimal> data = inputData.getAllDataAsDouble();
+        List<Double> data = inputData.getAllDataAsDouble();
         Collections.sort(data);
 
         int n = data.size();

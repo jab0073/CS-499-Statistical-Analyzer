@@ -13,22 +13,22 @@ import java.util.List;
  * Measure to calculate Mean
  */
 @Deprecated
-public class Mean implements IMeasure<BigDecimal> {
+public class Mean implements IMeasure<Double> {
     private static final Logger logger = LogManager.getLogger(IMeasure.class.getName());
 
     public int minimumSamples = 1;
 
     @Override
-    public BigDecimal function(DataSet inputData) {
+    public Double function(DataSet inputData) {
         String name = Constants.mean;
         logger.debug("Running " + name);
         if(inputData.getSize() >= minimumSamples) {
-            List<BigDecimal> data = inputData.getAllDataAsDouble();
+            List<Double> data = inputData.getAllDataAsDouble();
             if (inputData.getSize() != 0 && !data.isEmpty()) {
                 return data.stream()
-                        .reduce(BigDecimal.ZERO, BigDecimal::add)
-                        .divide(BigDecimal
-                                .valueOf(inputData.getSize()), RoundingMode.HALF_UP);
+                        .mapToDouble(d->d)
+                        .sum()
+                        / inputData.getSize();
             }
         }
         return null;

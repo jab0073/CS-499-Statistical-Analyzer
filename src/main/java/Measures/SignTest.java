@@ -20,12 +20,12 @@ public class SignTest implements IMeasure<String> {
         logger.debug("Running " + name);
 
         StringBuilder result = new StringBuilder();
-        List<BigDecimal> x;
-        List<BigDecimal> y;
+        List<Double> x;
+        List<Double> y;
         if (inputData != null && inputData.getNumberOfSamples() >= 2) {
             try {
-                x = inputData.getSample(0).getDataAsBigDecimal();
-                y = inputData.getSample(1).getDataAsBigDecimal();
+                x = inputData.getSample(0).getDataAsDouble();
+                y = inputData.getSample(1).getDataAsDouble();
 
             } catch (IndexOutOfBoundsException e) {
                 logger.debug("Out of Bounds Exception");
@@ -35,8 +35,8 @@ public class SignTest implements IMeasure<String> {
             int size = Math.min(x.size(), y.size());
 
             for(int i = 0; i < size; i++){
-                BigDecimal a = x.get(i);
-                BigDecimal b = y.get(i);
+                Double a = x.get(i);
+                Double b = y.get(i);
 
                 result.append(a).append(", ").append(b).append(", ");
 
