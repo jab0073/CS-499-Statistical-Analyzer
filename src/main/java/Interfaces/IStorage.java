@@ -19,5 +19,5 @@ public interface IStorage {
 
     File getFile(String fileID, String folder);
 
-    boolean deleteFile(String fileID, String folder, boolean softDelete);
+    boolean deleteFile(String fileID, String folder);
 }

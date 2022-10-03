@@ -51,7 +51,6 @@ public class FileSystemRepository implements IStorage {
 
     @Override
     public List<UserDefinedMeasure> loadUserDefinedMeasures(String folder) {
-        Gson gson = new Gson();
         try {
             return Files.list(Paths.get(folder))
                     .map(path -> {
@@ -86,7 +85,6 @@ public class FileSystemRepository implements IStorage {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -98,8 +96,8 @@ public class FileSystemRepository implements IStorage {
     }
 
     @Override
-    public boolean deleteFile(String fileID, String folder, boolean softDelete) {
-        Path p = Paths.get(folder + "/" + fileID + ".json"); // Removed version
+    public boolean deleteFile(String fileID, String folder) {
+        Path p = Paths.get(folder + "/" + fileID + ".json");
         if (Files.exists(p)) {
             try {
                 Files.delete(p);
@@ -110,5 +108,4 @@ public class FileSystemRepository implements IStorage {
         }
         return false;
     }
-
 }

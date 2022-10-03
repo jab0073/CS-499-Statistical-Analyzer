@@ -49,7 +49,7 @@ public class Main {
 
         Object output = Measures.run(testMeasure);*/
 
-        UserDefinedMeasure udm = new UserDefinedMeasure();
+        UserDefinedMeasure udm;
 
         udm = RepositoryManager.getUserDefinedMeasure("TEST");
 

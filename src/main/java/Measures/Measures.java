@@ -3,6 +3,7 @@ package Measures;
 import BackEndUtilities.MeasureConstants;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
+import Respository.RepositoryManager;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.distribution.BinomialDistribution;
 import org.apache.commons.math3.distribution.ChiSquaredDistribution;
@@ -262,6 +263,9 @@ public class Measures {
                     yield Measures.inputData.getNumberOfSamples() >= 2;
                 }
                 default -> {
+                    if(RepositoryManager.hasUserDefinedMeasure(measure)) {
+                        yield true;
+                    }
                     logger.error("Invalid measure passed to isValidFor: " + measure);
                     yield false;
                 }
@@ -290,6 +294,10 @@ public class Measures {
                 case MeasureConstants.std -> StandardDeviation();
                 case MeasureConstants.variance -> Variance();
                 default -> {
+                    if (RepositoryManager.hasUserDefinedMeasure(measure)) {
+                        UserDefinedMeasure udm = RepositoryManager.getUserDefinedMeasure(measure);
+                        yield udm.run();
+                    }
                     logger.error("Invalid measure passed to run:" + measure);
                     yield null;
                 }

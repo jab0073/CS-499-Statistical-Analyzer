@@ -47,7 +47,7 @@ public class RepositoryManager {
     }
 
     public static boolean hasUserDefinedMeasure(String name) {
-        return loadedUserDefinedMeasures.stream().map(udm -> udm.getName().equalsIgnoreCase(name)).findAny().isEmpty();
+        return loadedUserDefinedMeasures.stream().map(udm -> udm.getName().equalsIgnoreCase(name)).findAny().isPresent();
     }
 
     public static UserDefinedMeasure putUserDefinedMeasure(UserDefinedMeasure udm, String name) {
@@ -67,16 +67,10 @@ public class RepositoryManager {
         return UserSettings.getWorkingDirectory() + "/" + Constants.MAIN_FOLDER + "/" + Constants.UDM_FOLDER;
     }
 
-    public static UserDefinedMeasure getUserDefinedMeasureByName (String name){
-        return  loadedUserDefinedMeasures.stream().filter(udm-> udm.getName().trim().equalsIgnoreCase(name))
-                .findFirst()
-                .orElse(null);
-    }
-
     public static void deleteUserDefinedName(String name) {
         UserDefinedMeasure udm = getUserDefinedMeasure(name);
         if (udm != null && udm.getExpression() != null){
-            storage.deleteFile(name, getUDMFolderPath(),  true);
+            storage.deleteFile(name, getUDMFolderPath());
             loadedUserDefinedMeasures.remove(udm);
         }
     }
