@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class FileSystemRepository implements IStorage {
@@ -55,11 +56,14 @@ public class FileSystemRepository implements IStorage {
             return Files.list(Paths.get(folder))
                     .map(path->{
                         try {
-                            return gson.fromJson(new JsonReader(new FileReader(path.toString())), UserDefinedMeasure.class);
+                            if(path.toString().toLowerCase().endsWith(".json"))
+                                return gson.fromJson(new JsonReader(new FileReader(path.toString())), UserDefinedMeasure.class);
+                            return null;
                         } catch (FileNotFoundException e) {
                             throw new RuntimeException(e);
                         }
-                    }).map(o -> (UserDefinedMeasure) o)
+                    }).filter(Objects::nonNull)
+                    .map(o -> (UserDefinedMeasure) o)
                     .collect(Collectors.toList());
         } catch (Exception e) {
             e.printStackTrace();

@@ -22,14 +22,15 @@ public class Main {
         UserSettings.setWorkingDirectory("/Users/justin/Desktop/SA/");
 
         RepositoryManager.init();
+        RepositoryManager.getAllUserDefinedMeasures().forEach(m->System.out.println(m.getName()));
 
-        String inputTestCSV = "/Users/justin/Desktop/test.csv";
+        // String inputTestCSV = "/Users/justin/Desktop/test.csv";
 
-        //dt = UIServices.fromCSV("Sample Table", inputTestCSV);
+        // dt = UIServices.fromCSV("Sample Table", inputTestCSV);
 
-        //Sample sample = new Sample("1+n", "6000*p", "5+p*100000/n");
-        //assert dt != null;
-        //List<Sample> ls = dt.getRows().stream().map(Row::toSample).toList();//new DataSet();
+        // Sample sample = new Sample("1+n", "6000*p", "5+p*100000/n");
+        // assert dt != null;
+        // List<Sample> ls = dt.getRows().stream().map(Row::toSample).toList();//new DataSet();
 
         DataSet ds = new DataSet();
         //ls.forEach(ds::addSample);
@@ -50,11 +51,11 @@ public class Main {
 
         UserDefinedMeasure udm = new UserDefinedMeasure();
 
-        udm = RepositoryManager.getUserDefinedMeasure("TEST"); //UserDefinedMeasure.loadFromFile("/Users/justin/Desktop/square.json");
+        udm = RepositoryManager.getUserDefinedMeasure("TEST");
 
-        udm.setName("TEST");
-        udm.setDataVariable("x");
-        udm.setExpression("x*x/n");
+        //udm.setName("TEST");
+        //udm.setDataVariable("x");
+        //udm.setExpression("x*x/n");
         double result = udm.run();
 
         System.out.println(result);
