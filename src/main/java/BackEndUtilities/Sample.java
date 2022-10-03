@@ -1,10 +1,15 @@
 package BackEndUtilities;
 
 import Interfaces.IValidator;
+import Measures.Measures;
 import Validators.DataValidator;
+import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -134,6 +139,21 @@ public class Sample implements Cloneable{
 
     public boolean validate() {
         return DataValidator.validate(this);
+    }
+
+    public boolean save(String fileName) {
+        Gson gson = new Gson();
+        try {
+            Writer writer = new FileWriter(fileName);
+            gson.toJson(this, writer);
+            writer.flush();
+            writer.close();
+            Measures.getLogger().debug("Sample written to " + fileName);
+            return true;
+        } catch (IOException e) {
+            Measures.getLogger().error("Sample failed to write to " + fileName);
+            return false;
+        }
     }
 
     @Override

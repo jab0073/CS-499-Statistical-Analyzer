@@ -10,7 +10,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
@@ -36,40 +35,20 @@ public class Main {
         //ls.forEach(ds::addSample);
         ds.addSample(new Sample(1.0,2.0,100.0,35.0,7.0,12.5));
 
+        ds.save("/Users/justin/Desktop/SA/Analysis/testDS.json");
+
         Expressions.disableEvaluation();
 
         Arrays.asList("n=20000", "p=.5").forEach(a->Expressions.addArgument(a.split("=")[0], a.split("=")[1]));
 
-        //ds.addSample(sample);
-
         Measures.setInputData(ds);
-        /*String testMeasure = Constants.mode;
 
 
+        UserDefinedMeasure udm = RepositoryManager.getUserDefinedMeasure("TEST3");
 
-        Object output = Measures.run(testMeasure);*/
+        Double output = (Double) Measures.run("TEST3");
 
-        UserDefinedMeasure udm;
-
-        udm = RepositoryManager.getUserDefinedMeasure("TEST");
-
-        //udm.setName("TEST");
-        //udm.setDataVariable("x");
-        //udm.setExpression("x*x/n");
-        double result = udm.run();
-
-        System.out.println(result);
-
-        //RepositoryManager.putUserDefinedMeasure(udm, udm.getName());
-
-        //udm.saveToFile("/Users/justin/Desktop/square.json");
-
-        //BigDecimal output = (BigDecimal) FunctionCaller.measureRunner(testMeasure, ds);
-
-        //List<BigDecimal> value = Expressions.eval(ds);
-        //value.sort(Comparator.naturalOrder());
-        //value.forEach(System.out::println);
-        //System.out.println(testMeasure + ": " + output);
+        System.out.println("TEST3: " + output);
         logger.debug("Leaving Main.");
     }
 }

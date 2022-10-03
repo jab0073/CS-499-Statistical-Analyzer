@@ -1,11 +1,16 @@
 package BackEndUtilities;
 
 import Interfaces.IValidator;
+import Measures.Measures;
 import TableUtilities.DataTable;
 import Validators.DataValidator;
+import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,6 +111,21 @@ public class DataSet implements Cloneable{
             ds.addSample(s);
         });
         return ds;
+    }
+
+    public boolean save(String fileName) {
+        Gson gson = new Gson();
+        try {
+            Writer writer = new FileWriter(fileName);
+            gson.toJson(this, writer);
+            writer.flush();
+            writer.close();
+            Measures.getLogger().debug("DataSet written to " + fileName);
+            return true;
+        } catch (IOException e) {
+            Measures.getLogger().error("DataSet failed to write to " + fileName);
+            return false;
+        }
     }
 
     public boolean validate() {
