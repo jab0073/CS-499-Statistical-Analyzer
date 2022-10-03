@@ -1,6 +1,7 @@
 import BackEndUtilities.*;
 import Interop.UIServices;
 import Measures.Measures;
+import Measures.UserDefinedMeasure;
 import TableUtilities.DataTable;
 import TableUtilities.Row;
 import org.apache.logging.log4j.LogManager;
@@ -18,14 +19,15 @@ public class Main {
 
         String inputTestCSV = "/Users/justin/Desktop/test.csv";
 
-        dt = UIServices.fromCSV("Sample Table", inputTestCSV);
+        //dt = UIServices.fromCSV("Sample Table", inputTestCSV);
 
         //Sample sample = new Sample("1+n", "6000*p", "5+p*100000/n");
-        assert dt != null;
-        List<Sample> ls = dt.getRows().stream().map(Row::toSample).toList();//new DataSet();
+        //assert dt != null;
+        //List<Sample> ls = dt.getRows().stream().map(Row::toSample).toList();//new DataSet();
 
         DataSet ds = new DataSet();
-        ls.forEach(ds::addSample);
+        //ls.forEach(ds::addSample);
+        ds.addSample(new Sample(1.0,2.0,100.0,35.0,7.0,12.5));
 
         Expressions.disableEvaluation();
 
@@ -33,18 +35,32 @@ public class Main {
 
         //ds.addSample(sample);
 
-        String testMeasure = Constants.mode;
-
         Measures.setInputData(ds);
+        /*String testMeasure = Constants.mode;
 
-        Object output = Measures.run(testMeasure);
+
+
+        Object output = Measures.run(testMeasure);*/
+
+        UserDefinedMeasure udm = new UserDefinedMeasure();
+
+        //udm = UserDefinedMeasure.loadFromFile("/Users/justin/Desktop/square.json");
+
+        udm.setName("TEST");
+        udm.setDataVariable("x");
+        udm.setExpression("x*x/n");
+        double result = udm.run();
+
+        System.out.println(result);
+
+        udm.saveToFile("/Users/justin/Desktop/square.json");
 
         //BigDecimal output = (BigDecimal) FunctionCaller.measureRunner(testMeasure, ds);
 
         //List<BigDecimal> value = Expressions.eval(ds);
         //value.sort(Comparator.naturalOrder());
         //value.forEach(System.out::println);
-        System.out.println(testMeasure + ": " + output);
+        //System.out.println(testMeasure + ": " + output);
         logger.debug("Leaving Main.");
     }
 }

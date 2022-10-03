@@ -12,14 +12,13 @@ import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.commons.math3.stat.descriptive.moment.Variance;
+import org.apache.commons.math3.stat.descriptive.rank.Median;
 import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 
 public class Measures {
@@ -108,21 +107,15 @@ public class Measures {
 
     private static Double Mean() {
         logger.debug("Running " + Constants.mean);
-        List<Double> data = inputData.getAllDataAsDouble();
-        return data.stream()
-                .mapToDouble(d -> d)
-                .sum()
-                / inputData.getSize();
+        Double[] values = inputData.getAllDataAsDouble().toArray(Double[]::new);
+        return StatUtils.mean(ArrayUtils.toPrimitive(values));
     }
 
     private static Double Median() {
         logger.debug("Running " + Constants.median);
-        if (inputData.getSize() > 0 && !inputData.getAllDataAsDouble().isEmpty()) {
-            List<Double> inputCopy = inputData.getAllDataAsDouble().stream().sorted(Comparator.naturalOrder()).toList();
-
-            return inputCopy.get(BigDecimal.valueOf(inputCopy.size() / 2).setScale(0, RoundingMode.HALF_UP).intValue());
-        }
-        return null;
+        Median median = new Median();
+        median.setData(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
+        return median.evaluate();
     }
 
     private static List<Double> Mode() {
@@ -130,20 +123,6 @@ public class Measures {
         Double[] values = inputData.getAllDataAsDouble().toArray(Double[]::new);
 
         return Arrays.stream(StatUtils.mode(ArrayUtils.toPrimitive(values))).boxed().toList();
-
-        /*HashMap<Double, Integer> map = new HashMap<>();
-        double result = -9999.0, max = 1.0;
-        for (Double arrayItem : inputData.getAllDataAsDouble()) {
-            if (map.putIfAbsent(arrayItem, 1) != null) {
-                int count = map.get(arrayItem) + 1;
-                map.put(arrayItem, count);
-                if (count > max) {
-                    max = (double) count;
-                    result = arrayItem;
-                }
-            }
-        }
-        return !Double.valueOf(-9999).equals(result) ? result : null;*/
     }
 
     private static Double Percentiles() {
@@ -151,17 +130,7 @@ public class Measures {
 
         Percentile p = new Percentile();
         p.setData(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
-
-        /*List<Double> data = inputData.getAllDataAsDouble();
-        Collections.sort(data);
-
-        int n = data.size();*/
         double x = Double.parseDouble(Expressions.getArgument("x"));
-
-        /*double px = (x*(n+1))/100;
-        px = Math.round(px);
-
-        return data.get((int)px-1);*/
 
         return p.evaluate(x);
     }
@@ -442,5 +411,9 @@ public class Measures {
                 yield null;
             }
         };
+    }
+
+    public static Logger getLogger() {
+        return logger;
     }
 }

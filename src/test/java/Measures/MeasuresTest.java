@@ -18,8 +18,8 @@ public class MeasuresTest {
     @Before
     public void setup() {
         ds = new DataSet();
-        ds.addSample(new Sample(1.0, 2.0, 3.0, 5.0, 100.0, 3000.0));
-        ds.addSample(new Sample(12.0, 54.0, 100.0, 7.0, 13.0, 99.9));
+        ds.addSample(new Sample(1.0, 2.0, 3.0, 4.0, 5.0, 6.0));
+        ds.addSample(new Sample(2.0, 3.0, 4.0, 5.0, 6.0, 7.0));
         Expressions.addArgument("n", "10");
         Expressions.addArgument("p", "0.6");
         Expressions.addArgument("x", "80");
