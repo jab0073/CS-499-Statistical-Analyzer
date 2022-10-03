@@ -1,6 +1,6 @@
 package Measures;
 
-import BackEndUtilities.Constants;
+import BackEndUtilities.MeasureConstants;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import org.apache.commons.lang3.ArrayUtils;
@@ -40,7 +40,7 @@ public class Measures {
     }
 
     private static List<Double> Binomial() {
-        logger.debug("Running " + Constants.binomial);
+        logger.debug("Running " + MeasureConstants.binomial);
 
         int n = Integer.parseInt(Expressions.getArgument("n"));
 
@@ -52,7 +52,7 @@ public class Measures {
     }
 
     private static List<Double> ChiSquare() {
-        logger.debug("Running " + Constants.chi);
+        logger.debug("Running " + MeasureConstants.chi);
 
         double dof = Double.parseDouble(Expressions.getArgument("d"));
 
@@ -62,14 +62,14 @@ public class Measures {
     }
 
     private static Double CoefficientOfVariance() {
-        logger.debug("Running " + Constants.coefficient);
+        logger.debug("Running " + MeasureConstants.coefficient);
         Double stddiv = StandardDeviation();
         Double mean = Mean();
         return (stddiv / mean) * (100.0);
     }
 
     private static Object CorrelationCoefficient() {
-        logger.debug("Running " + Constants.correlation);
+        logger.debug("Running " + MeasureConstants.correlation);
         PearsonsCorrelation pc = new PearsonsCorrelation();
 
         Double[] xList = inputData.getSample(0).getDataAsDouble().toArray(Double[]::new);
@@ -88,7 +88,7 @@ public class Measures {
     }
 
     private static String LeastSquareLine() {
-        logger.debug("Running " + Constants.least);
+        logger.debug("Running " + MeasureConstants.least);
 
         SimpleRegression sr = new SimpleRegression(true);
 
@@ -106,27 +106,27 @@ public class Measures {
     }
 
     private static Double Mean() {
-        logger.debug("Running " + Constants.mean);
+        logger.debug("Running " + MeasureConstants.mean);
         Double[] values = inputData.getAllDataAsDouble().toArray(Double[]::new);
         return StatUtils.mean(ArrayUtils.toPrimitive(values));
     }
 
     private static Double Median() {
-        logger.debug("Running " + Constants.median);
+        logger.debug("Running " + MeasureConstants.median);
         Median median = new Median();
         median.setData(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
         return median.evaluate();
     }
 
     private static List<Double> Mode() {
-        logger.debug("Running " + Constants.mode);
+        logger.debug("Running " + MeasureConstants.mode);
         Double[] values = inputData.getAllDataAsDouble().toArray(Double[]::new);
 
         return Arrays.stream(StatUtils.mode(ArrayUtils.toPrimitive(values))).boxed().toList();
     }
 
     private static Double Percentiles() {
-        logger.debug("Running " + Constants.percentiles);
+        logger.debug("Running " + MeasureConstants.percentiles);
 
         Percentile p = new Percentile();
         p.setData(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
@@ -136,7 +136,7 @@ public class Measures {
     }
 
     private static Double ProbabilityDistribution() {
-        logger.debug("Running " + Constants.probability);
+        logger.debug("Running " + MeasureConstants.probability);
         Double mean = Mean();
         Double std = StandardDeviation();
         NormalDistribution nd = new NormalDistribution(mean, std);
@@ -147,7 +147,7 @@ public class Measures {
     }
 
     private static Double RankSum() {
-        logger.debug("Running " + Constants.rank);
+        logger.debug("Running " + MeasureConstants.rank);
 
         MannWhitneyUTest mwut = new MannWhitneyUTest();
         Double[] xList = inputData.getSample(0).getDataAsDouble().toArray(Double[]::new);
@@ -157,7 +157,7 @@ public class Measures {
     }
 
     private static String SignTest() {
-        logger.debug("Running " + Constants.sign);
+        logger.debug("Running " + MeasureConstants.sign);
 
         StringBuilder result = new StringBuilder();
         List<Double> x;
@@ -196,7 +196,7 @@ public class Measures {
     }
 
     private static Double SpearmanRank() {
-        logger.debug("Running " + Constants.spearman);
+        logger.debug("Running " + MeasureConstants.spearman);
 
         Double[] xList = inputData.getSample(0).getDataAsDouble().toArray(Double[]::new);
         Double[] yList = inputData.getSample(1).getDataAsDouble().toArray(Double[]::new);
@@ -206,7 +206,7 @@ public class Measures {
     }
 
     private static Double StandardDeviation() {
-        logger.debug("Running " + Constants.std);
+        logger.debug("Running " + MeasureConstants.std);
 
         StandardDeviation std = new StandardDeviation();
         std.setData(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
@@ -215,7 +215,7 @@ public class Measures {
     }
 
     private static Double Variance() {
-        logger.debug("Running " + Constants.variance);
+        logger.debug("Running " + MeasureConstants.variance);
 
         Variance v = new Variance();
 
@@ -231,34 +231,34 @@ public class Measures {
         if (inputData != null) {
             logger.debug("DataSet is not null and has " + inputData.getNumberOfSamples() + " data points");
             return switch (measure) {
-                case Constants.binomial -> {
+                case MeasureConstants.binomial -> {
                     yield Measures.inputData.getNumberOfSamples() >= 1 && Expressions.ensureArgument("n") && Expressions.ensureArgument("p");
                 }
-                case Constants.variance, Constants.std, Constants.mode, Constants.median, Constants.mean, Constants.coefficient -> {
+                case MeasureConstants.variance, MeasureConstants.std, MeasureConstants.mode, MeasureConstants.median, MeasureConstants.mean, MeasureConstants.coefficient -> {
                     yield Measures.inputData.getNumberOfSamples() >= 1;
                 }
-                case Constants.percentiles -> {
+                case MeasureConstants.percentiles -> {
                     yield Measures.inputData.getNumberOfSamples() >= 1 && Expressions.ensureArgument("x");
                 }
-                case Constants.chi -> {
+                case MeasureConstants.chi -> {
                     yield Measures.inputData.getNumberOfSamples() >= 2 && Expressions.ensureArgument("d");
                 }
-                case Constants.correlation -> {
+                case MeasureConstants.correlation -> {
                     yield Measures.inputData.getNumberOfSamples() >= 2;
                 }
-                case Constants.least -> {
+                case MeasureConstants.least -> {
                     yield Measures.inputData.getNumberOfSamples() >= 2;
                 }
-                case Constants.rank -> {
+                case MeasureConstants.rank -> {
                     yield Measures.inputData.getNumberOfSamples() >= 2;
                 }
-                case Constants.sign -> {
+                case MeasureConstants.sign -> {
                     yield Measures.inputData.getNumberOfSamples() >= 2;
                 }
-                case Constants.probability -> {
+                case MeasureConstants.probability -> {
                     yield Measures.inputData.getNumberOfSamples() >= 1 && Expressions.ensureArgument("x");
                 }
-                case Constants.spearman -> {
+                case MeasureConstants.spearman -> {
                     yield Measures.inputData.getNumberOfSamples() >= 2;
                 }
                 default -> {
@@ -274,21 +274,21 @@ public class Measures {
     public static Object run(String measure) {
         if (isValidFor(measure)) {
             return switch (measure) {
-                case Constants.binomial -> Binomial();
-                case Constants.chi -> ChiSquare();
-                case Constants.coefficient -> CoefficientOfVariance();
-                case Constants.correlation -> CorrelationCoefficient();
-                case Constants.least -> LeastSquareLine();
-                case Constants.mean -> Mean();
-                case Constants.median -> Median();
-                case Constants.mode -> Mode();
-                case Constants.percentiles -> Percentiles();
-                case Constants.probability -> ProbabilityDistribution();
-                case Constants.rank -> RankSum();
-                case Constants.sign -> SignTest();
-                case Constants.spearman -> SpearmanRank();
-                case Constants.std -> StandardDeviation();
-                case Constants.variance -> Variance();
+                case MeasureConstants.binomial -> Binomial();
+                case MeasureConstants.chi -> ChiSquare();
+                case MeasureConstants.coefficient -> CoefficientOfVariance();
+                case MeasureConstants.correlation -> CorrelationCoefficient();
+                case MeasureConstants.least -> LeastSquareLine();
+                case MeasureConstants.mean -> Mean();
+                case MeasureConstants.median -> Median();
+                case MeasureConstants.mode -> Mode();
+                case MeasureConstants.percentiles -> Percentiles();
+                case MeasureConstants.probability -> ProbabilityDistribution();
+                case MeasureConstants.rank -> RankSum();
+                case MeasureConstants.sign -> SignTest();
+                case MeasureConstants.spearman -> SpearmanRank();
+                case MeasureConstants.std -> StandardDeviation();
+                case MeasureConstants.variance -> Variance();
                 default -> {
                     logger.error("Invalid measure passed to run:" + measure);
                     yield null;
@@ -301,105 +301,105 @@ public class Measures {
 
     public static Class<?> getReturnType(String measure) {
         return switch (measure) {
-            case Constants.binomial -> {
+            case MeasureConstants.binomial -> {
                 try {
                     yield Measures.class.getDeclaredMethod("Binomial").getReturnType();
                 } catch (NoSuchMethodException e) {
                     yield null;
                 }
             }
-            case Constants.chi -> {
+            case MeasureConstants.chi -> {
                 try {
                     yield Measures.class.getDeclaredMethod("ChiSquare").getReturnType();
                 } catch (NoSuchMethodException e) {
                     yield null;
                 }
             }
-            case Constants.coefficient -> {
+            case MeasureConstants.coefficient -> {
                 try {
                     yield Measures.class.getDeclaredMethod("CoefficientOfVariance").getReturnType();
                 } catch (NoSuchMethodException e) {
                     yield null;
                 }
             }
-            case Constants.correlation -> {
+            case MeasureConstants.correlation -> {
                 try {
                     yield Measures.class.getDeclaredMethod("CorrelationCoefficient").getReturnType();
                 } catch (NoSuchMethodException e) {
                     yield null;
                 }
             }
-            case Constants.least -> {
+            case MeasureConstants.least -> {
                 try {
                     yield Measures.class.getDeclaredMethod("LeastSquareLine").getReturnType();
                 } catch (NoSuchMethodException e) {
                     yield null;
                 }
             }
-            case Constants.mean -> {
+            case MeasureConstants.mean -> {
                 try {
                     yield Measures.class.getDeclaredMethod("Mean").getReturnType();
                 } catch (NoSuchMethodException e) {
                     yield null;
                 }
             }
-            case Constants.median -> {
+            case MeasureConstants.median -> {
                 try {
                     yield Measures.class.getDeclaredMethod("Median").getReturnType();
                 } catch (NoSuchMethodException e) {
                     yield null;
                 }
             }
-            case Constants.mode -> {
+            case MeasureConstants.mode -> {
                 try {
                     yield Measures.class.getDeclaredMethod("Mode").getReturnType();
                 } catch (NoSuchMethodException e) {
                     yield null;
                 }
             }
-            case Constants.percentiles -> {
+            case MeasureConstants.percentiles -> {
                 try {
                     yield Measures.class.getDeclaredMethod("Percentiles").getReturnType();
                 } catch (NoSuchMethodException e) {
                     yield null;
                 }
             }
-            case Constants.probability -> {
+            case MeasureConstants.probability -> {
                 try {
                     yield Measures.class.getDeclaredMethod("ProbabilityDistribution").getReturnType();
                 } catch (NoSuchMethodException e) {
                     yield null;
                 }
             }
-            case Constants.rank -> {
+            case MeasureConstants.rank -> {
                 try {
                     yield Measures.class.getDeclaredMethod("RankSum").getReturnType();
                 } catch (NoSuchMethodException e) {
                     yield null;
                 }
             }
-            case Constants.sign -> {
+            case MeasureConstants.sign -> {
                 try {
                     yield Measures.class.getDeclaredMethod("SignTest").getReturnType();
                 } catch (NoSuchMethodException e) {
                     yield null;
                 }
             }
-            case Constants.spearman -> {
+            case MeasureConstants.spearman -> {
                 try {
                     yield Measures.class.getDeclaredMethod("SpearmanRank").getReturnType();
                 } catch (NoSuchMethodException e) {
                     yield null;
                 }
             }
-            case Constants.std -> {
+            case MeasureConstants.std -> {
                 try {
                     yield Measures.class.getDeclaredMethod("StandardDeviation").getReturnType();
                 } catch (NoSuchMethodException e) {
                     yield null;
                 }
             }
-            case Constants.variance -> {
+            case MeasureConstants.variance -> {
                 try {
                     yield Measures.class.getDeclaredMethod("Variance").getReturnType();
                 } catch (NoSuchMethodException e) {

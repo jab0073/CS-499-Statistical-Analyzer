@@ -2,6 +2,8 @@ import BackEndUtilities.*;
 import Interop.UIServices;
 import Measures.Measures;
 import Measures.UserDefinedMeasure;
+import Respository.RepositoryManager;
+import Settings.UserSettings;
 import TableUtilities.DataTable;
 import TableUtilities.Row;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +18,10 @@ public class Main {
     public static void main(String[] args) {
         logger.debug("Starting Main.");
         DataTable dt;
+
+        UserSettings.setWorkingDirectory("/Users/justin/Desktop/SA/");
+
+        RepositoryManager.init();
 
         String inputTestCSV = "/Users/justin/Desktop/test.csv";
 
@@ -44,7 +50,7 @@ public class Main {
 
         UserDefinedMeasure udm = new UserDefinedMeasure();
 
-        //udm = UserDefinedMeasure.loadFromFile("/Users/justin/Desktop/square.json");
+        udm = RepositoryManager.getUserDefinedMeasure("TEST"); //UserDefinedMeasure.loadFromFile("/Users/justin/Desktop/square.json");
 
         udm.setName("TEST");
         udm.setDataVariable("x");
@@ -53,7 +59,9 @@ public class Main {
 
         System.out.println(result);
 
-        udm.saveToFile("/Users/justin/Desktop/square.json");
+        //RepositoryManager.putUserDefinedMeasure(udm, udm.getName());
+
+        //udm.saveToFile("/Users/justin/Desktop/square.json");
 
         //BigDecimal output = (BigDecimal) FunctionCaller.measureRunner(testMeasure, ds);
 
