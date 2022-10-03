@@ -21,7 +21,7 @@ public class FileSystemRepository implements IStorage {
     @Override
     public boolean put(UserDefinedMeasure udm, String folder) {
         ensurePath(folder);
-        Path targetName=getFileName(udm.getName(), folder);
+        Path targetName = getFileName(udm.getName(), folder);
 
         return udm.saveToFile(targetName.toString());
 
@@ -30,14 +30,14 @@ public class FileSystemRepository implements IStorage {
     @Override
     public UserDefinedMeasure get(String name, String folder) {
         Path targetName = getFileName(name, folder);
-        if (Files.exists(targetName)){
+        if (Files.exists(targetName)) {
             return UserDefinedMeasure.loadFromFile(targetName.toString());
         }
         return null;
     }
 
-    private Path getFileName(String name, String folder){
-        return Paths.get(folder+"/"+name+ ".json");
+    private Path getFileName(String name, String folder) {
+        return Paths.get(folder + "/" + name + ".json");
     }
 
     @Override
@@ -54,16 +54,12 @@ public class FileSystemRepository implements IStorage {
         Gson gson = new Gson();
         try {
             return Files.list(Paths.get(folder))
-                    .map(path->{
-                        try {
-                            if(path.toString().toLowerCase().endsWith(".json"))
-                                return gson.fromJson(new JsonReader(new FileReader(path.toString())), UserDefinedMeasure.class);
-                            return null;
-                        } catch (FileNotFoundException e) {
-                            throw new RuntimeException(e);
-                        }
+                    .map(path -> {
+                        if (path.toString().toLowerCase().endsWith(".json"))
+                            return UserDefinedMeasure.loadFromFile(path.toString());
+                        //return gson.fromJson(new JsonReader(new FileReader(path.toString())), UserDefinedMeasure.class);
+                        return null;
                     }).filter(Objects::nonNull)
-                    .map(o -> (UserDefinedMeasure) o)
                     .collect(Collectors.toList());
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,9 +67,9 @@ public class FileSystemRepository implements IStorage {
         }
     }
 
-    public static void ensurePath(String path){
+    public static void ensurePath(String path) {
         Path pathy = Paths.get(path);
-        if (!Files.exists(pathy)){
+        if (!Files.exists(pathy)) {
             try {
                 Files.createDirectory(pathy);
             } catch (IOException e) {
@@ -81,11 +77,12 @@ public class FileSystemRepository implements IStorage {
             }
         }
     }
+
     @Override
     public void putFile(File file, String fileID, String folder) {
-        ensurePath(UserSettings.getWorkingDirectory()+folder);
+        ensurePath(UserSettings.getWorkingDirectory() + folder);
         try {
-            Files.copy(file.toPath(), Paths.get(UserSettings.getWorkingDirectory()+folder+"/"+fileID), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(file.toPath(), Paths.get(UserSettings.getWorkingDirectory() + folder + "/" + fileID), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,16 +91,16 @@ public class FileSystemRepository implements IStorage {
 
     @Override
     public File getFile(String fileID, String folder) {
-        Path p=Paths.get(UserSettings.getWorkingDirectory()+folder+"/"+fileID);
+        Path p = Paths.get(UserSettings.getWorkingDirectory() + folder + "/" + fileID);
         if (Files.exists(p))
-            return Paths.get(UserSettings.getWorkingDirectory()+folder+"/"+fileID).toFile();
+            return Paths.get(UserSettings.getWorkingDirectory() + folder + "/" + fileID).toFile();
         return null;
     }
 
     @Override
-    public boolean deleteFile(String fileID, String folder,  boolean softDelete) {
-        Path p=Paths.get(folder+"/"+fileID + ".json"); // Removed version
-        if (Files.exists(p)){
+    public boolean deleteFile(String fileID, String folder, boolean softDelete) {
+        Path p = Paths.get(folder + "/" + fileID + ".json"); // Removed version
+        if (Files.exists(p)) {
             try {
                 Files.delete(p);
                 return true;
