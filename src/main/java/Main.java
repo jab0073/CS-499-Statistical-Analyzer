@@ -9,19 +9,22 @@ import TableUtilities.Row;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         logger.debug("Starting Main.");
         DataTable dt;
 
-        UserSettings.setWorkingDirectory("/Users/justin/Desktop/SA/");
+        UserSettings.setWorkingDirectory("C:\\Users\\jusbus6p\\Desktop\\SA\\");
 
         RepositoryManager.init();
+        MeasureManager.init();
         RepositoryManager.getAllUserDefinedMeasures().forEach(m->System.out.println(m.getName()));
+
 
         // String inputTestCSV = "/Users/justin/Desktop/test.csv";
 
@@ -35,20 +38,22 @@ public class Main {
         //ls.forEach(ds::addSample);
         ds.addSample(new Sample(1.0,2.0,100.0,35.0,7.0,12.5));
 
-        ds.save("/Users/justin/Desktop/SA/Analysis/testDS.json");
+        UserDefinedMeasure udm1 = new UserDefinedMeasure("TEST", "((x^x)/x)*x", "x");
+
+        RepositoryManager.putUserDefinedMeasure(udm1, udm1.getName());
 
         Expressions.disableEvaluation();
 
         Arrays.asList("n=20000", "p=.5").forEach(a->Expressions.addArgument(a.split("=")[0], a.split("=")[1]));
 
-        Measures.setInputData(ds);
-
-
-        UserDefinedMeasure udm = RepositoryManager.getUserDefinedMeasure("TEST3");
-
-        Double output = (Double) Measures.run("TEST3");
-
-        System.out.println("TEST3: " + output);
+//        Measures.setInputData(ds);
+//
+//
+//        UserDefinedMeasure udm = RepositoryManager.getUserDefinedMeasure("TEST");
+//
+//        Double output = (Double) udm.run();
+//
+//        System.out.println("TEST: " + output);
         logger.debug("Leaving Main.");
     }
 }

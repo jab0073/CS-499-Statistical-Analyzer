@@ -3,16 +3,18 @@ package Measures;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.Pair;
+import Interfaces.IMeasure;
 import org.mariuszgromada.math.mxparser.Argument;
 import org.mariuszgromada.math.mxparser.Expression;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.gson.Gson;
 
-public class UserDefinedMeasure {
+public class UserDefinedMeasure implements IMeasure {
 
     public enum aggregateMode {SUM, DIFF, MEAN}
 
@@ -20,6 +22,7 @@ public class UserDefinedMeasure {
     private String expression;
     private String dataVariable;
     private aggregateMode aggregate;
+    private List<String> requiredVariables = new ArrayList<>();
 
     public UserDefinedMeasure() {
         this.name = "";
@@ -35,8 +38,29 @@ public class UserDefinedMeasure {
         this.aggregate = aggregateMode.SUM;
     }
 
+    @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public int getMinimumSamples() {
+        return 1;
+    }
+
+    @Override
+    public List<String> getRequiredVariables() {
+        return requiredVariables;
+    }
+
+    @Override
+    public void setInputData(DataSet inputData) {
+
+    }
+
+    @Override
+    public DataSet getInputData() {
+        return null;
     }
 
     public void setName(String name) {
@@ -67,7 +91,8 @@ public class UserDefinedMeasure {
         this.aggregate = aggregate;
     }
 
-    public double run() {
+    @Override
+    public Double run() {
         Expression exp = new Expression(this.expression);
         if(!Expressions.ensureArgument(this.dataVariable))
             Expressions.addArgument(this.dataVariable, "0");
