@@ -63,7 +63,7 @@ public class CoefficientOfVariance extends BiasCorrectable implements IMeasure {
         if (this.inputData.status == IValidator.ValidationStatus.INVALID)
             return false;
         if (this.requiredVariables.stream()
-                .map(Expressions::ensureArgument).anyMatch(b -> !b)) {
+                .anyMatch(Expressions::ensureArgument)) {
             return false;
         }
         return true;

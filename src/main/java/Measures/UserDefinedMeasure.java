@@ -65,8 +65,7 @@ public class UserDefinedMeasure implements IMeasure {
     @Override
     public boolean validate() {
         return this.requiredVariables.stream()
-                .map(Expressions::ensureArgument)
-                .anyMatch(b -> !b);
+                .noneMatch(Expressions::ensureArgument);
     }
 
     @Override
@@ -104,6 +103,11 @@ public class UserDefinedMeasure implements IMeasure {
 
     @Override
     public Double run() {
+        logger.debug("Running " + this.name);
+
+        if(!this.validate())
+            return null;
+
         Expression exp = new Expression(this.expression);
         if(!Expressions.ensureArgument(this.dataVariable))
             Expressions.addArgument(this.dataVariable, "0");

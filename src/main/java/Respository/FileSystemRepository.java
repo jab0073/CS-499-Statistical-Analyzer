@@ -29,7 +29,7 @@ public class FileSystemRepository implements IStorage {
     @Override
     public boolean put(DataSet ds, String name, String folder) {
         ensurePath(folder);
-        Path targetName = getDSFileName(name, folder);
+        Path targetName = getFileName(name, folder);
 
         return ds.save(targetName.toString());
     }
@@ -62,10 +62,6 @@ public class FileSystemRepository implements IStorage {
 
     private Path getFileName(String name, String folder) {
         return Paths.get(folder + "/" + name + ".json");
-    }
-
-    private Path getDSFileName(String name, String folder) {
-        return Paths.get(folder + "/" + name + ".csv");
     }
 
     @Override

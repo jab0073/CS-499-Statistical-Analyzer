@@ -21,8 +21,6 @@ public class Main {
     public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         logger.debug("Starting Main.");
 
-        DataTable dt;
-
         UserSettings.setWorkingDirectory("/Users/justin/Desktop/SA/");
 
         RepositoryManager.init();
@@ -30,12 +28,12 @@ public class Main {
         System.out.println("MEASURES:");
         MeasureManager.getAllMeasureNames().forEach(System.out::println);
 
-        DataSet ds = RepositoryManager.getDataSet("TEST_DS");
+        DataSet ds = RepositoryManager.getDataSet("BLEH");
         if(ds == null) {
-            logger.debug("DataSet not found in repository");
+            logger.error("DataSet not found in repository");
             ds = new DataSet();
             ds.addSample(new Sample(1.0,2.0,100.0,35.0,7.0,12.5));
-            ds.setName("TEST_DS");
+            ds.setName("BLEH");
             RepositoryManager.putDataSet(ds, ds.getName());
         }
 
@@ -45,21 +43,19 @@ public class Main {
 
         IMeasure measure = MeasureManager.getMeasure(measureName);
         if(measure == null) {
-            measure = new UserDefinedMeasure(measureName, "data", "data");
+            logger.error("Measure not found in repository");
+            measure = new UserDefinedMeasure(measureName, "data*z", "data");
             RepositoryManager.putUserDefinedMeasure((UserDefinedMeasure) measure, measure.getName());
         }
 
-        ((UserDefinedMeasure) measure).setAggregate(UserDefinedMeasure.aggregateMode.SUM);
-        ((UserDefinedMeasure) measure).setExpression("data");
         Expressions.disableEvaluation();
 
         Arrays.asList("n=20000", "p=.5").forEach(a->Expressions.addArgument(a.split("=")[0], a.split("=")[1]));
 
         Measures.setInputData(ds);
+        measure.setInputData(ds);
 
         Double output = (Double) measure.run();
-
-
 
         System.out.println(measureName + ": " + output + " based on DataSet " + ds.getName());
         logger.debug("Leaving Main.");
