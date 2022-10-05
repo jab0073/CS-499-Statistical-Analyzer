@@ -1,11 +1,11 @@
 package Respository;
 
 import BackEndUtilities.Constants;
+import BackEndUtilities.DataSet;
+import BackEndUtilities.Sample;
 import Interfaces.IStorage;
 import Measures.UserDefinedMeasure;
 import Settings.UserSettings;
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -24,7 +24,22 @@ public class FileSystemRepository implements IStorage {
         Path targetName = getFileName(udm.getName(), folder);
 
         return udm.saveToFile(targetName.toString());
+    }
 
+    @Override
+    public boolean put(DataSet ds, String name, String folder) {
+        ensurePath(folder);
+        Path targetName = getDSFileName(name, folder);
+
+        return ds.save(targetName.toString());
+    }
+
+    @Override
+    public boolean put(Sample s, String name, String folder) {
+        ensurePath(folder);
+        Path targetName = getFileName(name, folder);
+
+        return s.save(targetName.toString());
     }
 
     @Override
@@ -36,8 +51,21 @@ public class FileSystemRepository implements IStorage {
         return null;
     }
 
+    @Override
+    public DataSet getDataSet(String name, String folder) {
+        Path targetName = getFileName(name, folder);
+        if (Files.exists(targetName)) {
+            return DataSet.load(targetName.toString());
+        }
+        return null;
+    }
+
     private Path getFileName(String name, String folder) {
         return Paths.get(folder + "/" + name + ".json");
+    }
+
+    private Path getDSFileName(String name, String folder) {
+        return Paths.get(folder + "/" + name + ".csv");
     }
 
     @Override
@@ -47,6 +75,8 @@ public class FileSystemRepository implements IStorage {
         ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER);
         ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.GRAPH_OUTPUT_FOLDER);
         ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.UDM_FOLDER);
+        ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.DATASET_FOLDER);
+        ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.SAMPLE_FOLDER);
     }
 
     @Override
@@ -56,7 +86,25 @@ public class FileSystemRepository implements IStorage {
                     .map(path -> {
                         if (path.toString().toLowerCase().endsWith(".json"))
                             return UserDefinedMeasure.loadFromFile(path.toString());
-                        //return gson.fromJson(new JsonReader(new FileReader(path.toString())), UserDefinedMeasure.class);
+                        return null;
+                    }).filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<DataSet> loadDataSets(String folder) {
+        try {
+            return Files.list(Paths.get(folder))
+                    .map(path -> {
+                        if (path.toString().toLowerCase().endsWith(".csv")) {
+                            DataSet ds = DataSet.load(path.toString());
+                            ds.setName(path.getFileName().toString().replace(".csv", ""));
+                            return ds;
+                        }
                         return null;
                     }).filter(Objects::nonNull)
                     .collect(Collectors.toList());
@@ -70,7 +118,7 @@ public class FileSystemRepository implements IStorage {
         Path pathy = Paths.get(path);
         if (!Files.exists(pathy)) {
             try {
-                Files.createDirectory(pathy);
+                Files.createDirectories(pathy);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -97,7 +145,7 @@ public class FileSystemRepository implements IStorage {
 
     @Override
     public boolean deleteFile(String fileID, String folder) {
-        Path p = Paths.get(folder + "/" + fileID + ".json");
+        Path p = Paths.get(folder + "/" + fileID);
         if (Files.exists(p)) {
             try {
                 Files.delete(p);

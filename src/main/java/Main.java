@@ -35,9 +35,11 @@ public class Main {
         // assert dt != null;
         // List<Sample> ls = dt.getRows().stream().map(Row::toSample).toList();//new DataSet();
 
-        DataSet ds = new DataSet();
+        DataSet ds = RepositoryManager.getDataSet("TEST_DS"); //new DataSet();
+
+        System.out.println(ds.getSample(0));
         //ls.forEach(ds::addSample);
-        ds.addSample(new Sample(1.0,2.0,100.0,35.0,7.0,12.5));
+        //ds.addSample(new Sample(1.0,2.0,100.0,35.0,7.0,12.5));
 
         // UserDefinedMeasure udm1 = new UserDefinedMeasure("TEST", "((x^x)/x)*x", "x");
 
@@ -47,12 +49,13 @@ public class Main {
 
         Arrays.asList("n=20000", "p=.5").forEach(a->Expressions.addArgument(a.split("=")[0], a.split("=")[1]));
 
+        //RepositoryManager.putDataSet(ds, "TEST_DS");
+
         IMeasure measure = MeasureManager.getMeasure("TEST");
-        ((UserDefinedMeasure) measure).setAggregate(UserDefinedMeasure.aggregateMode.MEAN);
-        measure.setInputData(ds);
+
         Double output = (Double) measure.run();
 
-//        Measures.setInputData(ds);
+        Measures.setInputData(ds);
 //
 //
 //        UserDefinedMeasure udm = RepositoryManager.getUserDefinedMeasure("TEST");

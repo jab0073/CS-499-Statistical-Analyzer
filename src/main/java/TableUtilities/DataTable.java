@@ -1,5 +1,6 @@
 package TableUtilities;
 
+import BackEndUtilities.DataSet;
 import BackEndUtilities.Sample;
 import Interfaces.IValidator;
 import org.apache.logging.log4j.LogManager;
@@ -241,6 +242,15 @@ public class DataTable {
     public Sample selectionToSample() {
         Sample ds = new Sample();
         ds.addData(this.selectedCells.stream().map(c -> c.data).collect(Collectors.toList()));
+        return ds;
+    }
+
+    public DataSet toDataSet() {
+        DataSet ds = new DataSet();
+        this.rows.forEach(r-> {
+            logger.debug("Converting new row to sample and adding to dataset");
+            ds.addSample(r.toSample());
+        });
         return ds;
     }
 

@@ -1,13 +1,17 @@
 package BackEndUtilities;
 
 import Interfaces.IValidator;
+import Interop.UIServices;
 import Measures.Measures;
 import TableUtilities.DataTable;
 import Validators.DataValidator;
 import com.google.gson.Gson;
+import com.opencsv.CSVWriter;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -15,11 +19,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class DataSet implements Cloneable{
 
     private List<Sample> samples;
+    private String name;
     private static final Logger logger = LogManager.getLogger(DataSet.class.getName());
     public IValidator.ValidationStatus status;
 
@@ -40,6 +46,14 @@ public class DataSet implements Cloneable{
         this.samples = Arrays.asList(samples);
         logger.debug("Creating DataSet with size of " + this.samples.size());
         this.status = IValidator.ValidationStatus.NOT_VALIDATED;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void addSample(Sample sample) {
@@ -114,18 +128,33 @@ public class DataSet implements Cloneable{
     }
 
     public boolean save(String fileName) {
-        Gson gson = new Gson();
+        File file = new File(fileName);
         try {
-            Writer writer = new FileWriter(fileName);
-            gson.toJson(this, writer);
-            writer.flush();
+            // create FileWriter object with file as parameter
+            FileWriter outputFile = new FileWriter(file);
+
+            // create CSVWriter object filewriter object as parameter
+            CSVWriter writer = new CSVWriter(outputFile);
+
+            this.samples.forEach(s -> {
+                writer.writeNext(s.getData().toArray(String[]::new));
+            });
+
+            // closing writer connection
             writer.close();
-            Measures.getLogger().debug("DataSet written to " + fileName);
             return true;
-        } catch (IOException e) {
-            Measures.getLogger().error("DataSet failed to write to " + fileName);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
+    }
+
+    public static DataSet load(String fileName) {
+        DataTable dt = UIServices.fromCSV(fileName);
+        if (dt != null)
+            return dt.toDataSet();
+        return null;
     }
 
     public boolean validate() {

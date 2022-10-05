@@ -4,9 +4,11 @@ import Interfaces.IValidator;
 import Measures.Measures;
 import Validators.DataValidator;
 import com.google.gson.Gson;
+import com.opencsv.CSVWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -142,16 +144,22 @@ public class Sample implements Cloneable{
     }
 
     public boolean save(String fileName) {
-        Gson gson = new Gson();
+        File file = new File(fileName);
         try {
-            Writer writer = new FileWriter(fileName);
-            gson.toJson(this, writer);
-            writer.flush();
+            // create FileWriter object with file as parameter
+            FileWriter outputFile = new FileWriter(file);
+
+            // create CSVWriter object filewriter object as parameter
+            CSVWriter writer = new CSVWriter(outputFile);
+
+            writer.writeNext(data.toArray(String[]::new));
+
+            // closing writer connection
             writer.close();
-            Measures.getLogger().debug("Sample written to " + fileName);
             return true;
-        } catch (IOException e) {
-            Measures.getLogger().error("Sample failed to write to " + fileName);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
     }
