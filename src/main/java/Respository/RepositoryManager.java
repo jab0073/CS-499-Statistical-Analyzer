@@ -68,7 +68,7 @@ public class RepositoryManager {
     }
 
     public static DataSet getDataSet(String name) {
-        loadedDataSets.forEach(d -> System.out.println(d.getName()));
+        // loadedDataSets.forEach(d -> System.out.println(d.getName()));
         return loadedDataSets.stream().filter(ds->ds.getName().equalsIgnoreCase(name))
                 .findFirst()
                 .orElse(null);

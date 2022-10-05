@@ -100,10 +100,8 @@ public class FileSystemRepository implements IStorage {
         try {
             return Files.list(Paths.get(folder))
                     .map(path -> {
-                        if (path.toString().toLowerCase().endsWith(".csv")) {
-                            DataSet ds = DataSet.load(path.toString());
-                            ds.setName(path.getFileName().toString().replace(".csv", ""));
-                            return ds;
+                        if (path.toString().toLowerCase().endsWith(".json")) {
+                            return DataSet.load(path.toString());
                         }
                         return null;
                     }).filter(Objects::nonNull)

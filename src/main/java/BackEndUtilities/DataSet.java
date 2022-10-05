@@ -7,19 +7,13 @@ import TableUtilities.DataTable;
 import Validators.DataValidator;
 import com.google.gson.Gson;
 import com.opencsv.CSVWriter;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.math.BigDecimal;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class DataSet implements Cloneable{
@@ -128,6 +122,33 @@ public class DataSet implements Cloneable{
     }
 
     public boolean save(String fileName) {
+        Gson gson = new Gson();
+        try {
+            Writer writer = new FileWriter(fileName);
+            gson.toJson(this, writer);
+            writer.flush();
+            writer.close();
+            logger.debug(this.name + " written to " + fileName);
+            return true;
+        } catch (IOException e) {
+            logger.error(this.name + " failed to write to " + fileName);
+            return false;
+        }
+    }
+
+    public static DataSet load(String fileName) {
+        Gson gson = new Gson();
+        try {
+            DataSet obj =  gson.fromJson(new FileReader(fileName), DataSet.class);
+            logger.debug("Successfully loaded dataset from " + fileName);
+            return obj;
+        } catch (FileNotFoundException e) {
+            logger.error("!!! Failed to load dataset from " + fileName);
+            return null;
+        }
+    }
+
+    public boolean exportCSV(String fileName) {
         File file = new File(fileName);
         try {
             // create FileWriter object with file as parameter
@@ -150,7 +171,7 @@ public class DataSet implements Cloneable{
         }
     }
 
-    public static DataSet load(String fileName) {
+    public static DataSet importCSV(String fileName) {
         DataTable dt = UIServices.fromCSV(fileName);
         if (dt != null)
             return dt.toDataSet();

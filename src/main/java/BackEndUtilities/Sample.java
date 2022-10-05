@@ -8,10 +8,7 @@ import com.opencsv.CSVWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -144,6 +141,33 @@ public class Sample implements Cloneable{
     }
 
     public boolean save(String fileName) {
+        Gson gson = new Gson();
+        try {
+            Writer writer = new FileWriter(fileName);
+            gson.toJson(this, writer);
+            writer.flush();
+            writer.close();
+            Measures.getLogger().debug("Sample written to " + fileName);
+            return true;
+        } catch (IOException e) {
+            Measures.getLogger().error("Sample failed to write to " + fileName);
+            return false;
+        }
+    }
+
+    public static Sample load(String fileName) {
+        Gson gson = new Gson();
+        try {
+            Sample obj =  gson.fromJson(new FileReader(fileName), Sample.class);
+            logger.debug("Successfully loaded sample from " + fileName);
+            return obj;
+        } catch (FileNotFoundException e) {
+            logger.error("!!! Failed to load sample from " + fileName);
+            return null;
+        }
+    }
+
+    public boolean exportCSV(String fileName) {
         File file = new File(fileName);
         try {
             // create FileWriter object with file as parameter

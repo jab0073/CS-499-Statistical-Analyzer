@@ -27,7 +27,7 @@ public class UserDefinedMeasure implements IMeasure {
     public UserDefinedMeasure() {
         this.name = "UNUSABLE MEASURE";
         this.expression = "";
-        this.dataVariable = "x";
+        this.dataVariable = "data";
         this.aggregate = aggregateMode.SUM;
     }
 
