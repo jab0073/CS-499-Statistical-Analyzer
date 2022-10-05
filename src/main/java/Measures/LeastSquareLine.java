@@ -1,8 +1,10 @@
 package Measures;
 
 import BackEndUtilities.DataSet;
+import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
 import Interfaces.IMeasure;
+import Interfaces.IValidator;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
@@ -48,6 +50,21 @@ public class LeastSquareLine implements IMeasure {
         return this.inputData;
     }
 
+    @Override
+    public boolean validate() {
+        if (this.inputData == null)
+            return false;
+        if (this.inputData.getNumberOfSamples() < this.minimumSamples)
+            return false;
+        if (this.inputData.status == IValidator.ValidationStatus.INVALID)
+            return false;
+        if (this.requiredVariables.stream()
+                .map(Expressions::ensureArgument).anyMatch(b -> !b)) {
+            return false;
+        }
+        return true;
+    }
+
     private static double[][] pair(double[] arr1, double[] arr2) {
         double[][] paired = new double[arr1.length][2];
         for (int i = 0; i < arr1.length; i++) {
@@ -59,6 +76,9 @@ public class LeastSquareLine implements IMeasure {
     @Override
     public String run() {
         logger.debug("Running " + MeasureConstants.least);
+
+        if(!this.validate())
+            return null;
 
         SimpleRegression sr = new SimpleRegression(true);
 

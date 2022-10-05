@@ -25,7 +25,7 @@ public class UserDefinedMeasure implements IMeasure {
     private List<String> requiredVariables = new ArrayList<>();
 
     public UserDefinedMeasure() {
-        this.name = "";
+        this.name = "UNUSABLE MEASURE";
         this.expression = "";
         this.dataVariable = "x";
         this.aggregate = aggregateMode.SUM;
@@ -53,14 +53,25 @@ public class UserDefinedMeasure implements IMeasure {
         return requiredVariables;
     }
 
+    public void setRequiredVariables(List<String> requiredVariables) {
+        this.requiredVariables = requiredVariables;
+    }
+
     @Override
     public void setInputData(DataSet inputData) {
+        Measures.setInputData(inputData);
+    }
 
+    @Override
+    public boolean validate() {
+        return this.requiredVariables.stream()
+                .map(Expressions::ensureArgument)
+                .anyMatch(b -> !b);
     }
 
     @Override
     public DataSet getInputData() {
-        return null;
+        return Measures.getInputData();
     }
 
     public void setName(String name) {

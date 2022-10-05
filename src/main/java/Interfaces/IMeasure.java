@@ -1,6 +1,7 @@
 package Interfaces;
 
 import BackEndUtilities.DataSet;
+import BackEndUtilities.Expressions;
 import Measures.Measures;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +20,8 @@ public interface IMeasure {
     List<String> getRequiredVariables();
 
     void setInputData(DataSet inputData);
+
+    boolean validate();
 
     DataSet getInputData();
 

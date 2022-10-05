@@ -1,8 +1,10 @@
 package Measures;
 
 import BackEndUtilities.DataSet;
+import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
 import Interfaces.IMeasure;
+import Interfaces.IValidator;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -48,8 +50,27 @@ public class Median implements IMeasure {
     }
 
     @Override
+    public boolean validate() {
+        if (this.inputData == null)
+            return false;
+        if (this.inputData.getNumberOfSamples() < this.minimumSamples)
+            return false;
+        if (this.inputData.status == IValidator.ValidationStatus.INVALID)
+            return false;
+        if (this.requiredVariables.stream()
+                .map(Expressions::ensureArgument).anyMatch(b -> !b)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public Double run() {
         logger.debug("Running " + MeasureConstants.median);
+
+        if(!this.validate())
+            return null;
+
         org.apache.commons.math3.stat.descriptive.rank.Median median = new org.apache.commons.math3.stat.descriptive.rank.Median();
         median.setData(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
         return median.evaluate();

@@ -4,6 +4,7 @@ import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
 import Interfaces.IMeasure;
+import Interfaces.IValidator;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 
@@ -49,8 +50,26 @@ public class Percentiles implements IMeasure {
     }
 
     @Override
+    public boolean validate() {
+        if (this.inputData == null)
+            return false;
+        if (this.inputData.getNumberOfSamples() < this.minimumSamples)
+            return false;
+        if (this.inputData.status == IValidator.ValidationStatus.INVALID)
+            return false;
+        if (this.requiredVariables.stream()
+                .map(Expressions::ensureArgument).anyMatch(b -> !b)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public Double run() {
         logger.debug("Running " + MeasureConstants.percentiles);
+
+        if(!this.validate())
+            return null;
 
         Percentile p = new Percentile();
         p.setData(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));

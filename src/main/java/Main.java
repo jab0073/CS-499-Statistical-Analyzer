@@ -1,4 +1,5 @@
 import BackEndUtilities.*;
+import Interfaces.IMeasure;
 import Interop.UIServices;
 import Measures.Measures;
 import Measures.UserDefinedMeasure;
@@ -23,7 +24,7 @@ public class Main {
 
         RepositoryManager.init();
         MeasureManager.init();
-        RepositoryManager.getAllUserDefinedMeasures().forEach(m->System.out.println(m.getName()));
+        MeasureManager.getAllMeasureNames().forEach(System.out::println);
 
 
         // String inputTestCSV = "/Users/justin/Desktop/test.csv";
@@ -38,13 +39,18 @@ public class Main {
         //ls.forEach(ds::addSample);
         ds.addSample(new Sample(1.0,2.0,100.0,35.0,7.0,12.5));
 
-        UserDefinedMeasure udm1 = new UserDefinedMeasure("TEST", "((x^x)/x)*x", "x");
+        // UserDefinedMeasure udm1 = new UserDefinedMeasure("TEST", "((x^x)/x)*x", "x");
 
-        RepositoryManager.putUserDefinedMeasure(udm1, udm1.getName());
+        // RepositoryManager.putUserDefinedMeasure(udm1, udm1.getName());
 
         Expressions.disableEvaluation();
 
         Arrays.asList("n=20000", "p=.5").forEach(a->Expressions.addArgument(a.split("=")[0], a.split("=")[1]));
+
+        IMeasure measure = MeasureManager.getMeasure("TEST");
+        ((UserDefinedMeasure) measure).setAggregate(UserDefinedMeasure.aggregateMode.MEAN);
+        measure.setInputData(ds);
+        Double output = (Double) measure.run();
 
 //        Measures.setInputData(ds);
 //
@@ -53,7 +59,7 @@ public class Main {
 //
 //        Double output = (Double) udm.run();
 //
-//        System.out.println("TEST: " + output);
+        System.out.println("TEST: " + output);
         logger.debug("Leaving Main.");
     }
 }

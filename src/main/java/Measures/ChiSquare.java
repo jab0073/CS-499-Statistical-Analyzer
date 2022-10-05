@@ -4,6 +4,7 @@ import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
 import Interfaces.IMeasure;
+import Interfaces.IValidator;
 import org.apache.commons.math3.distribution.ChiSquaredDistribution;
 
 import java.util.Arrays;
@@ -49,8 +50,26 @@ public class ChiSquare implements IMeasure {
     }
 
     @Override
+    public boolean validate() {
+        if (this.inputData == null)
+            return false;
+        if (this.inputData.getNumberOfSamples() < this.minimumSamples)
+            return false;
+        if (this.inputData.status == IValidator.ValidationStatus.INVALID)
+            return false;
+        if (this.requiredVariables.stream()
+                .map(Expressions::ensureArgument).anyMatch(b -> !b)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public List<Double> run() {
         logger.debug("Running " + MeasureConstants.chi);
+
+        if(!this.validate())
+            return null;
 
         double dof = Double.parseDouble(Expressions.getArgument("d"));
 

@@ -1,9 +1,11 @@
 package Measures;
 
 import BackEndUtilities.DataSet;
+import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
 import Interfaces.BiasCorrectable;
 import Interfaces.IMeasure;
+import Interfaces.IValidator;
 import org.apache.commons.math3.distribution.NormalDistribution;
 
 import java.util.ArrayList;
@@ -54,8 +56,27 @@ public class ProbabilityDistribution extends BiasCorrectable implements IMeasure
     }
 
     @Override
+    public boolean validate() {
+        if (this.inputData == null)
+            return false;
+        if (this.inputData.getNumberOfSamples() < this.minimumSamples)
+            return false;
+        if (this.inputData.status == IValidator.ValidationStatus.INVALID)
+            return false;
+        if (this.requiredVariables.stream()
+                .map(Expressions::ensureArgument).anyMatch(b -> !b)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public List<Double> run() {
         logger.debug("Running " + MeasureConstants.probability);
+
+        if(!this.validate())
+            return null;
+
         Double mean = new Mean(this.inputData).run();
         Double std = new StandardDeviation(this.inputData, this.isBiasCorrected).run();
         NormalDistribution nd = new NormalDistribution(mean, std);
