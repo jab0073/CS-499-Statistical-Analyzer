@@ -1,6 +1,6 @@
 package Measures;
 
-import BackEndUtilities.Constants;
+import BackEndUtilities.MeasureConstants;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.Sample;
@@ -18,8 +18,8 @@ public class MeasuresTest {
     @Before
     public void setup() {
         ds = new DataSet();
-        ds.addSample(new Sample(1.0, 2.0, 3.0, 5.0, 100.0, 3000.0));
-        ds.addSample(new Sample(12.0, 54.0, 100.0, 7.0, 13.0, 99.9));
+        ds.addSample(new Sample(1.0, 2.0, 3.0, 4.0, 5.0, 6.0));
+        ds.addSample(new Sample(2.0, 3.0, 4.0, 5.0, 6.0, 7.0));
         Expressions.addArgument("n", "10");
         Expressions.addArgument("p", "0.6");
         Expressions.addArgument("x", "80");
@@ -30,7 +30,7 @@ public class MeasuresTest {
 
     @Test
     public void testAllMeasure() {
-        List<String> measures = Constants.getAllConstants();
+        List<String> measures = MeasureConstants.getAllConstants();
 
         measures.forEach(m -> {
             Object result = Measures.run(m);
@@ -44,17 +44,17 @@ public class MeasuresTest {
         DataSet otherDS = new DataSet();
         otherDS.addSample(new Sample(1.0, 2.0, 3.0, 4.0, 5.0));
         Measures.setInputData(otherDS);
-        Object population = Measures.run(Constants.std);
+        Object population = Measures.run(MeasureConstants.std);
         Double populationD = (Double) population;
         assert populationD != null;
         assert populationD.equals(1.4142135623730951);
-        logger.debug("population " + Constants.std + ": " + population);
+        logger.debug("population " + MeasureConstants.std + ": " + population);
 
         Measures.setBiasCorrected(true);
-        Object sample = Measures.run(Constants.std);
+        Object sample = Measures.run(MeasureConstants.std);
         Double sampleD = (Double) sample;
         assert sampleD != null;
         assert sampleD.equals(1.5811388300841898);
-        logger.debug("sample " + Constants.std + ": " + sample);
+        logger.debug("sample " + MeasureConstants.std + ": " + sample);
     }
 }

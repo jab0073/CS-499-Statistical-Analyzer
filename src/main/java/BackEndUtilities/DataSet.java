@@ -1,12 +1,16 @@
 package BackEndUtilities;
 
 import Interfaces.IValidator;
+import Interop.UIServices;
+import Measures.Measures;
 import TableUtilities.DataTable;
 import Validators.DataValidator;
+import com.google.gson.Gson;
+import com.opencsv.CSVWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.math.BigDecimal;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +19,7 @@ import java.util.stream.Collectors;
 public class DataSet implements Cloneable{
 
     private List<Sample> samples;
+    private String name;
     private static final Logger logger = LogManager.getLogger(DataSet.class.getName());
     public IValidator.ValidationStatus status;
 
@@ -35,6 +40,14 @@ public class DataSet implements Cloneable{
         this.samples = Arrays.asList(samples);
         logger.debug("Creating DataSet with size of " + this.samples.size());
         this.status = IValidator.ValidationStatus.NOT_VALIDATED;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void addSample(Sample sample) {
@@ -106,6 +119,63 @@ public class DataSet implements Cloneable{
             ds.addSample(s);
         });
         return ds;
+    }
+
+    public boolean save(String fileName) {
+        Gson gson = new Gson();
+        try {
+            Writer writer = new FileWriter(fileName);
+            gson.toJson(this, writer);
+            writer.flush();
+            writer.close();
+            logger.debug(this.name + " written to " + fileName);
+            return true;
+        } catch (IOException e) {
+            logger.error(this.name + " failed to write to " + fileName);
+            return false;
+        }
+    }
+
+    public static DataSet load(String fileName) {
+        Gson gson = new Gson();
+        try {
+            DataSet obj =  gson.fromJson(new FileReader(fileName), DataSet.class);
+            logger.debug("Successfully loaded dataset from " + fileName);
+            return obj;
+        } catch (FileNotFoundException e) {
+            logger.error("!!! Failed to load dataset from " + fileName);
+            return null;
+        }
+    }
+
+    public boolean exportCSV(String fileName) {
+        File file = new File(fileName);
+        try {
+            // create FileWriter object with file as parameter
+            FileWriter outputFile = new FileWriter(file);
+
+            // create CSVWriter object filewriter object as parameter
+            CSVWriter writer = new CSVWriter(outputFile);
+
+            this.samples.forEach(s -> {
+                writer.writeNext(s.getData().toArray(String[]::new));
+            });
+
+            // closing writer connection
+            writer.close();
+            return true;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static DataSet importCSV(String fileName) {
+        DataTable dt = UIServices.fromCSV(fileName);
+        if (dt != null)
+            return dt.toDataSet();
+        return null;
     }
 
     public boolean validate() {

@@ -33,10 +33,10 @@ public class UIServices {
         try (CSVReader reader = new CSVReader(new FileReader(file))) {
             List<String[]> r = reader.readAll();
             r.forEach(x -> {
-                Sample ds = new Sample();
-                ds.addData(Arrays.asList(x));
+                Sample sample = new Sample();
+                sample.addData(Arrays.asList(x));
                 int index = r.indexOf(x);
-                Row row = new Row(index, ds);
+                Row row = new Row(index, sample);
                 dt.getRows().add(row.clone());
             });
         } catch (IOException | CsvException e) {
