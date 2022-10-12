@@ -91,6 +91,6 @@ public class LeastSquareLine implements IMeasure {
         double[][] xyArray = pair(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
         sr.addData(xyArray);
 
-        return "Y=" + sr.getIntercept() + "+" + sr.getSlope() + "X";
+        return "b=" + sr.getIntercept() + ",m=" + sr.getSlope();
     }
 }
