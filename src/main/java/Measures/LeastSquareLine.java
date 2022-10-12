@@ -79,7 +79,6 @@ public class LeastSquareLine implements IMeasure {
 
         if(!this.validate())
             return null;
-
         SimpleRegression sr = new SimpleRegression(true);
 
         List<Double> x = inputData.getSample(0).getDataAsDouble();
