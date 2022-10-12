@@ -4,8 +4,15 @@ import BackEndUtilities.Constants;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Sample;
 import Interfaces.IStorage;
+import Interop.UIServices;
+import Measures.Measures;
 import Measures.UserDefinedMeasure;
 import Settings.UserSettings;
+import TableUtilities.DataTable;
+import com.google.gson.Gson;
+import com.opencsv.CSVWriter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -18,35 +25,75 @@ import java.util.stream.Collectors;
 
 public class FileSystemRepository implements IStorage {
 
+    private static final Logger logger = LogManager.getLogger(FileSystemRepository.class.getName());
     @Override
     public boolean put(UserDefinedMeasure udm, String folder) {
         ensurePath(folder);
         Path targetName = getFileName(udm.getName(), folder);
-
-        return udm.saveToFile(targetName.toString());
+        Gson gson = new Gson();
+        try {
+            Writer writer = new FileWriter(targetName.toString());
+            gson.toJson(udm, writer);
+            writer.flush();
+            writer.close();
+            logger.debug(udm.getName() + " written to " + targetName);
+            return true;
+        } catch (IOException e) {
+            logger.error(udm.getName() + " failed to write to " + targetName);
+            return false;
+        }
     }
 
     @Override
     public boolean put(DataSet ds, String name, String folder) {
         ensurePath(folder);
         Path targetName = getFileName(name, folder);
-
-        return ds.save(targetName.toString());
+        ds.setName(name);
+        Gson gson = new Gson();
+        try {
+            Writer writer = new FileWriter(targetName.toString());
+            gson.toJson(ds, writer);
+            writer.flush();
+            writer.close();
+            logger.debug(name + " written to " + targetName);
+        return true;
+        } catch (IOException e) {
+            logger.error(name + " failed to write to " + targetName);
+            return false;
+        }
     }
 
     @Override
     public boolean put(Sample s, String name, String folder) {
         ensurePath(folder);
         Path targetName = getFileName(name, folder);
-
-        return s.save(targetName.toString());
+        Gson gson = new Gson();
+        try {
+            Writer writer = new FileWriter(targetName.toString());
+            gson.toJson(s, writer);
+            writer.flush();
+            writer.close();
+            logger.debug(name + " written to " + targetName);
+            return true;
+        } catch (IOException e) {
+            logger.error(name + " failed to write to " + targetName);
+            return false;
+        }
     }
 
     @Override
     public UserDefinedMeasure get(String name, String folder) {
         Path targetName = getFileName(name, folder);
         if (Files.exists(targetName)) {
-            return UserDefinedMeasure.loadFromFile(targetName.toString());
+            Gson gson = new Gson();
+            try {
+                UserDefinedMeasure obj =  gson.fromJson(new FileReader(targetName.toString()), UserDefinedMeasure.class);
+                logger.debug("Successfully loaded measure from " + targetName);
+                return obj;
+            } catch (FileNotFoundException e) {
+                logger.error("!!! Failed to load measure from " + targetName);
+                return null;
+            }
         }
         return null;
     }
@@ -55,7 +102,15 @@ public class FileSystemRepository implements IStorage {
     public DataSet getDataSet(String name, String folder) {
         Path targetName = getFileName(name, folder);
         if (Files.exists(targetName)) {
-            return DataSet.load(targetName.toString());
+            Gson gson = new Gson();
+            try {
+                DataSet obj =  gson.fromJson(new FileReader(targetName.toString()), DataSet.class);
+                logger.debug("Successfully loaded dataset from " + targetName);
+                return obj;
+            } catch (FileNotFoundException e) {
+                logger.error("!!! Failed to load dataset from " + targetName);
+                return null;
+            }
         }
         return null;
     }
@@ -73,6 +128,7 @@ public class FileSystemRepository implements IStorage {
         ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.UDM_FOLDER);
         ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.DATASET_FOLDER);
         ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.SAMPLE_FOLDER);
+        ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.EXPORT_FOLDER);
     }
 
     @Override
@@ -80,8 +136,17 @@ public class FileSystemRepository implements IStorage {
         try {
             return Files.list(Paths.get(folder))
                     .map(path -> {
-                        if (path.toString().toLowerCase().endsWith(".json"))
-                            return UserDefinedMeasure.loadFromFile(path.toString());
+                        if (path.toString().toLowerCase().endsWith(".json")) {
+                            Gson gson = new Gson();
+                            try {
+                                UserDefinedMeasure obj =  gson.fromJson(new FileReader(path.toString()), UserDefinedMeasure.class);
+                                logger.debug("Successfully loaded measure from " + path);
+                                return obj;
+                            } catch (FileNotFoundException e) {
+                                logger.error("!!! Failed to load measure from " + path);
+                                return null;
+                            }
+                        }
                         return null;
                     }).filter(Objects::nonNull)
                     .collect(Collectors.toList());
@@ -97,7 +162,15 @@ public class FileSystemRepository implements IStorage {
             return Files.list(Paths.get(folder))
                     .map(path -> {
                         if (path.toString().toLowerCase().endsWith(".json")) {
-                            return DataSet.load(path.toString());
+                            Gson gson = new Gson();
+                            try {
+                                DataSet obj =  gson.fromJson(new FileReader(path.toString()), DataSet.class);
+                                logger.debug("Successfully loaded dataset from " + path);
+                                return obj;
+                            } catch (FileNotFoundException e) {
+                                logger.error("!!! Failed to load dataset from " + path);
+                                return null;
+                            }
                         }
                         return null;
                     }).filter(Objects::nonNull)
