@@ -39,7 +39,7 @@ public class Main {
 
         //UserDefinedMeasure udm = new UserDefinedMeasure("TEST", "((x^x)/x)*x", "data");
 
-        String measureName = "TEST_IT";
+        String measureName = MeasureConstants.percentiles;
 
         IMeasure measure = MeasureManager.getMeasure(measureName);
         if(measure == null) {
@@ -50,7 +50,16 @@ public class Main {
 
         Expressions.disableEvaluation();
 
-        Arrays.asList("n=20000", "p=.5").forEach(a->Expressions.addArgument(a.split("=")[0], a.split("=")[1]));
+        Arrays.asList("n=20000", "p=.5", "x=100").forEach(a->Expressions.addArgument(a.split("=")[0], a.split("=")[1]));
+
+        if(Expressions.ensureArgument("n")) {
+            logger.debug("VARIABLE FOUND");
+        }
+        else {
+            logger.error("VARIABLE NOT FOUND");
+        }
+
+
 
         Measures.setInputData(ds);
         measure.setInputData(ds);

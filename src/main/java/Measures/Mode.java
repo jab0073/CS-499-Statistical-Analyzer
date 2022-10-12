@@ -59,11 +59,8 @@ public class Mode implements IMeasure {
             return false;
         if (this.inputData.status == IValidator.ValidationStatus.INVALID)
             return false;
-        if (this.requiredVariables.stream()
-                .anyMatch(Expressions::ensureArgument)) {
-            return false;
-        }
-        return true;
+        return this.requiredVariables.stream()
+                .anyMatch(Expressions::ensureArgument);
     }
 
     @Override
