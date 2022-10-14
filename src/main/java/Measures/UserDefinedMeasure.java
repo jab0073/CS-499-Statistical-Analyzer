@@ -134,31 +134,4 @@ public class UserDefinedMeasure implements IMeasure {
         }
         return finalResult;
     }
-
-    public boolean saveToFile(String fileName) {
-        Gson gson = new Gson();
-        try {
-            Writer writer = new FileWriter(fileName);
-            gson.toJson(this, writer);
-            writer.flush();
-            writer.close();
-            Measures.getLogger().debug(this.name + " written to " + fileName);
-            return true;
-        } catch (IOException e) {
-            Measures.getLogger().error(this.name + " failed to write to " + fileName);
-            return false;
-        }
-    }
-
-    public static UserDefinedMeasure loadFromFile(String fileName) {
-        Gson gson = new Gson();
-        try {
-            UserDefinedMeasure obj =  gson.fromJson(new FileReader(fileName), UserDefinedMeasure.class);
-            Measures.getLogger().debug("Successfully loaded measure from " + fileName);
-            return obj;
-        } catch (FileNotFoundException e) {
-            Measures.getLogger().error("!!! Failed to load measure from " + fileName);
-            return null;
-        }
-    }
 }

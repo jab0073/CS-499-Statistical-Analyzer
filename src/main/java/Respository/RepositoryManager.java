@@ -2,15 +2,21 @@ package Respository;
 
 import BackEndUtilities.Constants;
 import BackEndUtilities.DataSet;
+import BackEndUtilities.Sample;
 import Interfaces.IStorage;
+import Interop.UIServices;
 import Measures.UserDefinedMeasure;
 import Settings.UserSettings;
+import TableUtilities.DataTable;
+import com.opencsv.CSVWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jfree.data.general.DatasetChangeEvent;
 
 import javax.xml.crypto.Data;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,6 +128,65 @@ public class RepositoryManager {
     private static String getDataSetFolderPath()
     {
         return UserSettings.getWorkingDirectory() + "/" + Constants.MAIN_FOLDER + "/" + Constants.DATASET_FOLDER;
+    }
+
+    private static String getExportFolderPath()
+    {
+        return UserSettings.getWorkingDirectory() + "/" + Constants.MAIN_FOLDER + "/" + Constants.EXPORT_FOLDER;
+    }
+
+    public static boolean exportCSV(DataSet ds, String name) {
+        String fileName = getExportFolderPath() + "/" + name + ".csv";
+        File file = new File(fileName);
+        try {
+            // create FileWriter object with file as parameter
+            FileWriter outputFile = new FileWriter(file);
+
+            // create CSVWriter object filewriter object as parameter
+            CSVWriter writer = new CSVWriter(outputFile);
+
+            ds.getSamples().forEach(s -> {
+                writer.writeNext(s.getData().toArray(String[]::new));
+            });
+
+            // closing writer connection
+            writer.close();
+            return true;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean exportCSV(Sample s, String name) {
+        String fileName = getExportFolderPath() + "/" + name + ".csv";
+        File file = new File(fileName);
+        try {
+            // create FileWriter object with file as parameter
+            FileWriter outputFile = new FileWriter(file);
+
+            // create CSVWriter object filewriter object as parameter
+            CSVWriter writer = new CSVWriter(outputFile);
+
+            writer.writeNext(s.getData().toArray(String[]::new));
+
+            // closing writer connection
+            writer.close();
+            return true;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    public static DataSet importCSV(String fileName) {
+        DataTable dt = UIServices.fromCSV(fileName);
+        if (dt != null)
+            return dt.toDataSet();
+        return null;
     }
 
     public static void deleteUserDefinedName(String name) {

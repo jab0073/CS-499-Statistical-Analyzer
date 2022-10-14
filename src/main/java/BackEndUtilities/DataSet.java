@@ -121,63 +121,6 @@ public class DataSet implements Cloneable{
         return ds;
     }
 
-    public boolean save(String fileName) {
-        Gson gson = new Gson();
-        try {
-            Writer writer = new FileWriter(fileName);
-            gson.toJson(this, writer);
-            writer.flush();
-            writer.close();
-            logger.debug(this.name + " written to " + fileName);
-            return true;
-        } catch (IOException e) {
-            logger.error(this.name + " failed to write to " + fileName);
-            return false;
-        }
-    }
-
-    public static DataSet load(String fileName) {
-        Gson gson = new Gson();
-        try {
-            DataSet obj =  gson.fromJson(new FileReader(fileName), DataSet.class);
-            logger.debug("Successfully loaded dataset from " + fileName);
-            return obj;
-        } catch (FileNotFoundException e) {
-            logger.error("!!! Failed to load dataset from " + fileName);
-            return null;
-        }
-    }
-
-    public boolean exportCSV(String fileName) {
-        File file = new File(fileName);
-        try {
-            // create FileWriter object with file as parameter
-            FileWriter outputFile = new FileWriter(file);
-
-            // create CSVWriter object filewriter object as parameter
-            CSVWriter writer = new CSVWriter(outputFile);
-
-            this.samples.forEach(s -> {
-                writer.writeNext(s.getData().toArray(String[]::new));
-            });
-
-            // closing writer connection
-            writer.close();
-            return true;
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public static DataSet importCSV(String fileName) {
-        DataTable dt = UIServices.fromCSV(fileName);
-        if (dt != null)
-            return dt.toDataSet();
-        return null;
-    }
-
     public boolean validate() {
         return DataValidator.validate(this);
     }

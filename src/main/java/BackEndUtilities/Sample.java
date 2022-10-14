@@ -140,54 +140,6 @@ public class Sample implements Cloneable{
         return DataValidator.validate(this);
     }
 
-    public boolean save(String fileName) {
-        Gson gson = new Gson();
-        try {
-            Writer writer = new FileWriter(fileName);
-            gson.toJson(this, writer);
-            writer.flush();
-            writer.close();
-            Measures.getLogger().debug("Sample written to " + fileName);
-            return true;
-        } catch (IOException e) {
-            Measures.getLogger().error("Sample failed to write to " + fileName);
-            return false;
-        }
-    }
-
-    public static Sample load(String fileName) {
-        Gson gson = new Gson();
-        try {
-            Sample obj =  gson.fromJson(new FileReader(fileName), Sample.class);
-            logger.debug("Successfully loaded sample from " + fileName);
-            return obj;
-        } catch (FileNotFoundException e) {
-            logger.error("!!! Failed to load sample from " + fileName);
-            return null;
-        }
-    }
-
-    public boolean exportCSV(String fileName) {
-        File file = new File(fileName);
-        try {
-            // create FileWriter object with file as parameter
-            FileWriter outputFile = new FileWriter(file);
-
-            // create CSVWriter object filewriter object as parameter
-            CSVWriter writer = new CSVWriter(outputFile);
-
-            writer.writeNext(data.toArray(String[]::new));
-
-            // closing writer connection
-            writer.close();
-            return true;
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
