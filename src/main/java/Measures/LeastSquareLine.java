@@ -58,11 +58,8 @@ public class LeastSquareLine implements IMeasure {
             return false;
         if (this.inputData.status == IValidator.ValidationStatus.INVALID)
             return false;
-        if (this.requiredVariables.stream()
-                .anyMatch(Expressions::ensureArgument)) {
-            return false;
-        }
-        return true;
+        return this.requiredVariables.stream()
+                .anyMatch(Expressions::ensureArgument);
     }
 
     private static double[][] pair(double[] arr1, double[] arr2) {
