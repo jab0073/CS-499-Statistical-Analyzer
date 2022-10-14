@@ -58,8 +58,11 @@ public class Mean implements IMeasure {
             return false;
         if (this.inputData.status == IValidator.ValidationStatus.INVALID)
             return false;
-        return this.requiredVariables.stream()
-                .anyMatch(Expressions::ensureArgument);
+        if(this.requiredVariables.size() > 0) {
+            return this.requiredVariables.stream()
+                    .anyMatch(Expressions::ensureArgument);
+        }
+        return true;
     }
 
     @Override
@@ -70,6 +73,12 @@ public class Mean implements IMeasure {
             return null;
 
         Double[] values = inputData.getAllDataAsDouble().toArray(Double[]::new);
-        return StatUtils.mean(ArrayUtils.toPrimitive(values));
+
+        double result = StatUtils.mean(ArrayUtils.toPrimitive(values));
+
+        if(Double.isNaN(result))
+            return null;
+
+        return result;
     }
 }

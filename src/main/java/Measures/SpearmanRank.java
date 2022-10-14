@@ -58,8 +58,11 @@ public class SpearmanRank implements IMeasure {
             return false;
         if (this.inputData.status == IValidator.ValidationStatus.INVALID)
             return false;
-        return this.requiredVariables.stream()
-                .anyMatch(Expressions::ensureArgument);
+        if(this.requiredVariables.size() > 0) {
+            return this.requiredVariables.stream()
+                    .anyMatch(Expressions::ensureArgument);
+        }
+        return true;
     }
 
     @Override
@@ -73,6 +76,12 @@ public class SpearmanRank implements IMeasure {
         Double[] yList = inputData.getSample(1).getDataAsDouble().toArray(Double[]::new);
 
         SpearmansCorrelation sc = new SpearmansCorrelation();
-        return sc.correlation(ArrayUtils.toPrimitive(xList), ArrayUtils.toPrimitive(yList));
+
+        double result = sc.correlation(ArrayUtils.toPrimitive(xList), ArrayUtils.toPrimitive(yList));
+
+        if(Double.isNaN(result))
+            return null;
+
+        return result;
     }
 }

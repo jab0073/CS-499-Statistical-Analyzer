@@ -59,8 +59,11 @@ public class Mode implements IMeasure {
             return false;
         if (this.inputData.status == IValidator.ValidationStatus.INVALID)
             return false;
-        return this.requiredVariables.stream()
-                .anyMatch(Expressions::ensureArgument);
+        if(this.requiredVariables.size() > 0) {
+            return this.requiredVariables.stream()
+                    .anyMatch(Expressions::ensureArgument);
+        }
+        return true;
     }
 
     @Override
@@ -72,6 +75,11 @@ public class Mode implements IMeasure {
 
         Double[] values = inputData.getAllDataAsDouble().toArray(Double[]::new);
 
-        return Arrays.stream(StatUtils.mode(ArrayUtils.toPrimitive(values))).boxed().toList();
+        List<Double> result = Arrays.stream(StatUtils.mode(ArrayUtils.toPrimitive(values))).boxed().toList();
+
+        if(result.stream().anyMatch(d -> d.isNaN()))
+            return null;
+
+        return result;
     }
 }

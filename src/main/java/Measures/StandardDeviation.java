@@ -65,8 +65,11 @@ public class StandardDeviation extends BiasCorrectable implements IMeasure {
             return false;
         if (this.inputData.status == IValidator.ValidationStatus.INVALID)
             return false;
-        return this.requiredVariables.stream()
-                .anyMatch(Expressions::ensureArgument);
+        if(this.requiredVariables.size() > 0) {
+            return this.requiredVariables.stream()
+                    .anyMatch(Expressions::ensureArgument);
+        }
+        return true;
     }
 
     @Override
@@ -79,6 +82,12 @@ public class StandardDeviation extends BiasCorrectable implements IMeasure {
         org.apache.commons.math3.stat.descriptive.moment.StandardDeviation std = new org.apache.commons.math3.stat.descriptive.moment.StandardDeviation();
         std.setData(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
         std.setBiasCorrected(this.isBiasCorrected);
-        return std.evaluate();
+
+        double result = std.evaluate();
+
+        if(Double.isNaN(result))
+            return null;
+
+        return result;
     }
 }

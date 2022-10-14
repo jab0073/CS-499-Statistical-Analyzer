@@ -59,8 +59,11 @@ public class Binomial implements IMeasure {
             return false;
         if (this.inputData.status == IValidator.ValidationStatus.INVALID)
             return false;
-        return this.requiredVariables.stream()
-                .anyMatch(Expressions::ensureArgument);
+        if(this.requiredVariables.size() > 0) {
+            return this.requiredVariables.stream()
+                    .anyMatch(Expressions::ensureArgument);
+        }
+        return true;
     }
 
     @Override
@@ -76,6 +79,12 @@ public class Binomial implements IMeasure {
 
         BinomialDistribution bd = new BinomialDistribution(n, p);
 
-        return inputData.getAllDataAsDouble().stream().map(d -> bd.probability(d.intValue())).toList();
+        List<Double> result = inputData.getAllDataAsDouble().stream().map(d -> bd.probability(d.intValue())).toList();
+
+        if(result.stream().anyMatch(d -> Double.isNaN(d))) {
+            return null;
+        }
+
+        return result;
     }
 }

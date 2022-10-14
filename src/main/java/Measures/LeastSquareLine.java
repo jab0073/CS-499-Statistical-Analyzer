@@ -58,8 +58,11 @@ public class LeastSquareLine implements IMeasure {
             return false;
         if (this.inputData.status == IValidator.ValidationStatus.INVALID)
             return false;
-        return this.requiredVariables.stream()
-                .anyMatch(Expressions::ensureArgument);
+        if(this.requiredVariables.size() > 0) {
+            return this.requiredVariables.stream()
+                    .anyMatch(Expressions::ensureArgument);
+        }
+        return true;
     }
 
     private static double[][] pair(double[] arr1, double[] arr2) {
@@ -84,9 +87,15 @@ public class LeastSquareLine implements IMeasure {
         Double[] xArray = x.toArray(Double[]::new);
         Double[] yArray = y.toArray(Double[]::new);
 
-        double[][] xyArray = pair(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
+        double[][] xyArray = this.pair(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
         sr.addData(xyArray);
 
-        return "b=" + sr.getIntercept() + ",m=" + sr.getSlope();
+        double b = sr.getIntercept();
+        double m = sr.getSlope();
+
+        if(Double.isNaN(b) || Double.isNaN(m))
+            return null;
+
+        return "b=" + b + ",m=" + m;
     }
 }
