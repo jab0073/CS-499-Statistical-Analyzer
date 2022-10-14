@@ -64,8 +64,11 @@ public class UserDefinedMeasure implements IMeasure {
 
     @Override
     public boolean validate() {
-        return this.requiredVariables.stream()
-                .noneMatch(Expressions::ensureArgument);
+        if(this.requiredVariables.size() > 0) {
+            return this.requiredVariables.stream()
+                    .noneMatch(Expressions::ensureArgument);
+        }
+        return true;
     }
 
     @Override

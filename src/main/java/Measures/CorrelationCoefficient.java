@@ -58,8 +58,11 @@ public class CorrelationCoefficient implements IMeasure {
             return false;
         if (this.inputData.status == IValidator.ValidationStatus.INVALID)
             return false;
-        return this.requiredVariables.stream()
-                .anyMatch(Expressions::ensureArgument);
+        if(this.requiredVariables.size() > 0) {
+            return this.requiredVariables.stream()
+                    .anyMatch(Expressions::ensureArgument);
+        }
+        return true;
     }
 
     @Override
@@ -74,6 +77,11 @@ public class CorrelationCoefficient implements IMeasure {
         Double[] xList = inputData.getSample(0).getDataAsDouble().toArray(Double[]::new);
         Double[] yList = inputData.getSample(1).getDataAsDouble().toArray(Double[]::new);
 
-        return pc.correlation(ArrayUtils.toPrimitive(xList), ArrayUtils.toPrimitive(yList));
+        Double result = pc.correlation(ArrayUtils.toPrimitive(xList), ArrayUtils.toPrimitive(yList));
+
+        if(result.isNaN())
+            return null;
+
+        return result;
     }
 }

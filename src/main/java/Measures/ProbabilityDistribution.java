@@ -63,8 +63,11 @@ public class ProbabilityDistribution extends BiasCorrectable implements IMeasure
             return false;
         if (this.inputData.status == IValidator.ValidationStatus.INVALID)
             return false;
-        return this.requiredVariables.stream()
-                .anyMatch(Expressions::ensureArgument);
+        if(this.requiredVariables.size() > 0) {
+            return this.requiredVariables.stream()
+                    .anyMatch(Expressions::ensureArgument);
+        }
+        return true;
     }
 
     @Override
@@ -76,8 +79,16 @@ public class ProbabilityDistribution extends BiasCorrectable implements IMeasure
 
         Double mean = new Mean(this.inputData).run();
         Double std = new StandardDeviation(this.inputData, this.isBiasCorrected).run();
+        if(mean==null || std==null || std.equals(0.0))
+            return null;
+
         NormalDistribution nd = new NormalDistribution(mean, std);
 
-        return this.inputData.getAllDataAsDouble().stream().map(nd::density).toList();
+        List<Double> result = this.inputData.getAllDataAsDouble().stream().map(nd::density).toList();
+
+        if(result.stream().anyMatch(d->d.isNaN()))
+            return null;
+
+        return result;
     }
 }

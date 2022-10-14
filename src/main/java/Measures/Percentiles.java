@@ -57,8 +57,11 @@ public class Percentiles implements IMeasure {
             return false;
         if (this.inputData.status == IValidator.ValidationStatus.INVALID)
             return false;
-        return this.requiredVariables.stream()
-                .anyMatch(Expressions::ensureArgument);
+        if(this.requiredVariables.size() > 0) {
+            return this.requiredVariables.stream()
+                    .anyMatch(Expressions::ensureArgument);
+        }
+        return true;
     }
 
     @Override
@@ -72,6 +75,11 @@ public class Percentiles implements IMeasure {
         p.setData(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
         double x = Double.parseDouble(Expressions.getArgument("x"));
 
-        return p.evaluate(x);
+        double result = p.evaluate(x);
+
+        if(Double.isNaN(result))
+            return null;
+
+        return result;
     }
 }

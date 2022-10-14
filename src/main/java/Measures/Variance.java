@@ -59,8 +59,11 @@ public class Variance implements IMeasure {
             return false;
         if (this.inputData.status == IValidator.ValidationStatus.INVALID)
             return false;
-        return this.requiredVariables.stream()
-                .anyMatch(Expressions::ensureArgument);
+        if(this.requiredVariables.size() > 0) {
+            return this.requiredVariables.stream()
+                    .anyMatch(Expressions::ensureArgument);
+        }
+        return true;
     }
 
     @Override
@@ -70,6 +73,11 @@ public class Variance implements IMeasure {
         if(!this.validate())
             return null;
 
-        return StatUtils.variance(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
+        double result = StatUtils.variance(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
+
+        if(Double.isNaN(result))
+            return null;
+
+        return result;
     }
 }
