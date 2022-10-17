@@ -15,12 +15,15 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
 public class UIServices {
 
     static final Logger logger = LogManager.getLogger(UIServices.class.getName());
+    public enum NotificationKind {MSG, ERROR, ALERT}
+    private static JLabel statusLabel;
 
     /**
      * It reads a CSV file and returns a DataTable object.
@@ -156,6 +159,43 @@ public class UIServices {
         DataTable dt = UIServices.fromXLSX(filePath, sheetNumber);
         dt.setTableName(tableName);
         return dt;
+    }
+
+    public static void setStatusLabel(JLabel label){
+        statusLabel = label;
+    }
+
+    public static void setStatusLabel(String s){
+        statusLabel.setText(s);
+    }
+
+    public static void clearStatusLabel () {
+        notify("...", NotificationKind.MSG);
+    }
+
+    public static void notify(String message){
+        notify(message, NotificationKind.MSG);
+    }
+
+    public static void notify(String message, NotificationKind kind){
+        if(kind.equals(NotificationKind.ERROR))
+            statusLabel.setText("!!! " + message + " !!!");
+        else if(kind.equals(NotificationKind.ALERT))
+            statusLabel.setText("--- " + message + " ---");
+        else
+            statusLabel.setText(message);
+    }
+
+    public static void notify(String message, Exception e){
+        notify(message+" ["+e.getMessage()+"]", NotificationKind.ERROR);
+    }
+
+    public static void ErrorMessage(String title, String message){
+        // TODO Dialog box for error with passed title and message
+    }
+
+    public static void WarningMessage(String title, String message){
+        // TODO Dialog box for warning with passed title and message
     }
 
 }
