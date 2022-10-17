@@ -62,6 +62,9 @@ public class LeastSquareLine implements IMeasure {
             return this.requiredVariables.stream()
                     .anyMatch(Expressions::ensureArgument);
         }
+        if(this.inputData.getSample(1).getSize() < 2) {
+            return false;
+        }
         return true;
     }
 
