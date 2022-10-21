@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="CS-499-Statistical-Analyzer" />
         <module name="Statistical-Analyzer" />
       </profile>
     </annotationProcessing>

@@ -66,6 +66,9 @@ public class Main {
 
         Double output = (Double) measure.run();
 
+        GUI.Frame frame = new GUI.Frame();
+        frame.frame();
+
         System.out.println(measureName + ": " + output + " based on DataSet " + ds.getName());
         logger.debug("Leaving Main.");
     }
