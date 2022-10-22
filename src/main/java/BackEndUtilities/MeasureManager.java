@@ -28,7 +28,7 @@ public class MeasureManager {
                 measures.add(a);
             }
         }
-        measures.addAll(RepositoryManager.getAllUserDefinedMeasures()); // Adding all the User Defined Measures from the Repository Manager
+        //measures.addAll(RepositoryManager.getAllUserDefinedMeasures()); // Adding all the User Defined Measures from the Repository Manager
     }
 
     /**
@@ -46,6 +46,16 @@ public class MeasureManager {
      */
     public static List<String> getAllMeasureNames() {
         return measures.stream().map(IMeasure::getName).sorted(Comparator.comparing(String::toLowerCase)).collect(Collectors.toList());
+    }
+
+    public static String getRandomMeasureName(){
+        String name = "";
+        int size = measures.size();
+
+        name = measures.get((int) (Math.random() * size)).getName();
+
+
+        return name;
     }
 }
 

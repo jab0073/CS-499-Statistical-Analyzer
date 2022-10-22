@@ -1,8 +1,14 @@
 package GUI;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
 
 public class RightPanel {
+    JList<String> functionList;
     /**Method which returns the panel which will be on the right side of the frame.
      *@return The panel which contains a scroll pane and button.*/
     public JPanel rightPanel(){
@@ -24,10 +30,10 @@ public class RightPanel {
     /**Method which creates the uneditable text area which will contain the names of the user's selected
      * equations.
      *@return An uneditable text area.*/
-    private JTextArea functionsBox(){
-        JTextArea functionsList = new JTextArea("Hello", 30, 20);
-        functionsList.setEditable(false);
-        return(functionsList);
+    private JList functionsBox(){
+        functionList = new JList<>();
+
+        return(functionList);
     }
 
     /**Method which creates the panel containing both buttons.
@@ -56,6 +62,13 @@ public class RightPanel {
         add.setOpaque(false);
         add.setContentAreaFilled(false);
         add.setBorderPainted(false);
+        add.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FrontEndUtilities.GUIDataMaster.newGUIMeasure(BackEndUtilities.MeasureManager.getRandomMeasureName());
+                updateList(true);
+            }
+        });
 
         return (add);
     }
@@ -67,7 +80,32 @@ public class RightPanel {
         remove.setOpaque(false);
         remove.setContentAreaFilled(false);
         remove.setBorderPainted(false);
+        remove.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FrontEndUtilities.GUIDataMaster.removeGUIMeasure(functionList.getSelectedIndex());
+                updateList(false);
+            }
+        });
 
         return (remove);
+    }
+
+    private void updateList(boolean add){
+        int i = functionList.getSelectedIndex();
+
+        String[] names = FrontEndUtilities.GUIDataMaster.getMeasureNames();
+
+        functionList.setListData(new Vector<String>(Arrays.asList(names)));
+
+        if(add){
+            functionList.setSelectedIndex(names.length-1);
+        }else{
+            if(i > names.length-1) {
+                functionList.setSelectedIndex(i - 1);
+            }else{
+                functionList.setSelectedIndex(i);
+            }
+        }
     }
 }
