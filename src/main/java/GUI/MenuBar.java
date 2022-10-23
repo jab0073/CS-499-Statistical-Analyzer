@@ -1,8 +1,13 @@
 package GUI;
 
+import FrontEndUtilities.GUIDataMaster;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class MenuBar {
     /**Method which returns the menu bar.
@@ -71,6 +76,18 @@ public class MenuBar {
         run.setOpaque(false);
         run.setContentAreaFilled(false);
         run.setBorderPainted(false);
+
+        run.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GUIDataMaster.executeMeasures();
+                ArrayList<Object> r = GUIDataMaster.getResults();
+                for(Object o : r){
+                    System.out.println(o);
+                }
+            }
+        });
+
         return (run);
     }
 

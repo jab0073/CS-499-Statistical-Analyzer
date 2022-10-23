@@ -21,10 +21,12 @@ public class Main {
     public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         logger.debug("Starting Main.");
 
-        UserSettings.setWorkingDirectory("/Users/justin/Desktop/SA/");
+        //UserSettings.setWorkingDirectory("/Users/justin/Desktop/SA/");
 
-        RepositoryManager.init();
+        //RepositoryManager.init();
         MeasureManager.init();
+
+        /**
         System.out.println("MEASURES:");
         MeasureManager.getAllMeasureNames().forEach(System.out::println);
 
@@ -65,11 +67,12 @@ public class Main {
         measure.setInputData(ds);
 
         Double output = (Double) measure.run();
+         */
+
 
         GUI.Frame frame = new GUI.Frame();
         frame.frame();
 
-        System.out.println(measureName + ": " + output + " based on DataSet " + ds.getName());
         logger.debug("Leaving Main.");
     }
 }

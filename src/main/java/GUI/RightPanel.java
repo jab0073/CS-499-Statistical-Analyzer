@@ -1,5 +1,10 @@
 package GUI;
+import BackEndUtilities.MeasureManager;
+import FrontEndUtilities.GUIDataMaster;
+
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,7 +13,7 @@ import java.util.List;
 import java.util.Vector;
 
 public class RightPanel {
-    JList<String> functionList;
+    private static JList<String> functionList;
     /**Method which returns the panel which will be on the right side of the frame.
      *@return The panel which contains a scroll pane and button.*/
     public JPanel rightPanel(){
@@ -32,6 +37,19 @@ public class RightPanel {
      *@return An uneditable text area.*/
     private JList functionsBox(){
         functionList = new JList<>();
+
+        functionList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(!e.getValueIsAdjusting()) {
+                    int a = functionList.getSelectedIndex();
+                    if(a==-1){
+                        return;
+                    }
+                    MiddlePanel.changeData(GUIDataMaster.getGUIMeasure(functionList.getSelectedIndex()).getDataAsString());
+                }
+            }
+        });
 
         return(functionList);
     }
@@ -65,7 +83,7 @@ public class RightPanel {
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                FrontEndUtilities.GUIDataMaster.newGUIMeasure(BackEndUtilities.MeasureManager.getRandomMeasureName());
+                FrontEndUtilities.GUIDataMaster.newGUIMeasure(MeasureManager.getRandomMeasureName());
                 updateList(true);
             }
         });
@@ -107,5 +125,9 @@ public class RightPanel {
                 functionList.setSelectedIndex(i);
             }
         }
+    }
+
+    public static int getCurrentMeasureIndex(){
+        return functionList.getSelectedIndex();
     }
 }

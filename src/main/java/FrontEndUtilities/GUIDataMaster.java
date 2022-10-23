@@ -16,8 +16,11 @@ public class GUIDataMaster {
     }
 
     public static void removeGUIMeasure(int index){
-        measures.remove(index);
-        results.remove(index);
+        if(measures.size() > 0){
+            measures.remove(index);
+            results.remove(index);
+        }
+
     }
 
     /**
