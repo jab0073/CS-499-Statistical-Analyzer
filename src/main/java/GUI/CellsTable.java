@@ -49,8 +49,12 @@ public class CellsTable {
 
                 if(value == null)
                     continue;
+                if(value.toString().contains(" ")){
 
-                data.append(value).append(",");
+                }
+                else{
+                    data.append(value).append(",");
+                }
             }
         }
 

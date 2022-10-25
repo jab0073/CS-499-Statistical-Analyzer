@@ -14,6 +14,7 @@ import java.util.Vector;
 
 public class RightPanel {
     private static JList<String> functionList;
+    private static int functionIndex;
     /**Method which returns the panel which will be on the right side of the frame.
      *@return The panel which contains a scroll pane and button.*/
     public JPanel rightPanel(){
@@ -22,14 +23,24 @@ public class RightPanel {
 
         /*Add the scroll bane and buttons panel to the right panel.*/
         panel.add(scrollPane(), BorderLayout.CENTER);
-        panel.add(buttons(), BorderLayout.NORTH);
+        panel.add(topRightPanel(), BorderLayout.NORTH);
         return(panel);
     }
+
+    private JPanel topRightPanel(){
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(buttons(), BorderLayout.NORTH);
+        panel.add(dropDown(), BorderLayout.SOUTH);
+        return(panel);
+    }
+
 
     /**Method which creates the scroll pane.
      *@return The scroll pane.*/
     private JScrollPane scrollPane() {
-        return (new JScrollPane(functionsBox()));
+        JScrollPane pane = new JScrollPane(functionsBox());
+        pane.setPreferredSize(new Dimension(250, 250));
+        return (pane);
     }
 
     /**Method which creates the uneditable text area which will contain the names of the user's selected
@@ -73,6 +84,19 @@ public class RightPanel {
         return(label);
     }
 
+    private JComboBox dropDown(){
+        String[] names = MeasureManager.getAllMeasureNames().toArray(new String[0]);
+        JComboBox box = new JComboBox(names);
+        box.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                functionIndex = box.getSelectedIndex();
+            }
+        });
+        return(box);
+    }
+
+
     /**Method which creates the add button.
      *@return The add button.*/
     private JButton addButton() {
@@ -83,7 +107,7 @@ public class RightPanel {
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                FrontEndUtilities.GUIDataMaster.newGUIMeasure(MeasureManager.getRandomMeasureName());
+                FrontEndUtilities.GUIDataMaster.newGUIMeasure(dropDown().getItemAt(functionIndex).toString());
                 updateList(true);
             }
         });

@@ -36,13 +36,17 @@ public class MiddlePanel {
     /**Creates a scroll pane for the text area.
      *@return A scroll pane containing a text area.*/
     private JScrollPane scrollPane() {
-        return (new JScrollPane(dataArea()));
+        JScrollPane pane = new JScrollPane(dataArea());
+        pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        return (pane);
     }
 
     /**Creates a text area that user can input data into.
      *@return The text area*/
     private JTextArea dataArea(){
-        dataArea = new JTextArea("Data", 20, 15);
+        dataArea = new JTextArea("Select Data from Chart", 20, 15);
+        dataArea.setEditable(false);
+        dataArea.setLineWrap(true);
 
         dataArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -88,7 +92,12 @@ public class MiddlePanel {
         btnImport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dataArea.setText(CellsTable.getSelectedData());
+                if(dataArea.getText().contains("Select Data from Chart")){
+                    dataArea.setText(CellsTable.getSelectedData());
+                }
+                else{
+                    dataArea.append(CellsTable.getSelectedData() + ",");
+                }
                 updateMeasureData();
             }
         });
