@@ -1,8 +1,15 @@
 package GUI;
 
+import FrontEndUtilities.GUIDataMaster;
+
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
 
 public class MenuBar {
     /**Method which returns the menu bar.
@@ -31,6 +38,34 @@ public class MenuBar {
         file.setOpaque(false);
         file.setContentAreaFilled(false);
         file.setBorderPainted(false);
+
+        file.addActionListener(new ActionListener() {
+            @Override
+            /**
+             * Opens a file browser for the user to select a file to import to the chart
+             * File types are restricted to CSV, but can be expanded
+             */
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "CSV Files", "csv");
+                fileChooser.setFileFilter(filter);
+
+                JDialog dialog = new JDialog();
+
+                int result = fileChooser.showOpenDialog(dialog);
+
+                dialog.setVisible(true);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    CellsTable.loadFile(selectedFile.getAbsolutePath());
+                }
+
+                dialog.dispose();
+            }
+        });
+
         return (file);
     }
 
@@ -71,6 +106,18 @@ public class MenuBar {
         run.setOpaque(false);
         run.setContentAreaFilled(false);
         run.setBorderPainted(false);
+
+        run.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GUIDataMaster.executeMeasures();
+                ArrayList<Object> r = GUIDataMaster.getResults();
+                for(Object o : r){
+                    System.out.println(o);
+                }
+            }
+        });
+
         return (run);
     }
 

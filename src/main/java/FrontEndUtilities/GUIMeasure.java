@@ -48,6 +48,8 @@ public class GUIMeasure {
             measureData[index] = new ArrayList<String>();
             measureData[index].addAll(Arrays.asList(data));
         }
+
+        int i = 0;
     }
 
     /**
@@ -106,5 +108,23 @@ public class GUIMeasure {
 
     public String getName(){
         return name;
+    }
+
+    public String getDataAsString(){
+        StringBuilder data = new StringBuilder();
+
+        for(ArrayList<String> sA : measureData){
+            if(sA == null){
+                data.append(" ");
+                continue;
+            }
+            for(String s : sA){
+                data.append(s).append(",");
+            }
+        }
+
+        data.deleteCharAt(data.length()-1);
+
+        return data.toString();
     }
 }

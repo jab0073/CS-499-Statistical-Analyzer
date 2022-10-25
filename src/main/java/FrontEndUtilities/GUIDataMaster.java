@@ -15,6 +15,14 @@ public class GUIDataMaster {
         results.add(null);
     }
 
+    public static void removeGUIMeasure(int index){
+        if(measures.size() > 0){
+            measures.remove(index);
+            results.remove(index);
+        }
+
+    }
+
     /**
      * Retrieves the names of all measures currently registered
      * @return Array of names

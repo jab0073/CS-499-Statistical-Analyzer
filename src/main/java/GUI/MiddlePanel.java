@@ -1,9 +1,17 @@
 package GUI;
 
+import FrontEndUtilities.GUIDataMaster;
+
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MiddlePanel {
+    private static JTextArea dataArea;
+
     /**Method which returns a panel which contains one scroll pane, a button, and a label.
      *@return One of the data panel options.*/
     public JPanel dataPanel(){
@@ -34,7 +42,26 @@ public class MiddlePanel {
     /**Creates a text area that user can input data into.
      *@return The text area*/
     private JTextArea dataArea(){
-        return(new JTextArea("Data", 20, 15));
+        dataArea = new JTextArea("Data", 20, 15);
+
+        dataArea.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateMeasureData();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateMeasureData();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
+
+        return(dataArea);
     }
 
     /**Method which creates panel to contain the button and label.
@@ -56,6 +83,31 @@ public class MiddlePanel {
     /**Method which creates the button for importing data from chart.
      *@return The import button,*/
     private JButton importButton(){
-        return(new JButton("Import From Chart"));
+        JButton btnImport = new JButton("Import From Chart");
+
+        btnImport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dataArea.setText(CellsTable.getSelectedData());
+                updateMeasureData();
+            }
+        });
+
+        return(btnImport);
+    }
+
+    private void updateMeasureData(){
+        String[] data = dataArea.getText().split(",");
+
+        int s = RightPanel.getCurrentMeasureIndex();
+        if(s < 0){
+            return;
+        }
+
+        GUIDataMaster.getGUIMeasure(s).addData(false, 0, data);
+    }
+
+    public static void changeData(String data){
+        dataArea.setText(data);
     }
 }
