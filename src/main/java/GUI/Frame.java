@@ -1,6 +1,8 @@
 package GUI;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class Frame extends JFrame {
     /**Method for generating the frame which holds the GUI*/
