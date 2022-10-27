@@ -3,6 +3,7 @@ package Measures;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
+import Graphing.GraphTypes;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
 import org.apache.commons.lang3.ArrayUtils;
@@ -17,6 +18,12 @@ public class SignTest implements IMeasure {
     private final String name = MeasureConstants.sign;
     private final int minimumSamples = 2;
     private final List<String> requiredVariables = new ArrayList<>();
+    private final boolean isGraphable = false;
+    private final List<GraphTypes> validGraphs = List.of();
+
+    public boolean isGraphable(){ return this.isGraphable; }
+
+    public List<GraphTypes> getValidGraphs(){ return this.validGraphs; }
 
     public SignTest() {
         this.inputData = new DataSet();

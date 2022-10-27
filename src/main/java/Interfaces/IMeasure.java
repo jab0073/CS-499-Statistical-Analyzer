@@ -2,6 +2,7 @@ package Interfaces;
 
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
+import Graphing.GraphTypes;
 import Measures.Measures;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,5 +27,9 @@ public interface IMeasure {
     DataSet getInputData();
 
     Object run();
+
+    boolean isGraphable();
+
+    List<GraphTypes> getValidGraphs();
 
 }

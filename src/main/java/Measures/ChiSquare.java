@@ -3,6 +3,7 @@ package Measures;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
+import Graphing.GraphTypes;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
 import org.apache.commons.math3.distribution.ChiSquaredDistribution;
@@ -15,6 +16,12 @@ public class ChiSquare implements IMeasure {
     private final String name = MeasureConstants.chi;
     private final int minimumSamples = 1;
     private final List<String> requiredVariables = Arrays.asList("p", "n");
+    private final boolean isGraphable = false;
+    private final List<GraphTypes> validGraphs = List.of();
+
+    public boolean isGraphable(){ return this.isGraphable; }
+
+    public List<GraphTypes> getValidGraphs(){ return this.validGraphs; }
 
     public ChiSquare() {
         this.inputData = new DataSet();

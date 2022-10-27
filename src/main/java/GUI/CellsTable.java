@@ -65,6 +65,10 @@ public class CellsTable {
             }
         }
 
+        if(data.length() == 0){
+            return null;
+        }
+
         data.deleteCharAt(data.length()-1);
 
         return data.toString();
