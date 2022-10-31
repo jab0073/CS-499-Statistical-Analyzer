@@ -3,6 +3,7 @@ package Measures;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
+import Graphing.GraphTypes;
 import Interfaces.BiasCorrectable;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
@@ -15,6 +16,12 @@ public class CoefficientOfVariance extends BiasCorrectable implements IMeasure {
     private final String name = MeasureConstants.coefficient;
     private final int minimumSamples = 1;
     private final List<String> requiredVariables = new ArrayList<>();
+    private final boolean isGraphable = false;
+    private final List<GraphTypes> validGraphs = List.of();
+
+    public boolean isGraphable(){ return this.isGraphable; }
+
+    public List<GraphTypes> getValidGraphs(){ return this.validGraphs; }
 
     public CoefficientOfVariance() {
         this.inputData = new DataSet();

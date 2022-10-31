@@ -1,6 +1,9 @@
 package GUI;
 
+import FrontEndUtilities.ErrorManager;
 import FrontEndUtilities.GUIDataMaster;
+import FrontEndUtilities.OutputManager;
+import Graphing.GraphManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -110,11 +113,21 @@ public class MenuBar {
         run.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GUIDataMaster.executeMeasures();
+                GUIDataMaster.flush();
+                boolean success = GUIDataMaster.executeMeasures();
+
+                if(!success){
+                    ErrorManager.displayErrors();
+                    return;
+                }
+
                 ArrayList<Object> r = GUIDataMaster.getResults();
                 for(Object o : r){
-                    System.out.println(o);
+                    OutputManager.addOutput((o==null) ? null : o.toString());
                 }
+
+                GraphManager.displayGraphs();
+                OutputManager.displayOutputs();
             }
         });
 

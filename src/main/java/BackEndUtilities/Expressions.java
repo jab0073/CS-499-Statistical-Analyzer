@@ -1,5 +1,6 @@
 package BackEndUtilities;
 
+import FrontEndUtilities.ErrorManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mariuszgromada.math.mxparser.*;
@@ -7,6 +8,7 @@ import org.mariuszgromada.math.mxparser.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Expressions {
@@ -46,7 +48,21 @@ public class Expressions {
     }
 
     public static boolean ensureArgument(String variable) {
-        return arguements.contains(new Pair(variable));
+        boolean contains = arguements.contains(new Pair(variable));
+
+        if(contains){
+            String varValue = arguements.get(arguements.indexOf(new Pair(variable))).getValue();
+            if(Objects.equals(varValue, "")){
+                ErrorManager.sendErrorMessage("Variables", "Value of variable " + variable + " not set");
+            }else if(!isNumeric(varValue)){
+                ErrorManager.sendErrorMessage("Variables", "Value of variable " + variable + " not valid");
+            }
+
+        }else{
+            ErrorManager.sendErrorMessage("Variables", "Variable " + variable + " does not exist");
+        }
+
+        return contains;
         //return !Expressions.arguements.stream().filter(a -> variable.equals(a.getVariable())).map(Pair::getValue).toList().isEmpty();
     }
 
@@ -130,4 +146,23 @@ public class Expressions {
         }).toList();
         return exps.stream().map(Expression::calculate).collect(Collectors.toList());
     }
+
+    /**
+     * Checks if a string is numeric
+     * @param str the string to analyze
+     * @return whether the string is numeric
+     */
+    private static boolean isNumeric(String str){
+        if(str == null){
+            return false;
+        }
+        try{
+            double d = Double.parseDouble(str);
+        }catch(NumberFormatException e){
+            return false;
+        }
+
+        return true;
+    }
+
 }
