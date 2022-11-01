@@ -1,8 +1,15 @@
 package GUI;
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Frame extends JFrame {
+    private static String CARD_PANEL ="2";
+    private JPanel cardPanel;
+
     /**Method for generating the frame which holds the GUI*/
     public void frame() {
         /*Create a frame, give it a size, set it to exit on close.*/
@@ -16,6 +23,16 @@ public class Frame extends JFrame {
         window.add(windowPanelLeft(), BorderLayout.WEST);
         window.add(windowPanelMiddle(), BorderLayout.CENTER);
         window.add(windowPanelRight(), BorderLayout.EAST);
+
+        /**JButton button = new JButton("Change");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CardLayout layout = (CardLayout) cardPanel.getLayout();
+                layout.next(cardPanel);
+            }
+        });
+        window.add(button, BorderLayout.SOUTH);*/
 
         /*Set the frame to start maximized and visible.*/
         window.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -45,9 +62,26 @@ public class Frame extends JFrame {
     /**Method which adds the middle panel to a panel which will be placed in the middle of the application.
      *@return The panel containing the middle panel.*/
     private JPanel windowPanelMiddle(){
-        JPanel panel = new JPanel(new CardLayout());
+        JPanel panel = new JPanel();
+        CardLayout layout = new CardLayout();
+        panel.setLayout(layout);
 
-        panel.add(new MiddlePanel().dataPanel());
+        cardPanel = panel;
+
+        /**The "cards" in the card layout, able to be cycled through. Name indicates layout.*/
+        JPanel oneBox = new MiddlePanel().dataPanel();
+        JPanel twoBoxes = new MiddlePanelTwo().dataPanel();
+        JPanel oneLine = new MiddlePanelThree().dataPanel();
+        JPanel twoLines = new MiddlePanelFour().dataPanel();
+        JPanel boxLine = new MiddlePanelFive().dataPanel();
+
+        panel.add(oneBox, "1");
+        panel.add(twoBoxes, "2");
+        panel.add(oneLine, "3");
+        panel.add(twoLines, "4");
+        panel.add(boxLine, "5");
+
+        layout.show(panel, CARD_PANEL);
 
         return(panel);
     }
