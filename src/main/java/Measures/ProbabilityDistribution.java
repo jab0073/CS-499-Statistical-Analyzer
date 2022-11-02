@@ -3,6 +3,8 @@ package Measures;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
+import FrontEndUtilities.ErrorManager;
+import Graphing.DataFormat;
 import Graphing.GraphTypes;
 import Interfaces.BiasCorrectable;
 import Interfaces.IMeasure;
@@ -17,8 +19,8 @@ public class ProbabilityDistribution extends BiasCorrectable implements IMeasure
     private final String name = MeasureConstants.probability;
     private final int minimumSamples = 1;
     private final List<String> requiredVariables = new ArrayList<>();
-    private final boolean isGraphable = false;
-    private final List<GraphTypes> validGraphs = List.of();
+    private final boolean isGraphable = true;
+    private final List<GraphTypes> validGraphs = List.of(GraphTypes.X_Y);
 
     public boolean isGraphable(){ return this.isGraphable; }
 
@@ -64,12 +66,18 @@ public class ProbabilityDistribution extends BiasCorrectable implements IMeasure
 
     @Override
     public boolean validate() {
-        if (this.inputData == null)
+        if (this.inputData == null || this.inputData.getAllDataAsDouble().size() == 0) {
+            ErrorManager.sendErrorMessage(name, "No Data supplied to evaluate");
             return false;
-        if (this.inputData.getNumberOfSamples() < this.minimumSamples)
+        }
+        if (this.inputData.getNumberOfSamples() < this.minimumSamples) {
+            ErrorManager.sendErrorMessage(name, "Invalid number of samples");
             return false;
-        if (this.inputData.status == IValidator.ValidationStatus.INVALID)
+        }
+        if (this.inputData.status == IValidator.ValidationStatus.INVALID) {
+            ErrorManager.sendErrorMessage(name, "Input Data not able to be validated");
             return false;
+        }
         if(this.requiredVariables.size() > 0) {
             return this.requiredVariables.stream()
                     .anyMatch(Expressions::ensureArgument);
@@ -78,24 +86,39 @@ public class ProbabilityDistribution extends BiasCorrectable implements IMeasure
     }
 
     @Override
-    public List<Double> run() {
+    public List<String> run() {
         logger.debug("Running " + MeasureConstants.probability);
 
         if(!this.validate())
             return null;
 
-        Double mean = new Mean(this.inputData).run();
-        Double std = new StandardDeviation(this.inputData, this.isBiasCorrected).run();
-        if(mean==null || std==null || std.equals(0.0))
-            return null;
+        List<Double> data = this.inputData.getAllDataAsDouble();
 
-        NormalDistribution nd = new NormalDistribution(mean, std);
+        ArrayList<Double> values = new ArrayList<>();
+        ArrayList<Integer> occurrences = new ArrayList<>();
 
-        List<Double> result = this.inputData.getAllDataAsDouble().stream().map(nd::density).toList();
+        for(double d : data){
+            if(values.contains(d)){
+                int i = values.indexOf(d);
+                occurrences.set(i, occurrences.get(i) + 1);
+            }else{
+                values.add(d);
+                occurrences.add(1);
+            }
+        }
 
-        if(result.stream().anyMatch(d->d.isNaN()))
-            return null;
+        ArrayList<String> result = new ArrayList<>();
+
+        for(int i = 0; i < values.size(); i++){
+            double p = (double)occurrences.get(i) / (double)data.size();
+            double v = values.get(i);
+
+            result.add(v + ": " + p);
+        }
 
         return result;
     }
+
+    @Override
+    public DataFormat getOutputFormat(){ return DataFormat.PROBABILITY; }
 }

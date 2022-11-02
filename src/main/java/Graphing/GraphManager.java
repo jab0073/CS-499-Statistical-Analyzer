@@ -35,7 +35,7 @@ public class GraphManager {
 
         if(graph == null) return;
 
-        graph.setData(data);
+        graph.setData(data, measure.getOutputFormat());
 
         graph.graphData(measure);
     }
