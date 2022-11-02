@@ -2,17 +2,16 @@ package Measures;
 
 import BackEndUtilities.*;
 import Interfaces.IMeasure;
-import org.apache.commons.collections.map.HashedMap;
+import Respository.RepositoryManager;
+import Settings.UserSettings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +40,7 @@ public class MeasuresTest {
     @BeforeClass
     public static void setup(){
         try {
+            RepositoryManager.init();
             MeasureManager.init();
             measureNames = MeasureManager.getAllMeasureNames();
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {

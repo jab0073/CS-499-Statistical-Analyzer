@@ -1,23 +1,41 @@
 package GUI;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Frame extends JFrame {
     /**Method for generating the frame which holds the GUI*/
     public void frame() {
         /*Create a frame, give it a size, set it to exit on close.*/
         JFrame window = new JFrame("Analysis");
+
+
+        AltMenuBar amb = new AltMenuBar();
+        window.setJMenuBar(amb.getMenuBar());
         window.setSize(1000, 750);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         /*Create a layout for the frame and add in the panels in their appropriate positions.*/
         window.setLayout(new BorderLayout());
-        window.add(windowPanelTop(), BorderLayout.NORTH);
+        //window.add(windowPanelTop(), BorderLayout.NORTH);
         window.add(windowPanelLeft(), BorderLayout.WEST);
         window.add(windowPanelMiddle(), BorderLayout.CENTER);
         window.add(windowPanelRight(), BorderLayout.EAST);
+
+        this.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                // TODO: Add dialog box to prompt if user wants to save or export before closing
+
+                // TODO: Save Table contents as DataSet or export to preferred file format
+
+                Frame.closeDialogs();
+                e.getWindow().dispose();
+            }
+        });
 
         /*Set the frame to start maximized and visible.*/
         window.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -60,5 +78,14 @@ public class Frame extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new RightPanel().rightPanel(), BorderLayout.CENTER);
         return(panel);
+    }
+
+    public static void closeDialogs(){
+        Window[] children = Frame.getWindows();
+        for (Window win : children){
+            if (win instanceof JDialog){
+                win.dispose();
+            }
+        }
     }
 }

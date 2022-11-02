@@ -122,17 +122,17 @@ public class RepositoryManager {
 
     private static String getUDMFolderPath()
     {
-        return UserSettings.getWorkingDirectory() + "/" + Constants.MAIN_FOLDER + "/" + Constants.UDM_FOLDER;
+        return UserSettings.getWorkingDirectory()  + "/" + Constants.UDM_FOLDER;
     }
 
     private static String getDataSetFolderPath()
     {
-        return UserSettings.getWorkingDirectory() + "/" + Constants.MAIN_FOLDER + "/" + Constants.DATASET_FOLDER;
+        return UserSettings.getWorkingDirectory() + "/" + Constants.DATASET_FOLDER;
     }
 
     private static String getExportFolderPath()
     {
-        return UserSettings.getWorkingDirectory() + "/" + Constants.MAIN_FOLDER + "/" + Constants.EXPORT_FOLDER;
+        return UserSettings.getWorkingDirectory() + "/" + Constants.EXPORT_FOLDER;
     }
 
     public static boolean exportCSV(DataSet ds, String name) {
@@ -223,6 +223,7 @@ public class RepositoryManager {
         loadedUserDefinedMeasures = new ArrayList<>();
         loadedDataSets = new ArrayList<>();
         storage = new FileSystemRepository();
+        UserSettings.init();
         storage.init();
         loadedUserDefinedMeasures.addAll(storage.loadUserDefinedMeasures(getUDMFolderPath()));
         loadedDataSets.addAll(storage.loadDataSets(getDataSetFolderPath()));

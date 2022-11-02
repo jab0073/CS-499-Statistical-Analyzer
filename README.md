@@ -6,7 +6,7 @@ __Statistical Analyzer__
 
 ## Table of Contents
 
-- Main Page (this readme)
+- StatisticalAnalyzer Page (this readme)
   - [Rational](https://github.com/jab0073/CS-499-Statistical-Analyzer#rationale)
   - [Features](https://github.com/jab0073/CS-499-Statistical-Analyzer#features)
   - [Team Info](https://github.com/jab0073/CS-499-Statistical-Analyzer#team-information)

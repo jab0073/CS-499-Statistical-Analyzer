@@ -123,12 +123,11 @@ public class FileSystemRepository implements IStorage {
     public void init() {
         System.out.println("Working directory set at " + UserSettings.getWorkingDirectory());
         ensurePath(UserSettings.getWorkingDirectory());
-        ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER);
-        ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.GRAPH_OUTPUT_FOLDER);
-        ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.UDM_FOLDER);
-        ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.DATASET_FOLDER);
-        ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.SAMPLE_FOLDER);
-        ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.EXPORT_FOLDER);
+        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.GRAPH_OUTPUT_FOLDER);
+        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.UDM_FOLDER);
+        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.DATASET_FOLDER);
+        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.SAMPLE_FOLDER);
+        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.EXPORT_FOLDER);
     }
 
     @Override
