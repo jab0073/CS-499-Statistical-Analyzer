@@ -4,13 +4,14 @@ import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
 import FrontEndUtilities.ErrorManager;
+import Graphing.DataFormat;
 import Graphing.GraphTypes;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.math3.stat.inference.MannWhitneyUTest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RankSum implements IMeasure {
@@ -80,21 +81,103 @@ public class RankSum implements IMeasure {
     }
 
     @Override
-    public Double run() {
+    public String run() {
         logger.debug("Running " + MeasureConstants.rank);
 
         if(!this.validate())
             return null;
+        double[] xList = ArrayUtils.toPrimitive(inputData.getSample(0).getDataAsDouble().toArray(Double[]::new));
+        double[] yList = ArrayUtils.toPrimitive(inputData.getSample(1).getDataAsDouble().toArray(Double[]::new));
 
-        MannWhitneyUTest mwut = new MannWhitneyUTest();
-        Double[] xList = inputData.getSample(0).getDataAsDouble().toArray(Double[]::new);
-        Double[] yList = inputData.getSample(1).getDataAsDouble().toArray(Double[]::new);
+        Arrays.sort(xList);
+        Arrays.sort(yList);
 
-        double result = mwut.mannWhitneyUTest(ArrayUtils.toPrimitive(xList), ArrayUtils.toPrimitive(yList));
+        // Begin Calculating Ranks for each sample
+        ArrayList<Double> xRanks = new ArrayList();
+        ArrayList<Double> yRanks = new ArrayList();
 
-        if(Double.isNaN(result))
-            return null;
+        int xIndex = 0;
+        int yIndex = 0;
 
+        for(int i = 1; i <= xList.length + yList.length; i++){
+            if(xIndex >= xList.length){
+                yRanks.add((double) i);
+                yIndex++;
+                continue;
+            }else if(yIndex >= yList.length){
+                xRanks.add((double) i);
+                xIndex++;
+                continue;
+            }
+
+            if(xList[xIndex] < yList[yIndex]){
+                xRanks.add((double) i);
+                xIndex++;
+            }else if(yList[yIndex] < xList[xIndex]){
+                yRanks.add((double) i);
+                yIndex++;
+            }else{
+                xRanks.add(i+0.5);
+                yRanks.add(i+0.5);
+                xIndex++;
+                yIndex++;
+                i++;
+            }
+
+        }
+
+        int nOne = xList.length;
+        int nTwo = yList.length;
+
+        //Calculate Rank Sums for each sample
+        double tOne = sum(xRanks);
+        double tTwo = sum(yRanks);
+
+        //Calculate U values for each sample
+        double uOne = calcU(nOne, nTwo, tOne);
+        double uTwo = calcU(nTwo, nOne, tTwo);
+
+        //Calculate U value for test
+        double u = Math.min(uOne, uTwo);
+
+        //Calculate expected U Value
+        double uExpected = ((double) nOne * (double) nTwo)/2;
+
+        //Calculate Standard Error
+        double stdError = Math.sqrt(((double) nOne * (double) nTwo * (double) (nOne + nTwo + 1))/12);
+
+        //Calculate Z value
+        double z = (u - uExpected)/stdError;
+
+
+        String result = String.format("""
+                n\u2081: %d
+                n\u2082: %d
+                T\u2081: %,.1f
+                T\u2082: %,.1f
+                U\u2081: %,.1f
+                U\u2082: %,.1f
+                U : %,.1f
+                \u03BCU: %,.1f
+                \u03C3U: %,.4f
+                z : %,.4f""", nOne, nTwo, tOne, tTwo, uOne, uTwo, u, uExpected, stdError, z);
+        
         return result;
     }
+
+    private double sum(ArrayList<Double> values){
+        double sum = 0;
+        for(double d : values){
+            sum += d;
+        }
+
+        return sum;
+    }
+
+    private double calcU(int nMe, int nOther, double t){
+        return (nMe * nOther) + ((double)(nMe * (nMe + 1))/2) - t;
+    }
+
+    @Override
+    public DataFormat getOutputFormat(){ return DataFormat.SINGLE_STRING; }
 }
