@@ -103,7 +103,7 @@ public class MiddlePanel {
                     dataArea.setText(d);
                 }
                 else{
-                    dataArea.append(d + ",");
+                    dataArea.setText(d);
                 }
                 updateMeasureData();
             }

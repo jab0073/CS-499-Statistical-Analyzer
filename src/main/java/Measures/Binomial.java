@@ -61,7 +61,6 @@ public class Binomial implements IMeasure {
 
     @Override
     public boolean validate() {
-        List<Double> a = this.inputData.getAllDataAsDouble();
         if (this.inputData == null || this.inputData.getAllDataAsDouble().size() == 0) {
             ErrorManager.sendErrorMessage(name, "No Data supplied to evaluate");
             return false;

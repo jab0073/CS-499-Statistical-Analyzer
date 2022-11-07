@@ -1,9 +1,11 @@
 package FrontEndUtilities;
 
 import BackEndUtilities.*;
+import Graphing.DataFormat;
 import Graphing.GraphManager;
 import Graphing.GraphTypes;
 import Interfaces.IMeasure;
+import org.jfree.chart.plot.PlotRenderingInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +20,7 @@ public class GUIMeasure {
     private boolean isGraphable = false;
     private List<GraphTypes> validGraphs = new ArrayList<>();
     private GraphTypes selectedGraph = null;
+    private DataFormat outputFormat = null;
 
     public GUIMeasure(String name){
         IMeasure m = MeasureManager.getMeasure(name);
@@ -39,6 +42,8 @@ public class GUIMeasure {
         if(isGraphable){
             this.validGraphs.addAll(m.getValidGraphs());
         }
+
+        this.outputFormat = m.getOutputFormat();
     }
 
     /**
@@ -91,7 +96,7 @@ public class GUIMeasure {
         MeasureManager.getMeasure(name).setInputData(ds);
 
         for(int i = 0; i < requiredVariables.size(); i++){
-            Expressions.addArgument(requiredVariables.get(i), variableValues.get(i).toString());
+            Expressions.addArgument(requiredVariables.get(i), variableValues.get(i));
         }
 
         Object r = MeasureManager.getMeasure(name).run();
@@ -157,4 +162,6 @@ public class GUIMeasure {
     public GraphTypes getSelectedGraph(){
         return this.selectedGraph;
     }
+
+    public DataFormat getOutputFormat(){ return outputFormat; }
 }
