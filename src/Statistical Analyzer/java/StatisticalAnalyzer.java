@@ -12,8 +12,10 @@ public class StatisticalAnalyzer {
     public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         logger.debug("Starting Main.");
 
+
         RepositoryManager.init();
         MeasureManager.init();
+        DynamicJavaClassLoader.init();
         GraphManager.init();
 
         GUI.Frame frame = new GUI.Frame();

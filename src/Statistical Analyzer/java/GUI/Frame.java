@@ -18,7 +18,7 @@ public class Frame extends JFrame {
 
         /*Create a layout for the frame and add in the panels in their appropriate positions.*/
         window.setLayout(new BorderLayout());
-        //window.add(windowPanelTop(), BorderLayout.NORTH);
+        window.add(windowPanelTop(), BorderLayout.NORTH);
         window.add(windowPanelLeft(), BorderLayout.WEST);
         window.add(windowPanelMiddle(), BorderLayout.CENTER);
         window.add(windowPanelRight(), BorderLayout.EAST);

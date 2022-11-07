@@ -1,12 +1,18 @@
 package GUI;
 
+import FrontEndUtilities.ErrorManager;
+import FrontEndUtilities.GUIDataMaster;
+import FrontEndUtilities.OutputManager;
+import Graphing.GraphManager;
 import Settings.UserSettings;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class AltMenuBar {
@@ -180,6 +186,23 @@ public class AltMenuBar {
         // Build the Run menu
         JMenu runMenu = new JMenu("Run");
         runMenu.getAccessibleContext().setAccessibleDescription("Run related options.");
+        runMenu.addActionListener(a -> {
+                GUIDataMaster.flush();
+                boolean success = GUIDataMaster.executeMeasures();
+
+                if(!success){
+                    ErrorManager.displayErrors();
+                    return;
+                }
+
+                ArrayList<Object> r = GUIDataMaster.getResults();
+                for(Object o : r){
+                    OutputManager.addOutput((o==null) ? null : o.toString());
+                }
+
+                GraphManager.displayGraphs();
+                OutputManager.displayOutputs();
+        });
         menuBar.add(runMenu);
 
         // TODO: Add Menu Items for Run
