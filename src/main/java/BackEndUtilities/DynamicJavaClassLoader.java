@@ -42,13 +42,14 @@ public class DynamicJavaClassLoader {
 
                         try {
 
-                            /** Compilation Requirements *********************************************************************************************/
+                            /*
+                            Compilation Requirements 
+                            */
                             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
                             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
                             StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
 
                             // This sets up the class path that the compiler will use.
-                            // I've added the .jar file that contains the DoStuff interface within in it...
                             List<String> optionList = new ArrayList<String>();
 
                             Iterable<? extends JavaFileObject> compilationUnit
@@ -60,9 +61,13 @@ public class DynamicJavaClassLoader {
                                     optionList,
                                     null,
                                     compilationUnit);
-                            /********************************************************************************************* Compilation Requirements **/
+                            /*
+                            Compilation Requirements 
+                            */
                             if (task.call()) {
-                                /** Load and execute *************************************************************************************************/
+                                /*
+                                Load and execute 
+                                */
                                 logger.debug(FilenameUtils.getBaseName(javaFile.getName()) + ": compiling");
                                 // Create a new custom class loader, pointing to the directory that contains the compiled
                                 // classes, this should point to the top of the package structure!
@@ -79,7 +84,9 @@ public class DynamicJavaClassLoader {
                                 else {
                                     logger.error(FilenameUtils.getBaseName(javaFile.getName()) + ": doesn't implement IMeasure");
                                 }
-                                /************************************************************************************************* Load and execute **/
+                                /*
+                                Load and execute
+                                */
                             } else {
                                 for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
                                     System.out.format("Error on line %d in %s%n",
