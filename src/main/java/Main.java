@@ -6,8 +6,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class StatisticalAnalyzer {
-    private static final Logger logger = LogManager.getLogger(StatisticalAnalyzer.class);
+public class Main {
+    private static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         logger.debug("Starting Main.");
