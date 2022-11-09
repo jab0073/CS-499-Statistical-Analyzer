@@ -3,6 +3,7 @@ package Measures;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.Pair;
+import Graphing.GraphTypes;
 import Interfaces.IMeasure;
 import org.mariuszgromada.math.mxparser.Argument;
 import org.mariuszgromada.math.mxparser.Expression;
@@ -136,5 +137,15 @@ public class UserDefinedMeasure implements IMeasure {
             finalResult /= inputData.getAllDataAsDouble().size();
         }
         return finalResult;
+    }
+
+    @Override
+    public boolean isGraphable() {
+        return false;
+    }
+
+    @Override
+    public List<GraphTypes> getValidGraphs() {
+        return null;
     }
 }

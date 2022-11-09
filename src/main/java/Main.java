@@ -1,4 +1,5 @@
 import BackEndUtilities.*;
+import Graphing.GraphManager;
 import Interfaces.IMeasure;
 import Interop.UIServices;
 import Measures.Measures;
@@ -25,6 +26,7 @@ public class Main {
 
         //RepositoryManager.init();
         MeasureManager.init();
+        GraphManager.init();
 
         /**
         System.out.println("MEASURES:");

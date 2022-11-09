@@ -1,5 +1,7 @@
 package FrontEndUtilities;
 
+import Graphing.GraphManager;
+
 import java.util.ArrayList;
 
 public class GUIDataMaster {
@@ -65,5 +67,15 @@ public class GUIDataMaster {
 
     public static ArrayList<Object> getResults(){
         return results;
+    }
+
+    public static void flush(){
+        for(Object s : results){
+            s = null;
+        }
+
+        GraphManager.clearGraphs();
+        OutputManager.clearOutput();
+        ErrorManager.clearErrors();
     }
 }

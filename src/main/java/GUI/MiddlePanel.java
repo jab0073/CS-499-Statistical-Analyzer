@@ -8,6 +8,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class MiddlePanel {
     private static JTextArea dataArea;
@@ -92,11 +93,17 @@ public class MiddlePanel {
         btnImport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String d = CellsTable.getSelectedData();
+
+                if(d == null){
+                    return;
+                }
+
                 if(dataArea.getText().contains("Select Data from Chart")){
-                    dataArea.setText(CellsTable.getSelectedData());
+                    dataArea.setText(d);
                 }
                 else{
-                    dataArea.append(CellsTable.getSelectedData() + ",");
+                    dataArea.setText(d);
                 }
                 updateMeasureData();
             }
@@ -113,7 +120,10 @@ public class MiddlePanel {
             return;
         }
 
-        GUIDataMaster.getGUIMeasure(s).addData(false, 0, data);
+
+
+        GUIDataMaster.getGUIMeasure(s).addData(false, 0, Arrays.copyOfRange(data, 0, data.length/2));
+        GUIDataMaster.getGUIMeasure(s).addData(false, 1, Arrays.copyOfRange(data, data.length/2, data.length));
     }
 
     public static void changeData(String data){

@@ -3,6 +3,8 @@ package Measures;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
+import FrontEndUtilities.ErrorManager;
+import Graphing.GraphTypes;
 import Interfaces.BiasCorrectable;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
@@ -15,6 +17,12 @@ public class CoefficientOfVariance extends BiasCorrectable implements IMeasure {
     private final String name = MeasureConstants.coefficient;
     private final int minimumSamples = 1;
     private final List<String> requiredVariables = new ArrayList<>();
+    private final boolean isGraphable = false;
+    private final List<GraphTypes> validGraphs = List.of();
+
+    public boolean isGraphable(){ return this.isGraphable; }
+
+    public List<GraphTypes> getValidGraphs(){ return this.validGraphs; }
 
     public CoefficientOfVariance() {
         this.inputData = new DataSet();
@@ -56,12 +64,18 @@ public class CoefficientOfVariance extends BiasCorrectable implements IMeasure {
 
     @Override
     public boolean validate() {
-        if (this.inputData == null)
+        if (this.inputData == null || this.inputData.getAllDataAsDouble().size() == 0) {
+            ErrorManager.sendErrorMessage(name, "No Data supplied to evaluate");
             return false;
-        if (this.inputData.getNumberOfSamples() < this.minimumSamples)
+        }
+        if (this.inputData.getNumberOfSamples() < this.minimumSamples) {
+            ErrorManager.sendErrorMessage(name, "Invalid number of samples");
             return false;
-        if (this.inputData.status == IValidator.ValidationStatus.INVALID)
+        }
+        if (this.inputData.status == IValidator.ValidationStatus.INVALID) {
+            ErrorManager.sendErrorMessage(name, "Input Data not able to be validated");
             return false;
+        }
         if(this.requiredVariables.size() > 0) {
             return this.requiredVariables.stream()
                     .anyMatch(Expressions::ensureArgument);

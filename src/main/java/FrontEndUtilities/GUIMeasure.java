@@ -1,7 +1,11 @@
 package FrontEndUtilities;
 
 import BackEndUtilities.*;
+import Graphing.DataFormat;
+import Graphing.GraphManager;
+import Graphing.GraphTypes;
 import Interfaces.IMeasure;
+import org.jfree.chart.plot.PlotRenderingInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +16,11 @@ public class GUIMeasure {
     private String name = "";
     private int minimumSamples = 0;
     private List<String> requiredVariables = new ArrayList<>();
-    private List<Double> variableValues = new ArrayList<>();
+    private List<String> variableValues = new ArrayList<>();
+    private boolean isGraphable = false;
+    private List<GraphTypes> validGraphs = new ArrayList<>();
+    private GraphTypes selectedGraph = null;
+    private DataFormat outputFormat = null;
 
     public GUIMeasure(String name){
         IMeasure m = MeasureManager.getMeasure(name);
@@ -21,7 +29,7 @@ public class GUIMeasure {
         this.requiredVariables = m.getRequiredVariables();
 
         for(String s : requiredVariables){
-            variableValues.add(0.0);
+            variableValues.add("");
         }
 
         this.measureData = new ArrayList[minimumSamples];
@@ -29,6 +37,13 @@ public class GUIMeasure {
         for(ArrayList a : measureData){
             a = new ArrayList<String>();
         }
+
+        this.isGraphable = m.isGraphable();
+        if(isGraphable){
+            this.validGraphs.addAll(m.getValidGraphs());
+        }
+
+        this.outputFormat = m.getOutputFormat();
     }
 
     /**
@@ -64,7 +79,7 @@ public class GUIMeasure {
 
         if(isNumeric(value)) {
             int i = requiredVariables.indexOf(variableName);
-            variableValues.set(i, Double.parseDouble(value));
+            variableValues.set(i, value);
         }
 
     }
@@ -81,10 +96,16 @@ public class GUIMeasure {
         MeasureManager.getMeasure(name).setInputData(ds);
 
         for(int i = 0; i < requiredVariables.size(); i++){
-            Expressions.addArgument(requiredVariables.get(i), variableValues.get(i).toString());
+            Expressions.addArgument(requiredVariables.get(i), variableValues.get(i));
         }
 
-        return MeasureManager.getMeasure(name).run();
+        Object r = MeasureManager.getMeasure(name).run();
+
+        if(isGraphable){
+            GraphManager.graphOutput(GraphTypes.X_Y, r, this);
+        }
+
+        return r;
 
     }
 
@@ -123,8 +144,24 @@ public class GUIMeasure {
             }
         }
 
-        data.deleteCharAt(data.length()-1);
+        if(data.length() > 0){
+            data.deleteCharAt(data.length()-1);
+        }
 
         return data.toString();
     }
+
+    public ArrayList<String>[] getData(){
+        return this.measureData;
+    }
+
+    public void setSelectedGraph(GraphTypes graph){
+        this.selectedGraph = graph;
+    }
+
+    public GraphTypes getSelectedGraph(){
+        return this.selectedGraph;
+    }
+
+    public DataFormat getOutputFormat(){ return outputFormat; }
 }

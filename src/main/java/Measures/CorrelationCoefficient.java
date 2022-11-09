@@ -3,6 +3,8 @@ package Measures;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
+import FrontEndUtilities.ErrorManager;
+import Graphing.GraphTypes;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
 import org.apache.commons.lang3.ArrayUtils;
@@ -16,6 +18,12 @@ public class CorrelationCoefficient implements IMeasure {
     private final String name = MeasureConstants.correlation;
     private final int minimumSamples = 2;
     private final List<String> requiredVariables = new ArrayList<>();
+    private final boolean isGraphable = false;
+    private final List<GraphTypes> validGraphs = List.of();
+
+    public boolean isGraphable(){ return this.isGraphable; }
+
+    public List<GraphTypes> getValidGraphs(){ return this.validGraphs; }
 
     public CorrelationCoefficient() {
         this.inputData = new DataSet();
@@ -52,18 +60,21 @@ public class CorrelationCoefficient implements IMeasure {
 
     @Override
     public boolean validate() {
-        if (this.inputData == null)
+        if (this.inputData == null || this.inputData.getAllDataAsDouble().size() == 0) {
+            ErrorManager.sendErrorMessage(name, "No Data supplied to evaluate");
             return false;
-        if (this.inputData.getNumberOfSamples() < this.minimumSamples)
+        }
+        if (this.inputData.getNumberOfSamples() < this.minimumSamples) {
+            ErrorManager.sendErrorMessage(name, "Invalid number of samples");
             return false;
-        if (this.inputData.status == IValidator.ValidationStatus.INVALID)
+        }
+        if (this.inputData.status == IValidator.ValidationStatus.INVALID) {
+            ErrorManager.sendErrorMessage(name, "Input Data not able to be validated");
             return false;
+        }
         if(this.requiredVariables.size() > 0) {
             return this.requiredVariables.stream()
                     .anyMatch(Expressions::ensureArgument);
-        }
-        if(this.inputData.getSample(1).getSize() < 2) {
-            return false;
         }
         return true;
     }

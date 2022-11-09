@@ -1,5 +1,8 @@
 package GUI;
 
+import Interop.UIServices;
+import TableUtilities.DataTable;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -37,6 +40,10 @@ public class CellsTable {
         return (table);
     }
 
+    /**
+     * Retrieves the data contained with cells on the table that have been selected by the user
+     * @return String representation of the data held within the cells. Data is ordered in a Row-Then-Column order
+     */
     public static String getSelectedData(){
         int[] r = table.getSelectedRows();
         int[] c = table.getSelectedColumns();
@@ -58,8 +65,42 @@ public class CellsTable {
             }
         }
 
+        if(data.length() == 0){
+            return null;
+        }
+
         data.deleteCharAt(data.length()-1);
 
         return data.toString();
+    }
+
+    /**
+     * Loads a CSV file into the onscreen chart
+     * @param file String representation of the file path to the target file
+     */
+    public static void loadFile(String file){
+        DataTable in = UIServices.fromCSV(file);
+
+        if(in == null){
+            return;
+        }
+
+        table.setModel(new DefaultTableModel(in.getRows().size()+20, table.getColumnCount()));
+
+        for(int i = 0; i < in.getRows().size(); i++){
+            TableUtilities.Row r = in.getRow(i);
+            for(int j = 0; j < r.size(); j++){
+                table.getModel().setValueAt(r.get(j).data, i, j);
+            }
+        }
+    }
+
+    public static void setColumnSelection(boolean value){
+        System.out.println("Column: " + value);
+        table.setRowSelectionAllowed(value);
+    }
+
+    public static void setRowSelection(boolean value){
+        table.setColumnSelectionAllowed(value);
     }
 }
