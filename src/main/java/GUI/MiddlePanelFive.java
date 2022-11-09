@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MiddlePanelFive {
+public class MiddlePanelFive extends Card{
     private static JTextArea dataArea;
     private static JTextField dataArea2;
 
@@ -36,6 +36,28 @@ public class MiddlePanelFive {
         c.gridy = 0;
         panel.add(topPanel(), c);
         return(panel);
+    }
+
+    public MiddlePanelFive(){
+        /*Create a JPanel with a grid bag layout*/
+        this.setLayout(new GridBagLayout());
+
+        /*Create the constraints for gridbag layout and apply them to the scroll pane.*/
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.anchor = GridBagConstraints.LINE_END;
+        c.gridx = 2;
+        c.gridy = 1;
+        this.add(scrollPane(), c);
+        c.gridy = 2;
+        this.add(topPanel2(), c);
+        c.gridy = 3;
+        this.add(dataAreaTwo(), c);
+
+        /*Change the y position value for the gridbag constraints and apply to the panel containing the
+         * button and label.*/
+        c.gridy = 0;
+        this.add(topPanel(), c);
     }
 
     /**Creates a scroll pane for the text area.

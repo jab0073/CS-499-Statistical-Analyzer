@@ -10,7 +10,7 @@ import java.awt.event.KeyListener;
 
 public class Frame extends JFrame {
     private static String CARD_PANEL ="2";
-    private JPanel cardPanel;
+    private static JPanel cardPanel;
 
     /**Method for generating the frame which holds the GUI*/
     public void frame() {
@@ -75,13 +75,13 @@ public class Frame extends JFrame {
         JPanel twoBoxes = new MiddlePanelTwo().dataPanel();
         JPanel oneLine = new MiddlePanelThree().dataPanel();
         JPanel twoLines = new MiddlePanelFour().dataPanel();
-        JPanel boxLine = new MiddlePanelFive().dataPanel();
+        JPanel boxLine = new MiddlePanelFive();
 
-        panel.add(oneBox, "1");
-        panel.add(twoBoxes, "2");
-        panel.add(oneLine, "3");
-        panel.add(twoLines, "4");
-        panel.add(boxLine, "5");
+        panel.add(oneBox, CardTypes.ONE_DATA_NO_VARIABLE.getName());
+        panel.add(twoBoxes, CardTypes.TWO_DATA_NO_VARIABLE.getName());
+        panel.add(oneLine, CardTypes.NO_DATA_ONE_VARIABLE.getName());
+        panel.add(twoLines, CardTypes.NO_DATA_TWO_VARIABLE.getName());
+        panel.add(boxLine, CardTypes.ONE_DATA_ONE_VARIABLE.getName());
 
         layout.show(panel, CARD_PANEL);
 
@@ -94,5 +94,11 @@ public class Frame extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new RightPanel().rightPanel(), BorderLayout.CENTER);
         return(panel);
+    }
+
+    public static void swapCard(CardTypes card){
+        //TODO: Implement method for swapping cards and updating their data areas with measure data
+        CardLayout layout = (CardLayout) cardPanel.getLayout();
+        layout.show(cardPanel, card.getName());
     }
 }
