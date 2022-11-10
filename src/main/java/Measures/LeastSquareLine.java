@@ -4,6 +4,7 @@ import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
 import FrontEndUtilities.ErrorManager;
+import GUI.CardTypes;
 import Graphing.DataFormat;
 import Graphing.GraphTypes;
 import Interfaces.IMeasure;
@@ -21,6 +22,7 @@ public class LeastSquareLine implements IMeasure {
     private final List<String> requiredVariables = new ArrayList<>();
     private final boolean isGraphable = true;
     private final List<GraphTypes> validGraphs = List.of(GraphTypes.X_Y);
+    private final CardTypes cardType = CardTypes.TWO_DATA_NO_VARIABLE;
 
     public boolean isGraphable(){ return this.isGraphable; }
 
@@ -88,6 +90,8 @@ public class LeastSquareLine implements IMeasure {
         }
         return paired;
     }
+
+    //TODO: set up data trimming method for unexual samples
     @Override
     public String run() {
         logger.debug("Running " + MeasureConstants.least);
@@ -116,4 +120,7 @@ public class LeastSquareLine implements IMeasure {
 
     @Override
     public DataFormat getOutputFormat(){return DataFormat.MX_PLUS_B; }
+
+    @Override
+    public CardTypes getCardType(){ return cardType; }
 }

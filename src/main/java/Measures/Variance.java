@@ -4,6 +4,7 @@ import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
 import FrontEndUtilities.ErrorManager;
+import GUI.CardTypes;
 import Graphing.GraphTypes;
 import Interfaces.BiasCorrectable;
 import Interfaces.IMeasure;
@@ -21,6 +22,7 @@ public class Variance implements IMeasure {
     private final List<String> requiredVariables = new ArrayList<>();
     private final boolean isGraphable = false;
     private final List<GraphTypes> validGraphs = List.of();
+    private final CardTypes cardType = CardTypes.ONE_DATA_NO_VARIABLE;
 
     public boolean isGraphable(){ return this.isGraphable; }
 
@@ -94,4 +96,7 @@ public class Variance implements IMeasure {
 
         return result;
     }
+
+    @Override
+    public CardTypes getCardType(){ return cardType; }
 }

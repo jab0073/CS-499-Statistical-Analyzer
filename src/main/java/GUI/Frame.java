@@ -7,9 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 public class Frame extends JFrame {
-    private static String CARD_PANEL ="2";
+    private static final ArrayList<Card> cards = new ArrayList<>();
     private static JPanel cardPanel;
 
     /**Method for generating the frame which holds the GUI*/
@@ -71,19 +72,17 @@ public class Frame extends JFrame {
         cardPanel = panel;
 
         /**The "cards" in the card layout, able to be cycled through. Name indicates layout.*/
-        JPanel oneBox = new MiddlePanel().dataPanel();
-        JPanel twoBoxes = new MiddlePanelTwo().dataPanel();
-        JPanel oneLine = new MiddlePanelThree().dataPanel();
-        JPanel twoLines = new MiddlePanelFour().dataPanel();
-        JPanel boxLine = new MiddlePanelFive();
+        cards.add(new MiddlePanel());
+        cards.add(new MiddlePanelTwo());
+        cards.add(new MiddlePanelThree());
+        cards.add(new MiddlePanelFour());
+        cards.add(new MiddlePanelFive());
 
-        panel.add(oneBox, CardTypes.ONE_DATA_NO_VARIABLE.getName());
-        panel.add(twoBoxes, CardTypes.TWO_DATA_NO_VARIABLE.getName());
-        panel.add(oneLine, CardTypes.NO_DATA_ONE_VARIABLE.getName());
-        panel.add(twoLines, CardTypes.NO_DATA_TWO_VARIABLE.getName());
-        panel.add(boxLine, CardTypes.ONE_DATA_ONE_VARIABLE.getName());
+        for(Card c : cards){
+            panel.add(c, c.getType().getName());
+        }
 
-        layout.show(panel, CARD_PANEL);
+        layout.show(panel, CardTypes.ONE_DATA_ONE_VARIABLE.getName());
 
         return(panel);
     }
@@ -96,9 +95,11 @@ public class Frame extends JFrame {
         return(panel);
     }
 
-    public static void swapCard(CardTypes card){
+    public static Card swapCard(CardTypes card){
         //TODO: Implement method for swapping cards and updating their data areas with measure data
         CardLayout layout = (CardLayout) cardPanel.getLayout();
         layout.show(cardPanel, card.getName());
+
+        return cards.stream().filter(c -> c.getType() == card).findFirst().orElse(null);
     }
 }

@@ -1,6 +1,7 @@
 package GUI;
 import BackEndUtilities.MeasureManager;
 import FrontEndUtilities.GUIDataMaster;
+import FrontEndUtilities.GUIMeasure;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -56,7 +57,8 @@ public class RightPanel {
                     if(a==-1){
                         return;
                     }
-                    MiddlePanel.changeData(GUIDataMaster.getGUIMeasure(functionList.getSelectedIndex()).getDataAsString());
+                    GUIMeasure m = GUIDataMaster.getGUIMeasure(functionList.getSelectedIndex());
+                    GUIDataMaster.swapMiddleCard(m.getCardType(), m);
                 }
             }
         });

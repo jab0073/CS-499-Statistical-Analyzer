@@ -1,5 +1,6 @@
 package GUI;
 
+import FrontEndUtilities.ErrorManager;
 import FrontEndUtilities.GUIDataMaster;
 
 import javax.swing.*;
@@ -10,14 +11,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-public class MiddlePanel {
-    private static JTextArea dataArea;
+public class MiddlePanel extends Card{
+    private final CardTypes type = CardTypes.ONE_DATA_NO_VARIABLE;
+    private static JTextArea dataArea0;
 
-    /**Method which returns a panel which contains one scroll pane, a button, and a label.
-     *@return One of the data panel options.*/
-    public JPanel dataPanel(){
+    private JLabel dataLabel0;
+
+    public MiddlePanel(){
         /*Create a JPanel with a grid bag layout*/
-        JPanel panel = new JPanel(new GridBagLayout());
+        this.setLayout(new GridBagLayout());
 
         /*Create the constraints for gridbag layout and apply them to the scroll pane.*/
         GridBagConstraints c = new GridBagConstraints();
@@ -25,13 +27,12 @@ public class MiddlePanel {
         c.anchor = GridBagConstraints.LINE_END;
         c.gridx = 2;
         c.gridy = 1;
-        panel.add(scrollPane(), c);
+        this.add(scrollPane(), c);
 
         /*Change the y position value for the gridbag constraints and apply to the panel containing the
-        * button and label.*/
+         * button and label.*/
         c.gridy = 0;
-        panel.add(topPanel(), c);
-        return(panel);
+        this.add(topPanel(), c);
     }
 
     /**Creates a scroll pane for the text area.
@@ -45,11 +46,11 @@ public class MiddlePanel {
     /**Creates a text area that user can input data into.
      *@return The text area*/
     private JTextArea dataArea(){
-        dataArea = new JTextArea("Select Data from Chart", 20, 15);
-        dataArea.setEditable(false);
-        dataArea.setLineWrap(true);
+        dataArea0 = new JTextArea("Select Data from Chart", 20, 15);
+        dataArea0.setEditable(false);
+        dataArea0.setLineWrap(true);
 
-        dataArea.getDocument().addDocumentListener(new DocumentListener() {
+        dataArea0.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 updateMeasureData();
@@ -66,7 +67,7 @@ public class MiddlePanel {
             }
         });
 
-        return(dataArea);
+        return(dataArea0);
     }
 
     /**Method which creates panel to contain the button and label.
@@ -99,11 +100,11 @@ public class MiddlePanel {
                     return;
                 }
 
-                if(dataArea.getText().contains("Select Data from Chart")){
-                    dataArea.setText(d);
+                if(dataArea0.getText().contains("Select Data from Chart")){
+                    dataArea0.setText(d);
                 }
                 else{
-                    dataArea.setText(d);
+                    dataArea0.setText(d);
                 }
                 updateMeasureData();
             }
@@ -113,20 +114,44 @@ public class MiddlePanel {
     }
 
     private void updateMeasureData(){
-        String[] data = dataArea.getText().split(",");
+        String[] data = dataArea0.getText().split(",");
 
         int s = RightPanel.getCurrentMeasureIndex();
         if(s < 0){
             return;
         }
 
-
-
-        GUIDataMaster.getGUIMeasure(s).addData(false, 0, Arrays.copyOfRange(data, 0, data.length/2));
-        GUIDataMaster.getGUIMeasure(s).addData(false, 1, Arrays.copyOfRange(data, data.length/2, data.length));
+        GUIDataMaster.getGUIMeasure(s).addData(false, 0, data);
     }
 
-    public static void changeData(String data){
-        dataArea.setText(data);
+    @Override
+    public CardTypes getType() {
+        return type;
+    }
+
+    @Override
+    public void setDataArea(int index, String data) {
+        switch (index) {
+            case 0 -> dataArea0.setText(data);
+            default -> ErrorManager.sendErrorMessage("GUI", "Program attempted to set data for a data field which does not exist");
+        }
+    }
+
+    @Override
+    public void setVariableArea(int index, String data) {
+        ErrorManager.sendErrorMessage("GUI", "Program attempted to set data for a data field which does not exist");
+    }
+
+    @Override
+    public void setDataLabel(int index, String label) {
+        switch (index) {
+            case 0 -> dataLabel0.setText(label);
+            default -> ErrorManager.sendErrorMessage("GUI", "Program attempted to set name for a label which does not exist");
+        }
+    }
+
+    @Override
+    public void setVariableLabel(int index, String label) {
+        ErrorManager.sendErrorMessage("GUI", "Program attempted to set name for a label which does not exist");
     }
 }

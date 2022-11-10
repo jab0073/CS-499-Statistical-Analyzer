@@ -1,5 +1,6 @@
 package GUI;
 
+import FrontEndUtilities.ErrorManager;
 import FrontEndUtilities.GUIDataMaster;
 
 import javax.swing.*;
@@ -9,14 +10,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MiddlePanelTwo {
-    private static JTextArea dataArea;
-    private static JTextArea dataArea2;
+public class MiddlePanelTwo extends Card{
+    private final CardTypes type = CardTypes.TWO_DATA_NO_VARIABLE;
 
-    /**Method which returns a panel which contains one scroll pane, a button, and a label.
-     *@return One of the data panel options.*/
-    public JPanel dataPanel(){
-        JPanel panel = new JPanel(new GridBagLayout());
+    private static JTextArea dataArea0;
+    private static JTextArea dataArea1;
+
+    private JLabel dataLabel0;
+    private JLabel dataLabel1;
+
+    public MiddlePanelTwo(){
+        this.setLayout(new GridBagLayout());
 
         /*Create the constraints for gridbag layout and apply them to the scroll pane.*/
         GridBagConstraints c = new GridBagConstraints();
@@ -24,17 +28,16 @@ public class MiddlePanelTwo {
         c.anchor = GridBagConstraints.LINE_END;
         c.gridx = 2;
         c.gridy = 1;
-        panel.add(middlePanel(), c);
+        this.add(middlePanel(), c);
         c.gridy = 2;
-        panel.add(topPanel2(), c);
+        this.add(topPanel2(), c);
         c.gridy = 3;
-        panel.add(middlePanel2(), c);
+        this.add(middlePanel2(), c);
 
         /*Change the y position value for the gridbag constraints and apply to the panel containing the
          * button and label.*/
         c.gridy = 0;
-        panel.add(topPanel(), c);
-        return(panel);
+        this.add(topPanel(), c);
     }
 
     /**Creates a scroll pane for the text area.
@@ -53,53 +56,19 @@ public class MiddlePanelTwo {
     /**Creates a text area that user can input data into.
      *@return The text area*/
     private JTextArea dataArea(){
-        dataArea = new JTextArea("Select Data from Chart", 10, 20);
-        dataArea.setEditable(false);
-        dataArea.setLineWrap(true);
+        dataArea0 = new JTextArea("Select Data from Chart", 10, 20);
+        dataArea0.setEditable(false);
+        dataArea0.setLineWrap(true);
 
-        dataArea.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateMeasureData();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateMeasureData();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-
-            }
-        });
-
-        return(dataArea);
+        return(dataArea0);
     }
 
     private JTextArea dataArea2(){
-        dataArea2 = new JTextArea("Select Data from Chart", 10, 20);
-        dataArea2.setEditable(false);
-        dataArea2.setLineWrap(true);
+        dataArea1 = new JTextArea("Select Data from Chart", 10, 20);
+        dataArea1.setEditable(false);
+        dataArea1.setLineWrap(true);
 
-        dataArea2.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateMeasureData();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateMeasureData();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-
-            }
-        });
-
-        return(dataArea2);
+        return(dataArea1);
     }
 
     /**Method which creates panel to contain the button and label.
@@ -138,11 +107,11 @@ public class MiddlePanelTwo {
         btnImport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(dataArea2.getText().contains("Select Data from Chart")){
-                    dataArea2.setText(CellsTable.getSelectedData());
+                if(dataArea1.getText().contains("Select Data from Chart")){
+                    dataArea1.setText(CellsTable.getSelectedData());
                 }
                 else{
-                    dataArea2.append(CellsTable.getSelectedData() + ",");
+                    dataArea1.append(CellsTable.getSelectedData() + ",");
                 }
                 updateMeasureData();
             }
@@ -157,11 +126,11 @@ public class MiddlePanelTwo {
         btnImport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(dataArea.getText().contains("Select Data from Chart")){
-                    dataArea.setText(CellsTable.getSelectedData());
+                if(dataArea0.getText().contains("Select Data from Chart")){
+                    dataArea0.setText(CellsTable.getSelectedData());
                 }
                 else{
-                    dataArea.append(CellsTable.getSelectedData() + ",");
+                    dataArea0.append(CellsTable.getSelectedData() + ",");
                 }
                 updateMeasureData2();
             }
@@ -171,18 +140,18 @@ public class MiddlePanelTwo {
     }
 
     private void updateMeasureData(){
-        String[] data = dataArea.getText().split(",");
+        String[] data = dataArea1.getText().split(",");
 
         int s = RightPanel.getCurrentMeasureIndex();
         if(s < 0){
             return;
         }
 
-        GUIDataMaster.getGUIMeasure(s).addData(false, 0, data);
+        GUIDataMaster.getGUIMeasure(s).addData(false, 1, data);
     }
 
     private void updateMeasureData2(){
-        String[] data = dataArea2.getText().split(",");
+        String[] data = dataArea0.getText().split(",");
 
         int s = RightPanel.getCurrentMeasureIndex();
         if(s < 0){
@@ -192,7 +161,36 @@ public class MiddlePanelTwo {
         GUIDataMaster.getGUIMeasure(s).addData(false, 0, data);
     }
 
-    public static void changeData(String data){
-        dataArea.setText(data);
+    @Override
+    public CardTypes getType() {
+        return type;
+    }
+
+    @Override
+    public void setDataArea(int index, String data) {
+        switch (index) {
+            case 0 -> dataArea0.setText(data);
+            case 1 -> dataArea1.setText(data);
+            default -> ErrorManager.sendErrorMessage("GUI", "Program attempted to set data for a data field which does not exist");
+        }
+    }
+
+    @Override
+    public void setVariableArea(int index, String data) {
+        ErrorManager.sendErrorMessage("GUI", "Program attempted to set data for a data field which does not exist");
+    }
+
+    @Override
+    public void setDataLabel(int index, String label) {
+        switch (index) {
+            case 0 -> dataLabel0.setText(label);
+            case 1 -> dataLabel1.setText(label);
+            default -> ErrorManager.sendErrorMessage("GUI", "Program attempted to set name for a label which does not exist");
+        }
+    }
+
+    @Override
+    public void setVariableLabel(int index, String label) {
+        ErrorManager.sendErrorMessage("GUI", "Program attempted to set name for a label which does not exist");
     }
 }
