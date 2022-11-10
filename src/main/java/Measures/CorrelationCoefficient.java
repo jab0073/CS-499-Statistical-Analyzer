@@ -12,6 +12,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CorrelationCoefficient implements IMeasure {
@@ -90,15 +91,23 @@ public class CorrelationCoefficient implements IMeasure {
 
         PearsonsCorrelation pc = new PearsonsCorrelation();
 
-        Double[] xList = inputData.getSample(0).getDataAsDouble().toArray(Double[]::new);
-        Double[] yList = inputData.getSample(1).getDataAsDouble().toArray(Double[]::new);
+        Double[] xArray = inputData.getSample(0).getDataAsDouble().toArray(Double[]::new);
+        Double[] yArray = inputData.getSample(1).getDataAsDouble().toArray(Double[]::new);
 
-        Double result = pc.correlation(ArrayUtils.toPrimitive(xList), ArrayUtils.toPrimitive(yList));
+        int maxLen = Math.min(xArray.length, yArray.length)-1;
+        xArray = trimSamples(xArray, maxLen);
+        yArray = trimSamples(yArray, maxLen);
+
+        Double result = pc.correlation(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
 
         if(result.isNaN())
             return null;
 
         return result;
+    }
+
+    private Double[] trimSamples(Double[] arr, int maxLength){
+        return Arrays.copyOf(arr, maxLength);
     }
 
     @Override

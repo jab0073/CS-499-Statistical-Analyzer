@@ -12,16 +12,17 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SpearmanRank implements IMeasure {
     private DataSet inputData;
     private final String name = MeasureConstants.spearman;
-    private final int minimumSamples = 1;
+    private final int minimumSamples = 2;
     private final List<String> requiredVariables = new ArrayList<>();
     private final boolean isGraphable = false;
     private final List<GraphTypes> validGraphs = List.of();
-    private final CardTypes cardType = CardTypes.ONE_DATA_NO_VARIABLE;
+    private final CardTypes cardType = CardTypes.TWO_DATA_NO_VARIABLE;
 
     public boolean isGraphable(){ return this.isGraphable; }
 
@@ -88,17 +89,25 @@ public class SpearmanRank implements IMeasure {
         if(!this.validate())
             return null;
 
-        Double[] xList = inputData.getSample(0).getDataAsDouble().toArray(Double[]::new);
-        Double[] yList = inputData.getSample(1).getDataAsDouble().toArray(Double[]::new);
+        Double[] xArray = inputData.getSample(0).getDataAsDouble().toArray(Double[]::new);
+        Double[] yArray = inputData.getSample(1).getDataAsDouble().toArray(Double[]::new);
+
+        int maxLen = Math.min(xArray.length, yArray.length)-1;
+        xArray = trimSamples(xArray, maxLen);
+        yArray = trimSamples(yArray, maxLen);
 
         SpearmansCorrelation sc = new SpearmansCorrelation();
 
-        double result = sc.correlation(ArrayUtils.toPrimitive(xList), ArrayUtils.toPrimitive(yList));
+        double result = sc.correlation(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
 
         if(Double.isNaN(result))
             return null;
 
         return result;
+    }
+
+    private Double[] trimSamples(Double[] arr, int maxLength){
+        return Arrays.copyOf(arr, maxLength);
     }
 
     @Override

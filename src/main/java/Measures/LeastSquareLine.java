@@ -13,6 +13,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LeastSquareLine implements IMeasure {
@@ -91,7 +92,6 @@ public class LeastSquareLine implements IMeasure {
         return paired;
     }
 
-    //TODO: set up data trimming method for unexual samples
     @Override
     public String run() {
         logger.debug("Running " + MeasureConstants.least);
@@ -106,6 +106,10 @@ public class LeastSquareLine implements IMeasure {
         Double[] xArray = x.toArray(Double[]::new);
         Double[] yArray = y.toArray(Double[]::new);
 
+        int maxLen = Math.min(xArray.length, yArray.length)-1;
+        xArray = trimSamples(xArray, maxLen);
+        yArray = trimSamples(yArray, maxLen);
+
         double[][] xyArray = this.pair(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
         sr.addData(xyArray);
 
@@ -116,6 +120,10 @@ public class LeastSquareLine implements IMeasure {
             return null;
 
         return "b=" + b + ",m=" + m;
+    }
+
+    private Double[] trimSamples(Double[] arr, int maxLength){
+        return Arrays.copyOf(arr, maxLength);
     }
 
     @Override
