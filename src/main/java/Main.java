@@ -28,49 +28,6 @@ public class Main {
         MeasureManager.init();
         GraphManager.init();
 
-        /**
-        System.out.println("MEASURES:");
-        MeasureManager.getAllMeasureNames().forEach(System.out::println);
-
-        DataSet ds = RepositoryManager.getDataSet("BLEH");
-        if(ds == null) {
-            logger.error("DataSet not found in repository");
-            ds = new DataSet();
-            ds.addSample(new Sample(1.0,2.0,100.0,35.0,7.0,12.5));
-            ds.setName("BLEH");
-            RepositoryManager.putDataSet(ds, ds.getName());
-        }
-
-        //UserDefinedMeasure udm = new UserDefinedMeasure("TEST", "((x^x)/x)*x", "data");
-
-        String measureName = MeasureConstants.percentiles;
-
-        IMeasure measure = MeasureManager.getMeasure(measureName);
-        if(measure == null) {
-            logger.error("Measure not found in repository");
-            measure = new UserDefinedMeasure(measureName, "data*z", "data");
-            RepositoryManager.putUserDefinedMeasure((UserDefinedMeasure) measure, measure.getName());
-        }
-
-        Expressions.disableEvaluation();
-
-        Arrays.asList("n=20000", "p=.5", "x=100").forEach(a->Expressions.addArgument(a.split("=")[0], a.split("=")[1]));
-
-        if(Expressions.ensureArgument("n")) {
-            logger.debug("VARIABLE FOUND");
-        }
-        else {
-            logger.error("VARIABLE NOT FOUND");
-        }
-
-
-
-        Measures.setInputData(ds);
-        measure.setInputData(ds);
-
-        Double output = (Double) measure.run();
-         */
-
 
         GUI.Frame frame = new GUI.Frame();
         frame.frame();

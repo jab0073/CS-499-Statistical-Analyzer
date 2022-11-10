@@ -4,6 +4,7 @@ import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
 import FrontEndUtilities.ErrorManager;
+import GUI.CardTypes;
 import Graphing.DataFormat;
 import Graphing.GraphTypes;
 import Interfaces.IMeasure;
@@ -21,6 +22,7 @@ public class RankSum implements IMeasure {
     private final List<String> requiredVariables = new ArrayList<>();
     private final boolean isGraphable = false;
     private final List<GraphTypes> validGraphs = List.of();
+    private final CardTypes cardType = CardTypes.TWO_DATA_NO_VARIABLE;
 
     public boolean isGraphable(){ return this.isGraphable; }
 
@@ -180,4 +182,7 @@ public class RankSum implements IMeasure {
 
     @Override
     public DataFormat getOutputFormat(){ return DataFormat.SINGLE_STRING; }
+
+    @Override
+    public CardTypes getCardType(){ return cardType; }
 }

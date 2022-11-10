@@ -1,6 +1,7 @@
 package FrontEndUtilities;
 
 import BackEndUtilities.*;
+import GUI.CardTypes;
 import Graphing.DataFormat;
 import Graphing.GraphManager;
 import Graphing.GraphTypes;
@@ -21,6 +22,7 @@ public class GUIMeasure {
     private List<GraphTypes> validGraphs = new ArrayList<>();
     private GraphTypes selectedGraph = null;
     private DataFormat outputFormat = null;
+    private CardTypes cardType = CardTypes.TWO_DATA_NO_VARIABLE;
 
     public GUIMeasure(String name){
         IMeasure m = MeasureManager.getMeasure(name);
@@ -44,6 +46,8 @@ public class GUIMeasure {
         }
 
         this.outputFormat = m.getOutputFormat();
+
+        this.cardType = m.getCardType();
     }
 
     /**
@@ -151,6 +155,37 @@ public class GUIMeasure {
         return data.toString();
     }
 
+    public String getDataAsString(int index){
+        StringBuilder data = new StringBuilder();
+
+        ArrayList<String> sample = measureData[index];
+        if(sample == null){
+            data.append(" ");
+            return "";
+        }
+
+        for(String s : sample){
+            data.append(s).append(",");
+        }
+
+
+        if(data.length() > 0){
+            data.deleteCharAt(data.length()-1);
+        }
+
+        return data.toString();
+    }
+
+    public String getVariableValue(int index){
+        String var = variableValues.get(index);
+
+        if(var == null){
+            return "";
+        }
+
+        return var;
+    }
+
     public ArrayList<String>[] getData(){
         return this.measureData;
     }
@@ -164,4 +199,12 @@ public class GUIMeasure {
     }
 
     public DataFormat getOutputFormat(){ return outputFormat; }
+
+    public CardTypes getCardType(){ return cardType; }
+
+    public int getMinimumSamples(){ return minimumSamples; }
+
+    public int getNumVariables(){ return requiredVariables.size(); }
+
+    public String getVariableName(int i){ return requiredVariables.get(i) ; }
 }

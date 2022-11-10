@@ -1,5 +1,8 @@
 package FrontEndUtilities;
 
+import GUI.Card;
+import GUI.CardTypes;
+import GUI.Frame;
 import Graphing.GraphManager;
 
 import java.util.ArrayList;
@@ -51,6 +54,7 @@ public class GUIDataMaster {
                 results.set(i, measures.get(i).execute());
             }catch (Exception e) {
                 results.set(i, null);
+                ErrorManager.sendErrorMessage(measures.get(i).getName(), "A critical error has occured");
                 success = false;
             }
         }
@@ -77,5 +81,19 @@ public class GUIDataMaster {
         GraphManager.clearGraphs();
         OutputManager.clearOutput();
         ErrorManager.clearErrors();
+    }
+
+    public static void swapMiddleCard(CardTypes card, GUIMeasure measure){
+        Card c = Frame.swapCard(card);
+
+        for(int i = 0; i < measure.getMinimumSamples(); i++){
+            System.out.println("Setting data " + measure.getDataAsString(i) + i + " on card " + card.name());
+            c.setDataArea(i, measure.getDataAsString(i));
+        }
+
+        for(int j = 0; j < measure.getNumVariables(); j++){
+            c.setVariableArea(j, measure.getVariableValue(j));
+            c.setVariableLabel(j, measure.getVariableName(j));
+        }
     }
 }

@@ -127,6 +127,10 @@ public class XYGraph implements IGraph{
         ArrayList<String> dataX = measure.getData()[0];
         ArrayList<String> dataY = measure.getData()[1];
 
+        if(dataX.size() > dataY.size()){
+            dataX.subList(dataY.size(), dataX.size()).clear();
+        }
+
         for(int i = 0; i < dataX.size(); i++){
             d.add(Double.parseDouble(dataX.get(i)), Double.parseDouble(dataY.get(i)));
         }

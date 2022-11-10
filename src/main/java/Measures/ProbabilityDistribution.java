@@ -4,6 +4,7 @@ import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
 import FrontEndUtilities.ErrorManager;
+import GUI.CardTypes;
 import Graphing.DataFormat;
 import Graphing.GraphTypes;
 import Interfaces.BiasCorrectable;
@@ -21,6 +22,7 @@ public class ProbabilityDistribution extends BiasCorrectable implements IMeasure
     private final List<String> requiredVariables = new ArrayList<>();
     private final boolean isGraphable = true;
     private final List<GraphTypes> validGraphs = List.of(GraphTypes.X_Y);
+    private final CardTypes cardType = CardTypes.ONE_DATA_NO_VARIABLE;
 
     public boolean isGraphable(){ return this.isGraphable; }
 
@@ -121,4 +123,7 @@ public class ProbabilityDistribution extends BiasCorrectable implements IMeasure
 
     @Override
     public DataFormat getOutputFormat(){ return DataFormat.PROBABILITY; }
+
+    @Override
+    public CardTypes getCardType(){ return cardType; }
 }

@@ -2,6 +2,7 @@ package Interfaces;
 
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
+import GUI.CardTypes;
 import Graphing.DataFormat;
 import Graphing.GraphTypes;
 import Measures.Measures;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface IMeasure {
+    //TODO: Define Card Types for all measures
 
     Logger logger = LogManager.getLogger(IMeasure.class.getName());
 
@@ -34,5 +36,7 @@ public interface IMeasure {
     List<GraphTypes> getValidGraphs();
 
     default DataFormat getOutputFormat(){ return DataFormat.SINGLE_DOUBLE; };
+
+    default CardTypes getCardType(){ return CardTypes.ONE_DATA_NO_VARIABLE; };
 
 }

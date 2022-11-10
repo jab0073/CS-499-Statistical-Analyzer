@@ -7,10 +7,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 public class Frame extends JFrame {
-    private static String CARD_PANEL ="2";
-    private JPanel cardPanel;
+    private static final ArrayList<Card> cards = new ArrayList<>();
+    private static JPanel cardPanel;
 
     /**Method for generating the frame which holds the GUI*/
     public void frame() {
@@ -70,21 +71,17 @@ public class Frame extends JFrame {
         cardPanel = panel;
 
         /**The "cards" in the card layout, able to be cycled through. Name indicates layout.*/
-        JPanel oneBox = new MiddlePanel().dataPanel();
-        JPanel twoBoxes = new MiddlePanelTwo().dataPanel();
-        JPanel oneLine = new MiddlePanelThree().dataPanel();
-        JPanel twoLines = new MiddlePanelFour().dataPanel();
-        JPanel boxLine = new MiddlePanelFive().dataPanel();
-        JPanel boxTwoLine = new MiddlePanelSix().dataPanel();
+        cards.add(new MiddlePanel());
+        cards.add(new MiddlePanelTwo());
+        cards.add(new MiddlePanelThree());
+        cards.add(new MiddlePanelFour());
+        cards.add(new MiddlePanelFive());
 
-        panel.add(oneBox, "1");
-        panel.add(twoBoxes, "2");
-        panel.add(oneLine, "3");
-        panel.add(twoLines, "4");
-        panel.add(boxLine, "5");
-        panel.add(boxTwoLine, "6");
+        for(Card c : cards){
+            panel.add(c, c.getType().getName());
+        }
 
-        layout.show(panel, CARD_PANEL);
+        layout.show(panel, CardTypes.ONE_DATA_ONE_VARIABLE.getName());
 
         return(panel);
     }
@@ -95,5 +92,13 @@ public class Frame extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new RightPanel().rightPanel(), BorderLayout.CENTER);
         return(panel);
+    }
+
+    public static Card swapCard(CardTypes card){
+        //TODO: Implement method for swapping cards and updating their data areas with measure data
+        CardLayout layout = (CardLayout) cardPanel.getLayout();
+        layout.show(cardPanel, card.getName());
+
+        return cards.stream().filter(c -> c.getType() == card).findFirst().orElse(null);
     }
 }

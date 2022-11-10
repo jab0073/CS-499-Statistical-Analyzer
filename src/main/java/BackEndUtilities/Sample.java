@@ -1,5 +1,6 @@
 package BackEndUtilities;
 
+import FrontEndUtilities.ErrorManager;
 import Interfaces.IValidator;
 import Measures.Measures;
 import Validators.DataValidator;
@@ -94,6 +95,10 @@ public class Sample implements Cloneable{
      * @param data The data to be displayed in the list.
      */
     public void setData(List<String> data) {
+        if(data == null){
+            ErrorManager.sendErrorMessage("Sample", "Data to be added to sample is null");
+            return;
+        }
         this.data = data;
     }
 
