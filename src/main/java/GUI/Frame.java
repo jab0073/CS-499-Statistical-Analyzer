@@ -16,16 +16,15 @@ public class Frame extends JFrame {
     /**Method for generating the frame which holds the GUI*/
     public void frame() {
         /*Create a frame, give it a size, set it to exit on close.*/
-        JFrame window = new JFrame("Analysis");
-        window.setSize(1000, 750);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(1000, 750);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         /*Create a layout for the frame and add in the panels in their appropriate positions.*/
-        window.setLayout(new BorderLayout());
-        window.add(windowPanelTop(), BorderLayout.NORTH);
-        window.add(windowPanelLeft(), BorderLayout.WEST);
-        window.add(windowPanelMiddle(), BorderLayout.CENTER);
-        window.add(windowPanelRight(), BorderLayout.EAST);
+        this.setLayout(new BorderLayout());
+        this.add(windowPanelTop(), BorderLayout.NORTH);
+        this.add(windowPanelLeft(), BorderLayout.WEST);
+        this.add(windowPanelMiddle(), BorderLayout.CENTER);
+        this.add(windowPanelRight(), BorderLayout.EAST);
 
         /**JButton button = new JButton("Change");
         button.addActionListener(new ActionListener() {
@@ -38,8 +37,8 @@ public class Frame extends JFrame {
         window.add(button, BorderLayout.SOUTH);*/
 
         /*Set the frame to start maximized and visible.*/
-        window.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        window.setVisible(true);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setVisible(true);
     }
 
     /**Method which adds the menu bar panel to a panel which will be placed at the top of the application.
