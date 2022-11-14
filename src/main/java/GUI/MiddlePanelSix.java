@@ -1,5 +1,6 @@
 package GUI;
 
+import FrontEndUtilities.ErrorManager;
 import FrontEndUtilities.GUIDataMaster;
 
 import javax.swing.*;
@@ -9,17 +10,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MiddlePanelSix {
-    private static JTextArea dataArea;
-    private static JTextField dataArea2;
+public class MiddlePanelSix extends Card{
+    private JTextArea dataArea0;
 
-    private static JTextField dataArea3;
+    private JTextField variableArea0;
+    private JTextField variableArea1;
 
-    /**Method which returns a panel which contains one scroll pane, a button, and a label.
-     *@return One of the data panel options.*/
-    public JPanel dataPanel(){
+    private JLabel dataLabel0;
+    private JLabel variableLabel0;
+    private JLabel variableLabel1;
+
+    private final CardTypes type = CardTypes.ONE_DATA_TWO_VARIABLE;
+
+    public MiddlePanelSix(){
         /*Create a JPanel with a grid bag layout*/
-        JPanel panel = new JPanel(new GridBagLayout());
+        this.setLayout(new GridBagLayout());
 
         /*Create the constraints for gridbag layout and apply them to the scroll pane.*/
         GridBagConstraints c = new GridBagConstraints();
@@ -27,20 +32,19 @@ public class MiddlePanelSix {
         c.anchor = GridBagConstraints.LINE_END;
         c.gridx = 2;
         c.gridy = 4;
-        panel.add(topPanel(), c);
+        this.add(topPanel(), c);
         c.gridy = 5;
-        panel.add(scrollPane(), c);
+        this.add(scrollPane(), c);
 
         c.gridy = 0;
-        panel.add(topPanel2(), c);
+        this.add(topPanel2(), c);
         c.gridy = 1;
-        panel.add(dataAreaTwo(), c);
+        this.add(dataAreaTwo(), c);
 
         c.gridy = 2;
-        panel.add(topPanel3(), c);
+        this.add(topPanel3(), c);
         c.gridy = 3;
-        panel.add(dataAreaThree(), c);
-        return(panel);
+        this.add(dataAreaThree(), c);
     }
 
     /**Creates a scroll pane for the text area.
@@ -53,78 +57,27 @@ public class MiddlePanelSix {
     /**Creates a text area that user can input data into.
      *@return The text area*/
     private JTextArea dataArea(){
-        dataArea = new JTextArea("Select Data from Chart", 20, 15);
-        dataArea.setEditable(false);
-        dataArea.setLineWrap(true);
+        dataArea0 = new JTextArea("Select Data from Chart", 20, 15);
+        dataArea0.setEditable(false);
+        dataArea0.setLineWrap(true);
 
-        dataArea.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateMeasureData();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateMeasureData();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-
-            }
-        });
-
-        return(dataArea);
+        return(dataArea0);
     }
 
     private JTextField dataAreaTwo(){
-        dataArea2 = new JTextField();
-        dataArea2.setEditable(false);
-        dataArea2.setBackground(Color.WHITE);
+        variableArea0 = new JTextField();
+        variableArea0.setEditable(false);
+        variableArea0.setBackground(Color.WHITE);
 
-        dataArea2.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateMeasureData();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateMeasureData();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-
-            }
-        });
-
-        return(dataArea2);
+        return(variableArea0);
     }
 
     private JTextField dataAreaThree(){
-        dataArea3 = new JTextField();
-        dataArea3.setEditable(false);
-        dataArea3.setBackground(Color.WHITE);
+        variableArea1 = new JTextField();
+        variableArea1.setEditable(false);
+        variableArea1.setBackground(Color.WHITE);
 
-        dataArea3.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateMeasureData();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateMeasureData();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-
-            }
-        });
-
-        return(dataArea3);
+        return(variableArea1);
     }
 
     /**Method which creates panel to contain the button and label.
@@ -156,15 +109,15 @@ public class MiddlePanelSix {
     /**Method which creates the label.
      *@return The label*/
     private JLabel dataLabel(){
-        return(new JLabel("Data"));
+        return(dataLabel0 = new JLabel("Data"));
     }
 
     private JLabel dataLabel2(){
-        return(new JLabel("Data"));
+        return(variableLabel0 = new JLabel("var-0"));
     }
 
     private JLabel dataLabel3(){
-        return(new JLabel("Data"));
+        return(variableLabel1 = new JLabel("var-1"));
     }
 
     /**Method which creates the button for importing data from chart.
@@ -175,11 +128,11 @@ public class MiddlePanelSix {
         btnImport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(dataArea.getText().contains("Select Data from Chart")){
-                    dataArea.setText(CellsTable.getSelectedData());
+                if(dataArea0.getText().contains("Select Data from Chart")){
+                    dataArea0.setText(CellsTable.getSelectedData());
                 }
                 else{
-                    dataArea.append(CellsTable.getSelectedData() + ",");
+                    dataArea0.append(CellsTable.getSelectedData() + ",");
                 }
                 updateMeasureData();
             }
@@ -194,7 +147,7 @@ public class MiddlePanelSix {
         btnImport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dataArea2.setText(CellsTable.getSelectedData());
+                variableArea0.setText(CellsTable.getSelectedData());
                 updateMeasureDataTwo();
             }
         });
@@ -208,7 +161,7 @@ public class MiddlePanelSix {
         btnImport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dataArea3.setText(CellsTable.getSelectedData());
+                variableArea1.setText(CellsTable.getSelectedData());
                 updateMeasureDataThree();
             }
         });
@@ -217,7 +170,7 @@ public class MiddlePanelSix {
     }
 
     private void updateMeasureData(){
-        String[] data = dataArea.getText().split(",");
+        String[] data = dataArea0.getText().split(",");
 
         int s = RightPanel.getCurrentMeasureIndex();
         if(s < 0){
@@ -228,28 +181,63 @@ public class MiddlePanelSix {
     }
 
     private void updateMeasureDataTwo(){
-        String[] data = dataArea2.getText().split(",");
+        String[] data = variableArea0.getText().split(",");
 
         int s = RightPanel.getCurrentMeasureIndex();
         if(s < 0){
             return;
         }
 
-        GUIDataMaster.getGUIMeasure(s).addData(false, 0, data);
+        GUIDataMaster.getGUIMeasure(s).setVariable(variableLabel0.getText(), data[0]);
     }
 
     private void updateMeasureDataThree(){
-        String[] data = dataArea3.getText().split(",");
+        String[] data = variableArea1.getText().split(",");
 
         int s = RightPanel.getCurrentMeasureIndex();
         if(s < 0){
             return;
         }
 
-        GUIDataMaster.getGUIMeasure(s).addData(false, 0, data);
+        GUIDataMaster.getGUIMeasure(s).setVariable(variableLabel1.getText(), data[0]);
     }
 
-    public static void changeData(String data){
-        dataArea.setText(data);
+    @Override
+    public CardTypes getType() {
+        return type;
+    }
+
+    @Override
+    public void setDataArea(int index, String data) {
+        switch (index) {
+            case 0 -> dataArea0.setText(data);
+            default -> ErrorManager.sendErrorMessage("GUI", "Program attempted to set data for a data field which does not exist");
+        }
+    }
+
+    @Override
+    public void setVariableArea(int index, String data) {
+        switch (index) {
+            case 0 -> variableArea0.setText(data);
+            case 1 -> variableArea1.setText(data);
+            default -> ErrorManager.sendErrorMessage("GUI", "Program attempted to set data for a data field which does not exist");
+        }
+    }
+
+    @Override
+    public void setDataLabel(int index, String label) {
+        switch (index) {
+            case 0 -> dataLabel0.setText(label);
+            default -> ErrorManager.sendErrorMessage("GUI", "Program attempted to set name for a label which does not exist");
+        }
+    }
+
+    @Override
+    public void setVariableLabel(int index, String label) {
+        switch (index) {
+            case 0 -> variableLabel0.setText(label);
+            case 1 -> variableLabel1.setText(label);
+            default -> ErrorManager.sendErrorMessage("GUI", "Program attempted to set name for a label which does not exist");
+        }
     }
 }

@@ -8,8 +8,8 @@ public class OutputManager {
     private static final ArrayList<String> outputs = new ArrayList<>();
     private static final ArrayList<JPanel> graphs = new ArrayList<>();
 
-    public static void addOutput(String output){
-        outputs.add(output);
+    public static void addOutput(String measureName, String output){
+        outputs.add(measureName + "," + output);
     }
 
     public static void displayOutputs(){
@@ -21,9 +21,27 @@ public class OutputManager {
         frame.setLayout(new BorderLayout());
 
         JTextPane textPane = new JTextPane();
+        textPane.setEditable(false);
 
         for(String s : outputs){
-            textPane.setText(textPane.getText() + "\n" + s);
+            String[] sArr = s.split(",");
+            String name = sArr[0];
+            String data = sArr[1];
+            for(int i = 2; i < sArr.length; i++){
+                data = data + "\n" + sArr[i];
+            }
+            data = data.indent(3);
+
+            String out = textPane.getText();
+
+            if(out != ""){
+                out += "\n";
+            }
+
+            out += name;
+            out += "\n" + data;
+
+            textPane.setText(out);
         }
 
         if(graphs.size() > 0){
