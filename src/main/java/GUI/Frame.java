@@ -76,6 +76,7 @@ public class Frame extends JFrame {
         cards.add(new MiddlePanelThree());
         cards.add(new MiddlePanelFour());
         cards.add(new MiddlePanelFive());
+        cards.add(new MiddlePanelSix());
 
         for(Card c : cards){
             panel.add(c, c.getType().getName());

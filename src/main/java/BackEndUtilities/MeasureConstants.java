@@ -6,21 +6,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MeasureConstants {
-    public static final String binomial = "binomial distribution";
-    public static final String chi = "chi square";
-    public static final String coefficient = "coefficient of variance";
-    public static final String correlation = "correlation coefficient";
-    public static final String least = "least square line";
-    public static final String mean = "mean";
-    public static final String median = "median";
-    public static final String mode = "mode";
-    public static final String percentiles = "percentiles";
-    public static final String probability = "probability distribution";
-    public static final String rank = "rank sum";
-    public static final String sign = "sign test";
-    public static final String spearman = "spearman rank";
-    public static final String std = "standard deviation";
-    public static final String variance = "variance";
+    public static final String binomial = "Binomial Distribution";
+    public static final String chi = "Chi Square";
+    public static final String coefficient = "Coefficient of Variance";
+    public static final String correlation = "Correlation Coefficient";
+    public static final String least = "Least Square Line";
+    public static final String mean = "Mean";
+    public static final String median = "Median";
+    public static final String mode = "Mode";
+    public static final String percentiles = "Percentiles";
+    public static final String probability = "Probability distribution";
+    public static final String rank = "Rank Sum";
+    public static final String sign = "Sign Test";
+    public static final String spearman = "Spearman Rank";
+    public static final String std = "Standard Deviation";
+    public static final String variance = "Variance";
 
     public static List<String> getAllConstants() {
         return Arrays.stream(MeasureConstants.class.getDeclaredFields()).map(Field::getName).map(f-> {

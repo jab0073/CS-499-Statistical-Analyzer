@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface IMeasure {
-    //TODO: Define Card Types for all measures
 
     Logger logger = LogManager.getLogger(IMeasure.class.getName());
 

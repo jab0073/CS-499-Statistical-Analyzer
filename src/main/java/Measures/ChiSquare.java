@@ -5,6 +5,7 @@ import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
 import FrontEndUtilities.ErrorManager;
 import GUI.CardTypes;
+import Graphing.DataFormat;
 import Graphing.GraphTypes;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
@@ -20,7 +21,7 @@ public class ChiSquare implements IMeasure {
     private final List<String> requiredVariables = Arrays.asList("p", "n");
     private final boolean isGraphable = false;
     private final List<GraphTypes> validGraphs = List.of();
-    private final CardTypes cardType = CardTypes.NO_DATA_TWO_VARIABLE;
+    private final CardTypes cardType = CardTypes.ONE_DATA_TWO_VARIABLE;
 
     public boolean isGraphable(){ return this.isGraphable; }
 
@@ -99,6 +100,8 @@ public class ChiSquare implements IMeasure {
 
         return result;
     }
+    @Override
+    public DataFormat getOutputFormat(){ return DataFormat.DOUBLE_LIST; }
 
     @Override
     public CardTypes getCardType(){ return cardType; }
