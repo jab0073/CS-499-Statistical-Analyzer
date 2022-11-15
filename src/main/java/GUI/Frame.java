@@ -14,7 +14,7 @@ public class Frame extends JFrame {
     private static JPanel cardPanel;
 
     /**Method for generating the frame which holds the GUI*/
-    public void frame() {
+    public Frame() {
         /*Create a frame, give it a size, set it to exit on close.*/
         this.setSize(1000, 750);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -23,7 +23,7 @@ public class Frame extends JFrame {
         this.setLayout(new BorderLayout());
         this.add(windowPanelTop(), BorderLayout.NORTH);
         this.add(windowPanelLeft(), BorderLayout.WEST);
-        this.add(windowPanelMiddle(), BorderLayout.CENTER);
+        this.add(fullWindowPanelMiddle(), BorderLayout.CENTER);
         this.add(windowPanelRight(), BorderLayout.EAST);
 
         /**JButton button = new JButton("Change");
@@ -81,9 +81,21 @@ public class Frame extends JFrame {
             panel.add(c, c.getType().getName());
         }
 
+        panel.add(new GraphsComboBox().graphsComboBoxPanel());
+
         layout.show(panel, CardTypes.ONE_DATA_ONE_VARIABLE.getName());
 
         return(panel);
+    }
+
+    private JPanel fullWindowPanelMiddle(){
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridy = 0;
+        panel.add(windowPanelMiddle(), c);
+        c.gridy = 1;
+        panel.add(new GraphsComboBox().graphsComboBoxPanel(), c);
+        return panel;
     }
 
     /**Method which adds the right panel to a panel which will be placed to the right of the application.

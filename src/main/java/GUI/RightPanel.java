@@ -2,6 +2,8 @@ package GUI;
 import BackEndUtilities.MeasureManager;
 import FrontEndUtilities.GUIDataMaster;
 import FrontEndUtilities.GUIMeasure;
+import Graphing.GraphTypes;
+import Interfaces.IMeasure;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -10,10 +12,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 public class RightPanel {
     private static JList<String> functionList;
+    private static List<GraphTypes> graphsList;
+    private static boolean selected = false;
     private static int functionIndex;
     /**Method which returns the panel which will be on the right side of the frame.
      *@return The panel which contains a scroll pane and button.*/
@@ -53,12 +58,17 @@ public class RightPanel {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if(!e.getValueIsAdjusting()) {
+                    selected = true;
                     int a = functionList.getSelectedIndex();
                     if(a==-1){
                         return;
                     }
                     GUIMeasure m = GUIDataMaster.getGUIMeasure(functionList.getSelectedIndex());
                     GUIDataMaster.swapMiddleCard(m.getCardType(), m);
+                    IMeasure i = MeasureManager.getMeasure(m.getName());
+                    setGraphsList(i.getValidGraphs());
+                    GraphsComboBox.getModel().removeAllElements();
+                    GraphsComboBox.setModel();
                 }
             }
         });
@@ -152,7 +162,28 @@ public class RightPanel {
         }
     }
 
+    private void setGraphsList(List<GraphTypes> list){
+        graphsList = list;
+    }
+
+    public static String[] getGraphsListStr(){
+        String[] arr = new String[graphsList.size()];
+        int i = 0;
+        for (Object value : graphsList) {
+            arr[i] = String.valueOf(value);
+            i++;
+        }
+        return(arr);
+    }
+
+    public static List<GraphTypes> getGraphsList(){
+        return(graphsList);
+    }
+
+
     public static int getCurrentMeasureIndex(){
         return functionList.getSelectedIndex();
     }
+
+    public static boolean getSelected(){return selected;}
 }
