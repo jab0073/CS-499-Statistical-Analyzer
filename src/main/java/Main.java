@@ -1,5 +1,7 @@
 import BackEndUtilities.*;
+import GUI.Frame;
 import Graphing.GraphManager;
+import javax.swing.*;
 import Interfaces.IMeasure;
 import Interop.UIServices;
 import Measures.Measures;
@@ -18,6 +20,7 @@ import java.util.Arrays;
 
 public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
+    private static JFrame frame;
 
     public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         logger.debug("Starting Main.");
@@ -29,9 +32,10 @@ public class Main {
         GraphManager.init();
 
 
-        GUI.Frame frame = new GUI.Frame();
-        frame.frame();
+        frame = new Frame();
 
         logger.debug("Leaving Main.");
     }
+
+    public JFrame returnFrame(){return(frame);}
 }
