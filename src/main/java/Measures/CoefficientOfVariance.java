@@ -3,6 +3,8 @@ package Measures;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
+import FrontEndUtilities.ErrorManager;
+import GUI.CardTypes;
 import Graphing.GraphTypes;
 import Interfaces.BiasCorrectable;
 import Interfaces.IMeasure;
@@ -18,6 +20,7 @@ public class CoefficientOfVariance extends BiasCorrectable implements IMeasure {
     private final List<String> requiredVariables = new ArrayList<>();
     private final boolean isGraphable = false;
     private final List<GraphTypes> validGraphs = List.of();
+    private final CardTypes cardType = CardTypes.ONE_DATA_NO_VARIABLE;
 
     public boolean isGraphable(){ return this.isGraphable; }
 
@@ -63,12 +66,18 @@ public class CoefficientOfVariance extends BiasCorrectable implements IMeasure {
 
     @Override
     public boolean validate() {
-        if (this.inputData == null)
+        if (this.inputData == null || this.inputData.getAllDataAsDouble().size() == 0) {
+            ErrorManager.sendErrorMessage(name, "No Data supplied to evaluate");
             return false;
-        if (this.inputData.getNumberOfSamples() < this.minimumSamples)
+        }
+        if (this.inputData.getNumberOfSamples() < this.minimumSamples) {
+            ErrorManager.sendErrorMessage(name, "Invalid number of samples");
             return false;
-        if (this.inputData.status == IValidator.ValidationStatus.INVALID)
+        }
+        if (this.inputData.status == IValidator.ValidationStatus.INVALID) {
+            ErrorManager.sendErrorMessage(name, "Input Data not able to be validated");
             return false;
+        }
         if(this.requiredVariables.size() > 0) {
             return this.requiredVariables.stream()
                     .anyMatch(Expressions::ensureArgument);
@@ -97,4 +106,7 @@ public class CoefficientOfVariance extends BiasCorrectable implements IMeasure {
 
         return (stddiv / mean) * (100.0);
     }
+
+    @Override
+    public CardTypes getCardType(){ return cardType; }
 }

@@ -4,6 +4,8 @@ import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
 import FrontEndUtilities.ErrorManager;
+import GUI.CardTypes;
+import Graphing.DataFormat;
 import Graphing.GraphTypes;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
@@ -21,6 +23,7 @@ public class Binomial implements IMeasure {
     private final List<String> requiredVariables = Arrays.asList("p", "n");
     private final boolean isGraphable = false;
     private final List<GraphTypes> validGraphs = List.of();
+    private final CardTypes cardType = CardTypes.ONE_DATA_TWO_VARIABLE;
 
     public boolean isGraphable(){ return this.isGraphable; }
 
@@ -61,7 +64,6 @@ public class Binomial implements IMeasure {
 
     @Override
     public boolean validate() {
-        List<Double> a = this.inputData.getAllDataAsDouble();
         if (this.inputData == null || this.inputData.getAllDataAsDouble().size() == 0) {
             ErrorManager.sendErrorMessage(name, "No Data supplied to evaluate");
             return false;
@@ -102,4 +104,10 @@ public class Binomial implements IMeasure {
 
         return result;
     }
+
+    @Override
+    public DataFormat getOutputFormat(){ return DataFormat.DOUBLE_LIST; }
+
+    @Override
+    public CardTypes getCardType(){ return cardType; }
 }

@@ -2,6 +2,8 @@ package Interfaces;
 
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
+import GUI.CardTypes;
+import Graphing.DataFormat;
 import Graphing.GraphTypes;
 import Measures.Measures;
 import org.apache.logging.log4j.LogManager;
@@ -31,5 +33,9 @@ public interface IMeasure {
     boolean isGraphable();
 
     List<GraphTypes> getValidGraphs();
+
+    default DataFormat getOutputFormat(){ return DataFormat.SINGLE_DOUBLE; };
+
+    default CardTypes getCardType(){ return CardTypes.ONE_DATA_NO_VARIABLE; };
 
 }

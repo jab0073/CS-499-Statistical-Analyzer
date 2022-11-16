@@ -4,6 +4,7 @@ import FrontEndUtilities.ErrorManager;
 import FrontEndUtilities.GUIDataMaster;
 import FrontEndUtilities.OutputManager;
 import Graphing.GraphManager;
+import org.apache.poi.hpsf.GUID;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -125,7 +126,7 @@ public class MenuBar {
 
                 ArrayList<Object> r = GUIDataMaster.getResults();
                 for(Object o : r){
-                    OutputManager.addOutput((o==null) ? null : o.toString());
+                    OutputManager.addOutput(GUIDataMaster.getGUIMeasure(r.indexOf(o)).getName() ,(o==null) ? null : o.toString());
                 }
 
                 GraphManager.displayGraphs();

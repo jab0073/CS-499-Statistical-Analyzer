@@ -1,9 +1,12 @@
 package FrontEndUtilities;
 
 import BackEndUtilities.*;
+import GUI.CardTypes;
+import Graphing.DataFormat;
 import Graphing.GraphManager;
 import Graphing.GraphTypes;
 import Interfaces.IMeasure;
+import org.jfree.chart.plot.PlotRenderingInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +21,8 @@ public class GUIMeasure {
     private boolean isGraphable = false;
     private List<GraphTypes> validGraphs = new ArrayList<>();
     private GraphTypes selectedGraph = null;
+    private DataFormat outputFormat = null;
+    private CardTypes cardType = CardTypes.TWO_DATA_NO_VARIABLE;
 
     public GUIMeasure(String name){
         IMeasure m = MeasureManager.getMeasure(name);
@@ -39,6 +44,10 @@ public class GUIMeasure {
         if(isGraphable){
             this.validGraphs.addAll(m.getValidGraphs());
         }
+
+        this.outputFormat = m.getOutputFormat();
+
+        this.cardType = m.getCardType();
     }
 
     /**
@@ -91,7 +100,7 @@ public class GUIMeasure {
         MeasureManager.getMeasure(name).setInputData(ds);
 
         for(int i = 0; i < requiredVariables.size(); i++){
-            Expressions.addArgument(requiredVariables.get(i), variableValues.get(i).toString());
+            Expressions.addArgument(requiredVariables.get(i), variableValues.get(i));
         }
 
         Object r = MeasureManager.getMeasure(name).run();
@@ -146,6 +155,37 @@ public class GUIMeasure {
         return data.toString();
     }
 
+    public String getDataAsString(int index){
+        StringBuilder data = new StringBuilder();
+
+        ArrayList<String> sample = measureData[index];
+        if(sample == null){
+            data.append(" ");
+            return "";
+        }
+
+        for(String s : sample){
+            data.append(s).append(",");
+        }
+
+
+        if(data.length() > 0){
+            data.deleteCharAt(data.length()-1);
+        }
+
+        return data.toString();
+    }
+
+    public String getVariableValue(int index){
+        String var = variableValues.get(index);
+
+        if(var == null){
+            return "";
+        }
+
+        return var;
+    }
+
     public ArrayList<String>[] getData(){
         return this.measureData;
     }
@@ -157,4 +197,14 @@ public class GUIMeasure {
     public GraphTypes getSelectedGraph(){
         return this.selectedGraph;
     }
+
+    public DataFormat getOutputFormat(){ return outputFormat; }
+
+    public CardTypes getCardType(){ return cardType; }
+
+    public int getMinimumSamples(){ return minimumSamples; }
+
+    public int getNumVariables(){ return requiredVariables.size(); }
+
+    public String getVariableName(int i){ return requiredVariables.get(i) ; }
 }

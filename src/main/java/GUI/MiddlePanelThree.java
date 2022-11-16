@@ -9,16 +9,15 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 
-public class MiddlePanel extends Card{
-    private final CardTypes type = CardTypes.ONE_DATA_NO_VARIABLE;
-    private static JTextArea dataArea0;
+public class MiddlePanelThree extends Card{
+    private final CardTypes type = CardTypes.NO_DATA_ONE_VARIABLE;
 
-    private JLabel dataLabel0;
+    private static JTextField variableArea0;
 
-    public MiddlePanel(){
-        /*Create a JPanel with a grid bag layout*/
+    private JLabel variableLabel0;
+
+    public MiddlePanelThree(){
         this.setLayout(new GridBagLayout());
 
         /*Create the constraints for gridbag layout and apply them to the scroll pane.*/
@@ -27,7 +26,7 @@ public class MiddlePanel extends Card{
         c.anchor = GridBagConstraints.LINE_END;
         c.gridx = 2;
         c.gridy = 1;
-        this.add(scrollPane(), c);
+        this.add(dataArea(), c);
 
         /*Change the y position value for the gridbag constraints and apply to the panel containing the
          * button and label.*/
@@ -36,38 +35,20 @@ public class MiddlePanel extends Card{
     }
 
     /**Creates a scroll pane for the text area.
-     *@return A scroll pane containing a text area.*/
-    private JScrollPane scrollPane() {
-        JScrollPane pane = new JScrollPane(dataArea());
+     *@return A scroll pane containing a text area.
+    private JScrollPane middlePanel() {
+        JScrollPane pane = new JScrollPane(variableArea0());
         pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         return (pane);
-    }
-
+    }*/
     /**Creates a text area that user can input data into.
      *@return The text area*/
-    private JTextArea dataArea(){
-        dataArea0 = new JTextArea("Select Data from Chart", 20, 15);
-        dataArea0.setEditable(false);
-        dataArea0.setLineWrap(true);
+    private JTextField dataArea(){
+        variableArea0 = new JTextField();
+        variableArea0.setBackground(Color.WHITE);
+        variableArea0.setEditable(false);
 
-        dataArea0.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateMeasureData();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateMeasureData();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-
-            }
-        });
-
-        return(dataArea0);
+        return(variableArea0);
     }
 
     /**Method which creates panel to contain the button and label.
@@ -83,7 +64,7 @@ public class MiddlePanel extends Card{
     /**Method which creates the label.
      *@return The label*/
     private JLabel dataLabel(){
-        return(new JLabel("Data"));
+        return(variableLabel0 = new JLabel("Data"));
     }
 
     /**Method which creates the button for importing data from chart.
@@ -94,34 +75,22 @@ public class MiddlePanel extends Card{
         btnImport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String d = CellsTable.getSelectedData();
-
-                if(d == null){
-                    return;
-                }
-
-                if(dataArea0.getText().contains("Select Data from Chart")){
-                    dataArea0.setText(d);
-                }
-                else{
-                    dataArea0.setText(d);
-                }
+                variableArea0.setText(CellsTable.getSelectedData());
                 updateMeasureData();
             }
         });
 
         return(btnImport);
     }
-
     private void updateMeasureData(){
-        String[] data = dataArea0.getText().split(",");
+        String[] data = variableArea0.getText().split(",");
 
         int s = RightPanel.getCurrentMeasureIndex();
         if(s < 0){
             return;
         }
 
-        GUIDataMaster.getGUIMeasure(s).addData(false, 0, data);
+        GUIDataMaster.getGUIMeasure(s).setVariable(variableLabel0.getText(), data[0]);
     }
 
     @Override
@@ -131,27 +100,27 @@ public class MiddlePanel extends Card{
 
     @Override
     public void setDataArea(int index, String data) {
+        ErrorManager.sendErrorMessage("GUI", "Program attempted to set data for a data field which does not exist");
+    }
+
+    @Override
+    public void setVariableArea(int index, String data) {
         switch (index) {
-            case 0 -> dataArea0.setText(data);
+            case 0 -> variableArea0.setText(data);
             default -> ErrorManager.sendErrorMessage("GUI", "Program attempted to set data for a data field which does not exist");
         }
     }
 
     @Override
-    public void setVariableArea(int index, String data) {
-        ErrorManager.sendErrorMessage("GUI", "Program attempted to set data for a data field which does not exist");
-    }
-
-    @Override
     public void setDataLabel(int index, String label) {
-        switch (index) {
-            case 0 -> dataLabel0.setText(label);
-            default -> ErrorManager.sendErrorMessage("GUI", "Program attempted to set name for a label which does not exist");
-        }
+        ErrorManager.sendErrorMessage("GUI", "Program attempted to set name for a label which does not exist");
     }
 
     @Override
     public void setVariableLabel(int index, String label) {
-        ErrorManager.sendErrorMessage("GUI", "Program attempted to set name for a label which does not exist");
+        switch (index) {
+            case 0 -> variableLabel0.setText(label);
+            default -> ErrorManager.sendErrorMessage("GUI", "Program attempted to set name for a label which does not exist");
+        }
     }
 }
