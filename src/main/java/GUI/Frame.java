@@ -3,6 +3,8 @@ import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -16,8 +18,14 @@ public class Frame extends JFrame {
     /**Method for generating the frame which holds the GUI*/
     public Frame() {
         /*Create a frame, give it a size, set it to exit on close.*/
-        this.setSize(1000, 750);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JFrame window = new JFrame("Analysis");
+
+
+        AltMenuBar amb = new AltMenuBar();
+        window.setJMenuBar(amb.getMenuBar());
+        window.setSize(1000, 750);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 
         /*Create a layout for the frame and add in the panels in their appropriate positions.*/
         this.setLayout(new BorderLayout());
@@ -35,6 +43,20 @@ public class Frame extends JFrame {
             }
         });
         window.add(button, BorderLayout.SOUTH);*/
+
+        this.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                // TODO: Add dialog box to prompt if user wants to save or export before closing
+
+                // TODO: Save Table contents as DataSet or export to preferred file format
+
+                Frame.closeDialogs();
+                e.getWindow().dispose();
+            }
+        });
 
         /*Set the frame to start maximized and visible.*/
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -107,11 +129,20 @@ public class Frame extends JFrame {
         return(panel);
     }
 
+
+    public static void closeDialogs(){
+        Window[] children = Frame.getWindows();
+        for (Window win : children){
+            if (win instanceof JDialog){
+                win.dispose();
+            }
+        }
     public static Card swapCard(CardTypes card){
         //TODO: Implement method for swapping cards and updating their data areas with measure data
         CardLayout layout = (CardLayout) cardPanel.getLayout();
         layout.show(cardPanel, card.getName());
 
         return cards.stream().filter(c -> c.getType() == card).findFirst().orElse(null);
+
     }
 }

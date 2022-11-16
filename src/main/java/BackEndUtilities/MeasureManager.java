@@ -48,6 +48,11 @@ public class MeasureManager {
         return measures.stream().map(IMeasure::getName).sorted(Comparator.comparing(String::toLowerCase)).collect(Collectors.toList());
     }
 
+    public static void dynamicallyAddMeasure(IMeasure measure) {
+        if(!measures.contains(measure))
+            measures.add(measure);
+    }
+
     public static String getRandomMeasureName(){
         String name = "";
         int size = measures.size();
