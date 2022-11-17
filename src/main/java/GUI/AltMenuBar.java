@@ -197,7 +197,7 @@ public class AltMenuBar {
 
                 ArrayList<Object> r = GUIDataMaster.getResults();
                 for(Object o : r){
-                    OutputManager.addOutput((o==null) ? null : o.toString());
+                    OutputManager.addOutput(GUIDataMaster.getGUIMeasure(r.indexOf(o)).getName(), ((o==null) ? null : o.toString()));
                 }
 
                 GraphManager.displayGraphs();

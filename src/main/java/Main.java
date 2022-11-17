@@ -20,7 +20,7 @@ public class Main {
         GraphManager.init();
 
         GUI.Frame frame = new GUI.Frame();
-        frame.frame();
+        //frame.frame();
 
         logger.debug("Leaving Main.");
     }

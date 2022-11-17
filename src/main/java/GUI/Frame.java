@@ -130,13 +130,15 @@ public class Frame extends JFrame {
     }
 
 
-    public static void closeDialogs(){
+    public static void closeDialogs() {
         Window[] children = Frame.getWindows();
-        for (Window win : children){
-            if (win instanceof JDialog){
+        for (Window win : children) {
+            if (win instanceof JDialog) {
                 win.dispose();
             }
         }
+    }
+
     public static Card swapCard(CardTypes card){
         //TODO: Implement method for swapping cards and updating their data areas with measure data
         CardLayout layout = (CardLayout) cardPanel.getLayout();
