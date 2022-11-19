@@ -2,6 +2,8 @@ package FrontEndUtilities;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class OutputManager {
@@ -71,5 +73,63 @@ public class OutputManager {
     public static void clearOutput(){
         outputs.clear();
         graphs.clear();
+    }
+
+    public static void saveOutputsToFile(){
+        //Open Selection menu
+            //User Selects what outputs to save
+        displayOutputSelection();
+
+        //Open file browser
+            //User selects where to save files and what name to give them
+
+        //Convert outputs to save format
+        //Build output file
+        //save file
+    }
+
+    private static boolean[] displayOutputSelection(){
+        boolean[] outputSelections = new boolean[outputs.size()];
+
+        JPanel[] selectors = new JPanel[outputSelections.length];
+
+        int i = 0;
+
+        //Build list of selectors to display
+        for(String s : outputs){
+            String name = s.split(",")[0];
+            JLabel label = new JLabel(name);
+            JCheckBox selectionBox = new JCheckBox();
+
+            int finalI = i;
+            selectionBox.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    outputSelections[finalI] = selectionBox.isSelected();
+                }
+            });
+
+            JPanel selector = new JPanel();
+            selector.setLayout(new GridLayout(1,2, 10, 10));
+
+            selector.add(label);
+            selector.add(selectionBox);
+
+            selectors[i] = selector;
+
+            i++;
+        }
+
+        JFrame frame = new JFrame();
+        frame.setLayout(new GridLayout((int) Math.ceil(((float) selectors.length)/2.0), 2));
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+        for(JPanel p : selectors){
+            frame.add(p);
+        }
+
+        frame.setVisible(true);
+
+        return outputSelections;
     }
 }
