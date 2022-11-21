@@ -169,9 +169,15 @@ public class OutputManager {
         //File browser stuff
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "CSV Files", "csv");
-        fileChooser.setFileFilter(filter);
+        FileNameExtensionFilter filtercsv = new FileNameExtensionFilter(
+                "Comma Separated (*.csv)", "csv");
+        FileNameExtensionFilter filtertsv = new FileNameExtensionFilter(
+                "Tab Separated (*.tsv)", "tsv");
+        FileNameExtensionFilter filtertxt = new FileNameExtensionFilter(
+                "Text File (*.txt)", "txt");
+        fileChooser.setFileFilter(filtercsv);
+        fileChooser.addChoosableFileFilter(filtertsv);
+        fileChooser.addChoosableFileFilter(filtertxt);
 
         JDialog dialog = new JDialog();
 
@@ -181,16 +187,16 @@ public class OutputManager {
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
 
-            if (FilenameUtils.getExtension(selectedFile.getName()).equalsIgnoreCase("csv")) {
+            String format = fileChooser.getFileFilter().getDescription().split("\\.")[1].replace(")", "");
+
+            if (FilenameUtils.getExtension(selectedFile.getName()).equalsIgnoreCase(format)) {
                 // filename is OK as-is
             } else {
-                selectedFile = new File(selectedFile.getParentFile(), FilenameUtils.getBaseName(selectedFile.getName())+".csv"); // ALTERNATIVELY: remove the extension (if any) and replace it with ".xml"
+                selectedFile = new File(selectedFile.getParentFile(), FilenameUtils.getBaseName(selectedFile.getName())+"."+format);
             }
 
 
             System.out.println(selectedFile.getAbsolutePath());
-
-            prepareAndSaveFile(selectedFile.getAbsolutePath(), selectedOutputs);
         }
 
         dialog.dispose();
@@ -199,9 +205,14 @@ public class OutputManager {
     }
 
     private static void prepareAndSaveFile(String fileLocation, boolean[] selectedOutputs){
-        System.out.println(fileLocation +  "," + Arrays.toString(selectedOutputs));
 
         StringBuilder outputFileString = new StringBuilder();
+
+        String separator = ",";
+
+        if(FilenameUtils.getExtension(fileLocation).equals("tsv")){
+            separator = "\t";
+        }
 
         int i = 0;
         for(boolean b : selectedOutputs){
@@ -210,7 +221,7 @@ public class OutputManager {
                 String[] data = outputs.get(i).split(",");
                     data = Arrays.copyOfRange(data, 1, data.length);
 
-                outputFileString.append(name).append(",");
+                outputFileString.append(name).append(separator);
 
                 int j = 0;
                 for(String s: data){
@@ -223,12 +234,12 @@ public class OutputManager {
                         l = l.replace("]", "");
                     }
 
-                    l = l.replace("\n", ",");
+                    l = l.replace("\n", separator);
 
                     outputFileString.append(l);
 
                     if(j != data.length-1){
-                        outputFileString.append(",");
+                        outputFileString.append(separator);
                     }
 
                     j++;
@@ -245,7 +256,7 @@ public class OutputManager {
             outFile.write(outputFileString.toString());
             outFile.close();
         }catch (IOException e){
-            System.out.println("Shits fucked");
+
         }
     }
 }
