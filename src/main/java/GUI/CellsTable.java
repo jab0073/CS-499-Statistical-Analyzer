@@ -37,6 +37,7 @@ public class CellsTable {
         table.setRowSelectionAllowed(true);
         table.setColumnSelectionAllowed(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        table.setShowGrid(true);
         return (table);
     }
 

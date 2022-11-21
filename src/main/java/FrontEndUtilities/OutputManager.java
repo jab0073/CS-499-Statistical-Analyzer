@@ -1,10 +1,19 @@
 package FrontEndUtilities;
 
+import GUI.CellsTable;
+import org.apache.commons.io.FilenameUtils;
+
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class OutputManager {
     private static final ArrayList<String> outputs = new ArrayList<>();
@@ -88,7 +97,7 @@ public class OutputManager {
         //save file
     }
 
-    private static boolean[] displayOutputSelection(){
+    private static void displayOutputSelection(){
         boolean[] outputSelections = new boolean[outputs.size()];
 
         JPanel[] selectors = new JPanel[outputSelections.length];
@@ -120,16 +129,123 @@ public class OutputManager {
             i++;
         }
 
+        //Create new panel to hold selectors
+        // Has 2 Columns and splits the measure selectors between the two columns
+        JPanel selectionPanel = new JPanel(new GridLayout((int) Math.ceil(((float) selectors.length)/2.0), 2));
+
+        JPanel content = new JPanel(new BorderLayout());
+
         JFrame frame = new JFrame();
-        frame.setLayout(new GridLayout((int) Math.ceil(((float) selectors.length)/2.0), 2));
+        frame.setContentPane(content);
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         for(JPanel p : selectors){
-            frame.add(p);
+            selectionPanel.add(p);
         }
 
-        frame.setVisible(true);
+        content.add(selectionPanel, BorderLayout.CENTER);
 
-        return outputSelections;
+        //Add Save button to panel
+        JButton btnSave = new JButton("Save Outputs");
+        btnSave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displayFileBrowser(outputSelections);
+                frame.dispose();
+            }
+        });
+
+        content.add(btnSave, BorderLayout.SOUTH);
+
+        content.revalidate();
+        content.repaint();
+
+        frame.pack();
+
+        frame.setVisible(true);
+    }
+
+    private static void displayFileBrowser(boolean[] selectedOutputs){
+        //File browser stuff
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "CSV Files", "csv");
+        fileChooser.setFileFilter(filter);
+
+        JDialog dialog = new JDialog();
+
+        int result = fileChooser.showSaveDialog(dialog);
+
+        dialog.setVisible(true);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+
+            if (FilenameUtils.getExtension(selectedFile.getName()).equalsIgnoreCase("csv")) {
+                // filename is OK as-is
+            } else {
+                selectedFile = new File(selectedFile.getParentFile(), FilenameUtils.getBaseName(selectedFile.getName())+".csv"); // ALTERNATIVELY: remove the extension (if any) and replace it with ".xml"
+            }
+
+
+            System.out.println(selectedFile.getAbsolutePath());
+
+            prepareAndSaveFile(selectedFile.getAbsolutePath(), selectedOutputs);
+        }
+
+        dialog.dispose();
+
+
+    }
+
+    private static void prepareAndSaveFile(String fileLocation, boolean[] selectedOutputs){
+        System.out.println(fileLocation +  "," + Arrays.toString(selectedOutputs));
+
+        StringBuilder outputFileString = new StringBuilder();
+
+        int i = 0;
+        for(boolean b : selectedOutputs){
+            if(b){
+                String name = outputs.get(i).split(",")[0];
+                String[] data = outputs.get(i).split(",");
+                    data = Arrays.copyOfRange(data, 1, data.length);
+
+                outputFileString.append(name).append(",");
+
+                int j = 0;
+                for(String s: data){
+                    String l = s;
+                    if(l.startsWith("[")){
+                        l = l.replace("[", "");
+                    }
+
+                    if(l.endsWith("]")){
+                        l = l.replace("]", "");
+                    }
+
+                    l = l.replace("\n", ",");
+
+                    outputFileString.append(l);
+
+                    if(j != data.length-1){
+                        outputFileString.append(",");
+                    }
+
+                    j++;
+                }
+            }
+
+            outputFileString.append("\n");
+
+            i++;
+        }
+
+        try {
+            FileWriter outFile = new FileWriter(fileLocation);
+            outFile.write(outputFileString.toString());
+            outFile.close();
+        }catch (IOException e){
+            System.out.println("Shits fucked");
+        }
     }
 }

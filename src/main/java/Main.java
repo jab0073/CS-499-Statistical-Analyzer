@@ -2,6 +2,9 @@ import BackEndUtilities.*;
 import GUI.Frame;
 import Graphing.GraphManager;
 import javax.swing.*;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
+import javax.swing.plaf.synth.SynthLookAndFeel;
+
 import Interfaces.IMeasure;
 import Interop.UIServices;
 import Measures.Measures;
@@ -10,6 +13,10 @@ import Respository.RepositoryManager;
 import Settings.UserSettings;
 import TableUtilities.DataTable;
 import TableUtilities.Row;
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mariuszgromada.math.mxparser.Argument;
@@ -22,8 +29,10 @@ public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
     private static JFrame frame;
 
-    public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
         logger.debug("Starting Main.");
+
+        UIManager.setLookAndFeel(new FlatIntelliJLaf());
 
         //UserSettings.setWorkingDirectory("/Users/justin/Desktop/SA/");
 

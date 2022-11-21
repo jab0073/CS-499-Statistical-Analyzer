@@ -135,7 +135,7 @@ public class SignTest implements IMeasure {
                 Negative Differences: %d
                 Positive Differences: %d
                 Ties                : %d
-                P-Value             : %,.4f
+                P-Value             : %.4f
                 """, negativeDifference, positiveDifference, ties, r);
 
         return result;
