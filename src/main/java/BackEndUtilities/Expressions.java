@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Expressions {
-    private static final Logger logger = LogManager.getLogger(Sample.class.getName());
+    private static final Logger logger = LogManager.getLogger(Expressions.class.getName());
     private static boolean evaluate = false;
     private static List<Pair> arguements = new ArrayList<>();
 

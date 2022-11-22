@@ -1,34 +1,31 @@
 import BackEndUtilities.*;
-import GUI.Frame;
 import Graphing.GraphManager;
+import Respository.RepositoryManager;
 import javax.swing.*;
-
 import com.formdev.flatlaf.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
-    private static JFrame frame;
 
-    public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+    public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, IOException, ClassNotFoundException, UnsupportedLookAndFeelException {
         logger.debug("Starting Main.");
 
         UIManager.setLookAndFeel(new FlatIntelliJLaf());
 
-        //UserSettings.setWorkingDirectory("/Users/justin/Desktop/SA/");
-
-        //RepositoryManager.init();
+        RepositoryManager.init();
         MeasureManager.init();
+        DynamicJavaClassLoader.init();
         GraphManager.init();
 
-
-        frame = new Frame();
+        GUI.Frame frame = new GUI.Frame();
+        //frame.frame();
 
         logger.debug("Leaving Main.");
     }
-
-    public JFrame returnFrame(){return(frame);}
 }
+

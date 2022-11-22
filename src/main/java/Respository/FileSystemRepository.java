@@ -26,23 +26,6 @@ import java.util.stream.Collectors;
 public class FileSystemRepository implements IStorage {
 
     private static final Logger logger = LogManager.getLogger(FileSystemRepository.class.getName());
-    @Override
-    public boolean put(UserDefinedMeasure udm, String folder) {
-        ensurePath(folder);
-        Path targetName = getFileName(udm.getName(), folder);
-        Gson gson = new Gson();
-        try {
-            Writer writer = new FileWriter(targetName.toString());
-            gson.toJson(udm, writer);
-            writer.flush();
-            writer.close();
-            logger.debug(udm.getName() + " written to " + targetName);
-            return true;
-        } catch (IOException e) {
-            logger.error(udm.getName() + " failed to write to " + targetName);
-            return false;
-        }
-    }
 
     @Override
     public boolean put(DataSet ds, String name, String folder) {
@@ -82,23 +65,6 @@ public class FileSystemRepository implements IStorage {
     }
 
     @Override
-    public UserDefinedMeasure get(String name, String folder) {
-        Path targetName = getFileName(name, folder);
-        if (Files.exists(targetName)) {
-            Gson gson = new Gson();
-            try {
-                UserDefinedMeasure obj =  gson.fromJson(new FileReader(targetName.toString()), UserDefinedMeasure.class);
-                logger.debug("Successfully loaded measure from " + targetName);
-                return obj;
-            } catch (FileNotFoundException e) {
-                logger.error("!!! Failed to load measure from " + targetName);
-                return null;
-            }
-        }
-        return null;
-    }
-
-    @Override
     public DataSet getDataSet(String name, String folder) {
         Path targetName = getFileName(name, folder);
         if (Files.exists(targetName)) {
@@ -123,37 +89,11 @@ public class FileSystemRepository implements IStorage {
     public void init() {
         System.out.println("Working directory set at " + UserSettings.getWorkingDirectory());
         ensurePath(UserSettings.getWorkingDirectory());
-        ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER);
-        ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.GRAPH_OUTPUT_FOLDER);
-        ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.UDM_FOLDER);
-        ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.DATASET_FOLDER);
-        ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.SAMPLE_FOLDER);
-        ensurePath(UserSettings.getWorkingDirectory() + Constants.MAIN_FOLDER + "/" + Constants.EXPORT_FOLDER);
-    }
-
-    @Override
-    public List<UserDefinedMeasure> loadUserDefinedMeasures(String folder) {
-        try {
-            return Files.list(Paths.get(folder))
-                    .map(path -> {
-                        if (path.toString().toLowerCase().endsWith(".json")) {
-                            Gson gson = new Gson();
-                            try {
-                                UserDefinedMeasure obj =  gson.fromJson(new FileReader(path.toString()), UserDefinedMeasure.class);
-                                logger.debug("Successfully loaded measure from " + path);
-                                return obj;
-                            } catch (FileNotFoundException e) {
-                                logger.error("!!! Failed to load measure from " + path);
-                                return null;
-                            }
-                        }
-                        return null;
-                    }).filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.GRAPH_OUTPUT_FOLDER);
+        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.UDM_FOLDER);
+        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.DATASET_FOLDER);
+        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.SAMPLE_FOLDER);
+        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.EXPORT_FOLDER);
     }
 
     @Override

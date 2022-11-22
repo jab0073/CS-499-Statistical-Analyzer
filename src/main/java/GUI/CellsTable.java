@@ -4,8 +4,10 @@ import Interop.UIServices;
 import TableUtilities.DataTable;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.IOException;
 
 public class CellsTable {
     private static JTable table;
@@ -38,6 +40,10 @@ public class CellsTable {
         table.setColumnSelectionAllowed(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         table.setShowGrid(true);
+
+        table.setBorder(new EtchedBorder(EtchedBorder.RAISED));
+        table.setGridColor(Color.GRAY);
+
         return (table);
     }
 
@@ -85,6 +91,19 @@ public class CellsTable {
         if(in == null){
             return;
         }
+
+        table.setModel(new DefaultTableModel(in.getRows().size()+20, table.getColumnCount()));
+
+        for(int i = 0; i < in.getRows().size(); i++){
+            TableUtilities.Row r = in.getRow(i);
+            for(int j = 0; j < r.size(); j++){
+                table.getModel().setValueAt(r.get(j).data, i, j);
+            }
+        }
+    }
+
+    public static void loadXLSXFile(String file) throws IOException {
+        DataTable in = UIServices.fromXLSX(file, 0);
 
         table.setModel(new DefaultTableModel(in.getRows().size()+20, table.getColumnCount()));
 

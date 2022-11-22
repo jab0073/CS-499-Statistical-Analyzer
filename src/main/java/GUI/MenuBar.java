@@ -45,7 +45,7 @@ public class MenuBar {
 
         file.addActionListener(new ActionListener() {
             @Override
-            /**
+            /*
              * Opens a file browser for the user to select a file to import to the chart
              * File types are restricted to CSV, but can be expanded
              */
@@ -73,8 +73,10 @@ public class MenuBar {
         return (file);
     }
 
-    /**Method which creates the edit button.
-     *@return The edit button.*/
+    /**
+     * Method which creates the edit button.
+     * @return The edit button.
+     */
     private JButton editButton() {
         JButton edit = new JButton("Edit");
         edit.setOpaque(false);
