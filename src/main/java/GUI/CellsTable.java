@@ -40,8 +40,10 @@ public class CellsTable {
         table.setColumnSelectionAllowed(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         table.setShowGrid(true);
+
         table.setBorder(new EtchedBorder(EtchedBorder.RAISED));
         table.setGridColor(Color.GRAY);
+
         return (table);
     }
 

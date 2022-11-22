@@ -155,14 +155,14 @@ public class RankSum implements IMeasure {
         String result = String.format("""
                 n\u2081: %d
                 n\u2082: %d
-                T\u2081: %,.1f
-                T\u2082: %,.1f
-                U\u2081: %,.1f
-                U\u2082: %,.1f
-                U : %,.1f
-                \u03BCU: %,.1f
-                \u03C3U: %,.4f
-                z : %,.4f""", nOne, nTwo, tOne, tTwo, uOne, uTwo, u, uExpected, stdError, z);
+                T\u2081: %.1f
+                T\u2082: %.1f
+                U\u2081: %.1f
+                U\u2082: %.1f
+                U : %.1f
+                \u03BCU: %.1f
+                \u03C3U: %.4f
+                z : %.4f""", nOne, nTwo, tOne, tTwo, uOne, uTwo, u, uExpected, stdError, z);
         
         return result;
     }

@@ -140,7 +140,6 @@ public class Frame extends JFrame {
     }
 
     public static Card swapCard(CardTypes card){
-        //TODO: Implement method for swapping cards and updating their data areas with measure data
         CardLayout layout = (CardLayout) cardPanel.getLayout();
         layout.show(cardPanel, card.getName());
 

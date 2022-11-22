@@ -14,8 +14,10 @@ import java.util.Objects;
 
 public class GraphsComboBox {
     private static DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
+    private static JPanel panel;
+    private static JComboBox box;
     public JPanel graphsComboBoxPanel(){
-        JPanel panel = new JPanel();
+        panel = new JPanel();
         panel.add(label());
         panel.add(dropDown());
         return panel;
@@ -27,6 +29,14 @@ public class GraphsComboBox {
 
     public static void setModel(){
         String[] names = RightPanel.getGraphsListStr();
+
+        if(names == null || names.length == 0){
+            panel.setVisible(false);
+            return;
+        }else{
+            panel.setVisible(true);
+        }
+
         for (int i = 0; i < names.length; i++) {
             model.addElement(names[i]);
         }
@@ -37,15 +47,15 @@ public class GraphsComboBox {
     }
 
     private JComboBox dropDown(){
-        JComboBox box = new JComboBox(model);
+        box = new JComboBox(model);
         box.setPrototypeDisplayValue("Select Graph");
         box.addActionListener(e -> setGraph(box.getSelectedIndex()));
         return(box);
     }
 
     private void setGraph(int graphsIndex){
-        if(dropDown().getItemAt(graphsIndex) != null) {
-            String graph = dropDown().getItemAt(graphsIndex).toString();
+        if(box.getItemAt(graphsIndex) != null) {
+            String graph = box.getItemAt(graphsIndex).toString();
             for (Object value : RightPanel.getGraphsList()) {
                 if (Objects.equals(graph, String.valueOf(value))) {
                     GUIMeasure m = GUIDataMaster.getGUIMeasure(RightPanel.getCurrentMeasureIndex());

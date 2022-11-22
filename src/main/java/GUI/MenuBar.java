@@ -144,6 +144,12 @@ public class MenuBar {
         download.setOpaque(false);
         download.setContentAreaFilled(false);
         download.setBorderPainted(false);
+        download.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                OutputManager.saveOutputsToFile();
+            }
+        });
         return (download);
     }
 }
