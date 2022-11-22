@@ -25,6 +25,10 @@ public class UserSettings {
         UserSettings.workingDirectory = null;
     }
 
+    public static void setWorkingDirectory(String workingDirectory) {
+        UserSettings.workingDirectory = workingDirectory;
+    }
+
     public static String getWorkingDirectory() {
         return UserSettings.workingDirectory;
     }
