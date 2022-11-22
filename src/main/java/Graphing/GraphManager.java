@@ -4,6 +4,7 @@ import FrontEndUtilities.GUIMeasure;
 import FrontEndUtilities.OutputManager;
 import Interfaces.IMeasure;
 import Measures.UserDefinedMeasure;
+import org.jfree.chart.ChartPanel;
 import org.reflections.Reflections;
 
 import javax.swing.*;
@@ -15,7 +16,7 @@ import java.util.Set;
 
 public class GraphManager {
     private static final ArrayList<IGraph> graphs = new ArrayList<>();
-    private static final ArrayList<JPanel> graphPanels = new ArrayList<>();
+    private static final ArrayList<ChartPanel> graphPanels = new ArrayList<>();
 
     public static void init()throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException{
         String packageName = "Graphing";
@@ -43,12 +44,12 @@ public class GraphManager {
     public static void displayGraphs(){
         if(graphPanels.size() == 0) return;
 
-        for(JPanel g : graphPanels){
+        for(ChartPanel g : graphPanels){
             OutputManager.addGraph(g);
         }
     }
 
-    public static void addGraphPanel(JPanel panel){
+    public static void addGraphPanel(ChartPanel panel){
         graphPanels.add(panel);
     }
 

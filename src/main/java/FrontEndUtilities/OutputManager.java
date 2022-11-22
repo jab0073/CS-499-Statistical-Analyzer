@@ -2,22 +2,22 @@ package FrontEndUtilities;
 
 import GUI.CellsTable;
 import org.apache.commons.io.FilenameUtils;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
 public class OutputManager {
     private static final ArrayList<String> outputs = new ArrayList<>();
-    private static final ArrayList<JPanel> graphs = new ArrayList<>();
+    private static final ArrayList<ChartPanel> graphs = new ArrayList<>();
 
     public static void addOutput(String measureName, String output){
         outputs.add(measureName + "," + output);
@@ -55,27 +55,60 @@ public class OutputManager {
             textPane.setText(out);
         }
 
+        JScrollPane textScroll = new JScrollPane(textPane);
+        textScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        JPanel textPanel = new JPanel(new BorderLayout());
+        JButton btnSaveText = new JButton("Save Output");
+        btnSaveText.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveOutputsToFile();
+            }
+        });
+
+        textPanel.add(textScroll);
+        textPanel.add(btnSaveText, BorderLayout.SOUTH);
+
         if(graphs.size() > 0){
             JTabbedPane mainTab = new JTabbedPane();
             JTabbedPane graphTab = new JTabbedPane();
 
-            for(JPanel g : graphs){
-                graphTab.addTab(g.getName(), g);
+            for(ChartPanel g : graphs){
+                JPanel graphPane = new JPanel(new BorderLayout());
+                JButton btnSave = new JButton("Save Graph");
+                btnSave.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        saveGraph(g);
+                    }
+                });
+
+                graphPane.add(g);
+                graphPane.add(btnSave, BorderLayout.SOUTH);
+
+                graphTab.addTab(g.getName(), graphPane);
             }
 
-            mainTab.addTab("Outputs", textPane);
+            mainTab.addTab("Outputs", textPanel);
             mainTab.addTab("Graphs", graphTab);
 
             frame.add(mainTab);
         }else{
-            frame.add(textPane);
+            frame.add(textPanel);
         }
 
-
         frame.setVisible(true);
+
+        textScroll.getViewport().setViewPosition(new Point(0,0));
+        textScroll.getVerticalScrollBar().setValue(0);
+
+        textPane.setSelectionStart(0);
+        textPane.setSelectionEnd(0);
+
+        frame.repaint();
     }
 
-    public static void addGraph(JPanel graph){
+    public static void addGraph(ChartPanel graph){
         graphs.add(graph);
     }
 
@@ -195,8 +228,7 @@ public class OutputManager {
                 selectedFile = new File(selectedFile.getParentFile(), FilenameUtils.getBaseName(selectedFile.getName())+"."+format);
             }
 
-
-            System.out.println(selectedFile.getAbsolutePath());
+            prepareAndSaveFile(selectedFile.getAbsolutePath(), selectedOutputs);
         }
 
         dialog.dispose();
@@ -256,7 +288,42 @@ public class OutputManager {
             outFile.write(outputFileString.toString());
             outFile.close();
         }catch (IOException e){
-
+            e.printStackTrace();
         }
+    }
+
+    private static void saveGraph(ChartPanel panel){
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        FileNameExtensionFilter filterpng = new FileNameExtensionFilter(
+                "PNG (*.png)", "png");
+        fileChooser.setFileFilter(filterpng);
+
+        JDialog dialog = new JDialog();
+
+        int result = fileChooser.showSaveDialog(dialog);
+
+        dialog.setVisible(true);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+
+            String format = fileChooser.getFileFilter().getDescription().split("\\.")[1].replace(")", "");
+
+            if (FilenameUtils.getExtension(selectedFile.getName()).equalsIgnoreCase(format)) {
+                // filename is OK as-is
+            } else {
+                selectedFile = new File(selectedFile.getParentFile(), FilenameUtils.getBaseName(selectedFile.getName())+"."+format);
+            }
+
+            try {
+                OutputStream out = new FileOutputStream(selectedFile);
+                ChartUtils.writeChartAsPNG(out, panel.getChart(), panel.getWidth(), panel.getHeight());
+                out.close();
+            }catch(IOException e){
+
+            }
+        }
+
+        dialog.dispose();
     }
 }
