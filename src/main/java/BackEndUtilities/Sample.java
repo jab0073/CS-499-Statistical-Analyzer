@@ -159,10 +159,7 @@ public class Sample implements Cloneable{
 
     @Override
     public String toString() {
-        return "Sample{" +
-                "data=" + this.data +
-                ", size=" + this.getSize() +
-                '}';
+        return String.join(", ", this.data);
     }
 
     @Override

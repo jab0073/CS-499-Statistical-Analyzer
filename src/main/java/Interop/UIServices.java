@@ -106,6 +106,12 @@ public class UIServices {
         return dt;
     }
 
+    public static DataTable fromTSV(String tableName, String file) {
+        DataTable dt = fromDelimitedFile(file, '\t');
+        dt.setTableName(tableName);
+        return dt;
+    }
+
     /**
      * It takes a file path and a sheet number, and returns a DataTable object
      *
@@ -157,5 +163,6 @@ public class UIServices {
         dt.setTableName(tableName);
         return dt;
     }
+
 
 }

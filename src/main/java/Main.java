@@ -22,8 +22,7 @@ public class Main {
         DynamicJavaClassLoader.init();
         GraphManager.init();
 
-        GUI.Frame frame = new GUI.Frame();
-        //frame.frame();
+        new GUI.Frame();
 
         logger.debug("Leaving Main.");
     }

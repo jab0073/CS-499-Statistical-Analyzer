@@ -1,19 +1,15 @@
 package BackEndUtilities;
 
 import Interfaces.IValidator;
-import Interop.UIServices;
-import Measures.Measures;
 import TableUtilities.DataTable;
 import Validators.DataValidator;
-import com.google.gson.Gson;
-import com.opencsv.CSVWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class DataSet implements Cloneable{
@@ -132,5 +128,15 @@ public class DataSet implements Cloneable{
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    @Override
+    public String toString() {
+        final AtomicReference<String> string = new AtomicReference<>("");
+
+        this.samples.forEach(s -> {
+            string.set(string.get() + s.toString() + "\n");
+        });
+        return string.get();
     }
 }

@@ -1,14 +1,8 @@
 package GUI;
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 public class Frame extends JFrame {
@@ -18,13 +12,12 @@ public class Frame extends JFrame {
     /**Method for generating the frame which holds the GUI*/
     public Frame() {
         /*Create a frame, give it a size, set it to exit on close.*/
-        JFrame window = new JFrame("Analysis");
-
+        this.setName("Analysis");
 
         AltMenuBar amb = new AltMenuBar();
-        window.setJMenuBar(amb.getMenuBar());
-        window.setSize(1000, 750);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setJMenuBar(amb.getMenuBar());
+        this.setSize(1000, 750);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
         /*Create a layout for the frame and add in the panels in their appropriate positions.*/
@@ -42,7 +35,7 @@ public class Frame extends JFrame {
                 layout.next(cardPanel);
             }
         });
-        window.add(button, BorderLayout.SOUTH);*/
+        this.add(button, BorderLayout.SOUTH);*/
 
         this.addWindowListener(new WindowAdapter() {
 

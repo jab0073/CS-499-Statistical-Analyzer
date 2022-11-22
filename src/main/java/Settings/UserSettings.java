@@ -19,6 +19,7 @@ public class UserSettings {
             UserSettings.workingDirectory =  Constants.MacBeginningDir + System.getProperty("user.name") + Constants.MacDefaultDir;
             // If running on macOS, this next line puts the JMenuBar in the system menu bar
             System.setProperty("apple.laf.useScreenMenuBar", "true");
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Statistical Analyzer");
             return;
         }
         UserSettings.workingDirectory = null;
