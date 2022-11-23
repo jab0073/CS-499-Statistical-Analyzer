@@ -5,11 +5,13 @@ import GUI.CardTypes;
 import GUI.Frame;
 import Graphing.GraphManager;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class GUIDataMaster {
     private static ArrayList<GUIMeasure> measures = new ArrayList<>();
     private static ArrayList<Object> results = new ArrayList<>();
+    private static Frame frameReference;
 
     public static GUIMeasure getGUIMeasure(int index){
         return measures.get(index);
@@ -96,4 +98,10 @@ public class GUIDataMaster {
             c.setVariableLabel(j, measure.getVariableName(j));
         }
     }
+
+    public static void setFrameReference(Frame frame){
+        frameReference = frame;
+    }
+
+    public static Frame getFrameReference(){return frameReference; }
 }

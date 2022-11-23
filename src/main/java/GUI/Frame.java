@@ -1,4 +1,8 @@
 package GUI;
+import FrontEndUtilities.GUIDataMaster;
+import Settings.Themes;
+import TableUtilities.Cell;
+
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
@@ -14,22 +18,23 @@ import java.util.ArrayList;
 public class Frame extends JFrame {
     private static final ArrayList<Card> cards = new ArrayList<>();
     private static JPanel cardPanel;
+    private CellsTable table;
 
     /**Method for generating the frame which holds the GUI*/
     public Frame() {
         /*Create a frame, give it a size, set it to exit on close.*/
-        JFrame window = new JFrame("Analysis");
+        this.setTitle("Analysis");
 
 
         AltMenuBar amb = new AltMenuBar();
-        window.setJMenuBar(amb.getMenuBar());
-        window.setSize(1000, 750);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setJMenuBar(amb.getMenuBar());
+        this.setSize(1000, 750);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
         /*Create a layout for the frame and add in the panels in their appropriate positions.*/
         this.setLayout(new BorderLayout());
-        this.add(windowPanelTop(), BorderLayout.NORTH);
+        //this.add(windowPanelTop(), BorderLayout.NORTH);
         this.add(windowPanelLeft(), BorderLayout.WEST);
         this.add(fullWindowPanelMiddle(), BorderLayout.CENTER);
         this.add(windowPanelRight(), BorderLayout.EAST);
@@ -78,7 +83,9 @@ public class Frame extends JFrame {
     private JPanel windowPanelLeft(){
         JPanel panel = new JPanel(new BorderLayout());
 
-        panel.add(new CellsTable().cellsPanel(), BorderLayout.LINE_START);
+        table = new CellsTable();
+
+        panel.add(table, BorderLayout.LINE_START);
 
         return(panel);
     }
@@ -145,5 +152,24 @@ public class Frame extends JFrame {
 
         return cards.stream().filter(c -> c.getType() == card).findFirst().orElse(null);
 
+    }
+
+    public void setLookAndFeel(String laf) throws UnsupportedLookAndFeelException {
+        UIManager.setLookAndFeel(Themes.getTheme(laf));
+
+        SwingUtilities.updateComponentTreeUI(this);
+
+        table.setGridColor(Color.GRAY);
+    }
+
+    public void setZoom(int zoom){
+        int fontSize = (int) (12 * ((double)zoom/100.0));
+
+        UIManager.getLookAndFeelDefaults()
+                .put("defaultFont", new Font("Segoe UI", Font.PLAIN, fontSize));
+
+        SwingUtilities.updateComponentTreeUI(this);
+
+        table.setGridColor(Color.GRAY);
     }
 }

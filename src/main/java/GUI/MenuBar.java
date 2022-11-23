@@ -4,6 +4,7 @@ import FrontEndUtilities.ErrorManager;
 import FrontEndUtilities.GUIDataMaster;
 import FrontEndUtilities.OutputManager;
 import Graphing.GraphManager;
+import com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme;
 import org.apache.poi.hpsf.GUID;
 
 import javax.swing.*;
@@ -15,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
+@Deprecated
 public class MenuBar {
     /**Method which returns the menu bar.
      *@return The panel containing the menu bar.*/
@@ -92,6 +94,18 @@ public class MenuBar {
         settings.setOpaque(false);
         settings.setContentAreaFilled(false);
         settings.setBorderPainted(false);
+        settings.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame f = GUIDataMaster.getFrameReference();
+                try {
+                    UIManager.setLookAndFeel(Settings.Themes.getRandomTheme());
+                    SwingUtilities.updateComponentTreeUI(f);
+                } catch (UnsupportedLookAndFeelException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
         return (settings);
     }
 

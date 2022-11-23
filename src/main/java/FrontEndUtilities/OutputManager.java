@@ -1,6 +1,6 @@
 package FrontEndUtilities;
 
-import GUI.CellsTable;
+import Settings.UserSettings;
 import org.apache.commons.io.FilenameUtils;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtils;
@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class OutputManager {
     private static final ArrayList<String> outputs = new ArrayList<>();
@@ -168,9 +167,7 @@ public class OutputManager {
 
         JPanel content = new JPanel(new BorderLayout());
 
-        JFrame frame = new JFrame();
-        frame.setContentPane(content);
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        JDialog dialog = new JDialog();
 
         for(JPanel p : selectors){
             selectionPanel.add(p);
@@ -184,7 +181,7 @@ public class OutputManager {
             @Override
             public void actionPerformed(ActionEvent e) {
                 displayFileBrowser(outputSelections);
-                frame.dispose();
+                dialog.dispose();
             }
         });
 
@@ -193,15 +190,22 @@ public class OutputManager {
         content.revalidate();
         content.repaint();
 
-        frame.pack();
+        dialog.setContentPane(content);
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        dialog.setModal(true);
+        dialog.getRootPane().setDefaultButton(btnSave);
 
-        frame.setVisible(true);
+        dialog.pack();
+
+        dialog.setLocationRelativeTo(GUIDataMaster.getFrameReference());
+
+        dialog.setVisible(true);
     }
 
     private static void displayFileBrowser(boolean[] selectedOutputs){
         //File browser stuff
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        fileChooser.setCurrentDirectory(new File(UserSettings.getWorkingDirectory()));
         FileNameExtensionFilter filtercsv = new FileNameExtensionFilter(
                 "Comma Separated (*.csv)", "csv");
         FileNameExtensionFilter filtertsv = new FileNameExtensionFilter(
@@ -294,7 +298,7 @@ public class OutputManager {
 
     private static void saveGraph(ChartPanel panel){
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        fileChooser.setCurrentDirectory(new File(UserSettings.getWorkingDirectory()));
         FileNameExtensionFilter filterpng = new FileNameExtensionFilter(
                 "PNG (*.png)", "png");
         fileChooser.setFileFilter(filterpng);
