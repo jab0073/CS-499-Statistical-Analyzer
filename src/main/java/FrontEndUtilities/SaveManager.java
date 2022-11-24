@@ -99,6 +99,8 @@ public class SaveManager {
 
                 SaveObject input = gson.fromJson(inputJson, SaveObject.class);
 
+                GUIDataMaster.removeAllMeasures();
+
                 for(GUIMeasure m : input.measures){
                     GUIDataMaster.addMeasure(m);
                 }

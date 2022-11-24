@@ -10,8 +10,8 @@ import javax.swing.*;
 import java.util.ArrayList;
 
 public class GUIDataMaster {
-    private static ArrayList<GUIMeasure> measures = new ArrayList<>();
-    private static ArrayList<Object> results = new ArrayList<>();
+    private static final ArrayList<GUIMeasure> measures = new ArrayList<>();
+    private static final ArrayList<Object> results = new ArrayList<>();
     private static Frame frameReference;
 
     public static GUIMeasure getGUIMeasure(int index){
@@ -115,5 +115,12 @@ public class GUIDataMaster {
 
     public static ArrayList<GUIMeasure> getAllMeasures() {
         return measures;
+    }
+
+    public static void removeAllMeasures(){
+        int limit = measures.size();
+        for(int i = 0; i < limit; i++){
+            removeGUIMeasure(0);
+        }
     }
 }
