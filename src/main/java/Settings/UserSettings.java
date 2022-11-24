@@ -20,7 +20,7 @@ public class UserSettings {
         Preferences prefs = Preferences.userNodeForPackage(Main.class);
 
         String userTheme = prefs.get("userTheme", "Light");
-        int userZoom = Integer.parseInt(prefs.get("userZoom", "100"));
+        float userZoom = Float.parseFloat(prefs.get("userZoom", "100"));
 
         try {
             UIManager.setLookAndFeel(Themes.getTheme(userTheme));

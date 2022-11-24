@@ -6,6 +6,7 @@ import TableUtilities.Cell;
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
+import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -154,8 +155,32 @@ public class Frame extends JFrame {
 
     }
 
-    public void setLookAndFeel(String laf) throws UnsupportedLookAndFeelException {
-        UIManager.setLookAndFeel(Themes.getTheme(laf));
+    /**
+     * Sets the look and feel as well as zoom for the program
+     * @param laf The New look and feel for the application
+     * @param userZoom The zoom percentage the user selected
+     * @throws UnsupportedLookAndFeelException
+     */
+    public void setLookAndFeel(String laf, float userZoom) throws UnsupportedLookAndFeelException {
+        LookAndFeel l = Themes.getTheme(laf);
+
+        //If theme is different from current theme, then change it
+        if(!UIManager.getLookAndFeel().equals(l)){
+            UIManager.setLookAndFeel(l);
+        }
+
+        FontUIResource f = (FontUIResource) l.getDefaults().get("defaultFont");
+
+        int zoom = Math.round(12F * (userZoom/100.0F));
+
+        //If font size is different, then change it
+        if(zoom != f.getSize()){
+            FontUIResource newFont = (new FontUIResource(f.getFontName(), f.getStyle(), zoom));
+
+            UIManager.getLookAndFeelDefaults()
+                    .put("defaultFont", newFont);
+        }
+
 
         SwingUtilities.updateComponentTreeUI(this);
 
@@ -169,6 +194,12 @@ public class Frame extends JFrame {
                 .put("defaultFont", new Font("Segoe UI", Font.PLAIN, fontSize));
 
         SwingUtilities.updateComponentTreeUI(this);
+    }
+
+    public void confirmLAFChanges(){
+        SwingUtilities.updateComponentTreeUI(this);
+
+        Object a = UIManager.getLookAndFeelDefaults().get("defaultFont");
 
         table.setGridColor(Color.GRAY);
     }

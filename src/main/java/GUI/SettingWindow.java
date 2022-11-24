@@ -92,12 +92,11 @@ public class SettingWindow extends JDialog {
     private void onOK() {
         String themeName = (String) themeSelector.getSelectedItem();
         try{
-            GUIDataMaster.getFrameReference().setLookAndFeel(themeName);
+            Frame frame = GUIDataMaster.getFrameReference();
 
-            int zoom = (int) Math.round((zoomSlider.getValue()*1.75) + 25);
-            GUIDataMaster.getFrameReference().setZoom(zoom);
+            float zoom =  ((float) zoomSlider.getValue()*1.75F) + 25F;
 
-            SwingUtilities.updateComponentTreeUI(this);
+            frame.setLookAndFeel(themeName, zoom);
 
             Preferences prefs = Preferences.userNodeForPackage(Main.class);
 
