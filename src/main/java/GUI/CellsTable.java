@@ -2,6 +2,7 @@ package GUI;
 
 import Interop.UIServices;
 import TableUtilities.DataTable;
+import TableUtilities.Row;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -124,5 +125,42 @@ public class CellsTable extends JPanel {
     public void setGridColor(java.awt.Color color){
         table.setShowGrid(true);
         table.setGridColor(color);
+    }
+
+    public DataTable getTableAsDT(){
+        DataTable out = new DataTable();
+        int numRows = table.getRowCount();
+        int numCols = table.getColumnCount();
+
+        for(int i = 0; i < numRows; i++){
+            TableUtilities.Row row = new Row(i);
+            for(int j = 0; j < numCols; j++){
+                String data = (String) table.getModel().getValueAt(i,j);
+
+                if(data == null || data.replace(" ", "").isEmpty())
+                    continue;
+
+                row.addCell(data);
+            }
+
+            out.addRow(row.toSample());
+        }
+
+        return out;
+    }
+
+    public void loadFromDT(DataTable in){
+        if(in == null){
+            return;
+        }
+
+        table.setModel(new DefaultTableModel(in.getRows().size()+20, table.getColumnCount()));
+
+        for(int i = 0; i < in.getRows().size(); i++){
+            TableUtilities.Row r = in.getRow(i);
+            for(int j = 0; j < r.size(); j++){
+                table.getModel().setValueAt(r.get(j).data, i, j);
+            }
+        }
     }
 }

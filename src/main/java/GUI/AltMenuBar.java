@@ -3,6 +3,7 @@ package GUI;
 import FrontEndUtilities.ErrorManager;
 import FrontEndUtilities.GUIDataMaster;
 import FrontEndUtilities.OutputManager;
+import FrontEndUtilities.SaveManager;
 import Graphing.GraphManager;
 import Settings.UserSettings;
 
@@ -67,6 +68,7 @@ public class AltMenuBar {
         openDataSetMenuItem.getAccessibleContext().setAccessibleDescription("Open a DataSet.");
         openDataSetMenuItem.addActionListener(l -> {
             // TODO: create functionality to open dataset
+            SaveManager.openSaveFile();
         });
         fileOpenMenu.add(openDataSetMenuItem);
 
@@ -139,7 +141,7 @@ public class AltMenuBar {
         JMenuItem fileExportMenuItem = new JMenuItem("Export Data");
         fileExportMenuItem.getAccessibleContext().setAccessibleDescription("Export Data");
         fileExportMenuItem.addActionListener(l -> {
-            // TODO: create functionality to export data from table
+            SaveManager.saveProgramState();
         });
         fileMenu.add(fileExportMenuItem);
 

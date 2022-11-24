@@ -3,6 +3,7 @@ package FrontEndUtilities;
 import GUI.Card;
 import GUI.CardTypes;
 import GUI.Frame;
+import GUI.RightPanel;
 import Graphing.GraphManager;
 
 import javax.swing.*;
@@ -68,6 +69,8 @@ public class GUIDataMaster {
             }
         }
 
+        SaveManager.test();
+
         return success;
     }
 
@@ -89,7 +92,6 @@ public class GUIDataMaster {
         Card c = Frame.swapCard(card);
 
         for(int i = 0; i < measure.getMinimumSamples(); i++){
-            System.out.println("Setting data " + measure.getDataAsString(i) + i + " on card " + card.name());
             c.setDataArea(i, measure.getDataAsString(i));
         }
 
@@ -104,4 +106,14 @@ public class GUIDataMaster {
     }
 
     public static Frame getFrameReference(){return frameReference; }
+
+    public static void addMeasure(GUIMeasure m){
+        measures.add(m);
+        results.add(null);
+        frameReference.updateRightPanelForLoad();
+    }
+
+    public static ArrayList<GUIMeasure> getAllMeasures() {
+        return measures;
+    }
 }
