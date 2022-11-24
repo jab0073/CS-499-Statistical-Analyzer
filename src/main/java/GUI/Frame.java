@@ -40,16 +40,6 @@ public class Frame extends JFrame {
         this.add(fullWindowPanelMiddle(), BorderLayout.CENTER);
         this.add(windowPanelRight(), BorderLayout.EAST);
 
-        /**JButton button = new JButton("Change");
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CardLayout layout = (CardLayout) cardPanel.getLayout();
-                layout.next(cardPanel);
-            }
-        });
-        window.add(button, BorderLayout.SOUTH);*/
-
         this.addWindowListener(new WindowAdapter() {
 
             @Override
@@ -67,16 +57,6 @@ public class Frame extends JFrame {
         /*Set the frame to start maximized and visible.*/
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setVisible(true);
-    }
-
-    /**Method which adds the menu bar panel to a panel which will be placed at the top of the application.
-     *@return The panel containing the menu bar panel.*/
-    private JPanel windowPanelTop(){
-        JPanel panel = new JPanel(new BorderLayout());
-
-        panel.add(new MenuBar().topPanel(), BorderLayout.PAGE_START);
-
-        return(panel);
     }
 
     /**Method which adds the cells table panel to a panel which will be placed to the left of the application.
@@ -100,7 +80,7 @@ public class Frame extends JFrame {
 
         cardPanel = panel;
 
-        /**The "cards" in the card layout, able to be cycled through. Name indicates layout.*/
+        //The "cards" in the card layout, able to be cycled through. Name indicates layout.
         cards.add(new MiddlePanel());
         cards.add(new MiddlePanelTwo());
         cards.add(new MiddlePanelThree());
@@ -159,7 +139,6 @@ public class Frame extends JFrame {
      * Sets the look and feel as well as zoom for the program
      * @param laf The New look and feel for the application
      * @param userZoom The zoom percentage the user selected
-     * @throws UnsupportedLookAndFeelException
      */
     public void setLookAndFeel(String laf, float userZoom) throws UnsupportedLookAndFeelException {
         LookAndFeel l = Themes.getTheme(laf);
@@ -183,23 +162,6 @@ public class Frame extends JFrame {
 
 
         SwingUtilities.updateComponentTreeUI(this);
-
-        table.setGridColor(Color.GRAY);
-    }
-
-    public void setZoom(int zoom){
-        int fontSize = (int) (12 * ((double)zoom/100.0));
-
-        UIManager.getLookAndFeelDefaults()
-                .put("defaultFont", new Font("Segoe UI", Font.PLAIN, fontSize));
-
-        SwingUtilities.updateComponentTreeUI(this);
-    }
-
-    public void confirmLAFChanges(){
-        SwingUtilities.updateComponentTreeUI(this);
-
-        Object a = UIManager.getLookAndFeelDefaults().get("defaultFont");
 
         table.setGridColor(Color.GRAY);
     }
