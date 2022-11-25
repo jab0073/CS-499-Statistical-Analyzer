@@ -1,7 +1,12 @@
 package GUI;
+import FrontEndUtilities.GUIDataMaster;
+import Settings.Themes;
+import TableUtilities.Cell;
+
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
+import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -14,35 +19,26 @@ import java.util.ArrayList;
 public class Frame extends JFrame {
     private static final ArrayList<Card> cards = new ArrayList<>();
     private static JPanel cardPanel;
+    private CellsTable table;
 
     /**Method for generating the frame which holds the GUI*/
     public Frame() {
         /*Create a frame, give it a size, set it to exit on close.*/
-        JFrame window = new JFrame("Analysis");
+        this.setTitle("Analysis");
 
 
         AltMenuBar amb = new AltMenuBar();
-        window.setJMenuBar(amb.getMenuBar());
-        window.setSize(1000, 750);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setJMenuBar(amb.getMenuBar());
+        this.setSize(1000, 750);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
         /*Create a layout for the frame and add in the panels in their appropriate positions.*/
         this.setLayout(new BorderLayout());
-        this.add(windowPanelTop(), BorderLayout.NORTH);
+        //this.add(windowPanelTop(), BorderLayout.NORTH);
         this.add(windowPanelLeft(), BorderLayout.WEST);
         this.add(fullWindowPanelMiddle(), BorderLayout.CENTER);
         this.add(windowPanelRight(), BorderLayout.EAST);
-
-        /**JButton button = new JButton("Change");
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CardLayout layout = (CardLayout) cardPanel.getLayout();
-                layout.next(cardPanel);
-            }
-        });
-        window.add(button, BorderLayout.SOUTH);*/
 
         this.addWindowListener(new WindowAdapter() {
 
@@ -63,22 +59,14 @@ public class Frame extends JFrame {
         this.setVisible(true);
     }
 
-    /**Method which adds the menu bar panel to a panel which will be placed at the top of the application.
-     *@return The panel containing the menu bar panel.*/
-    private JPanel windowPanelTop(){
-        JPanel panel = new JPanel(new BorderLayout());
-
-        panel.add(new MenuBar().topPanel(), BorderLayout.PAGE_START);
-
-        return(panel);
-    }
-
     /**Method which adds the cells table panel to a panel which will be placed to the left of the application.
      *@return The panel containing the cells table panel.*/
     private JPanel windowPanelLeft(){
         JPanel panel = new JPanel(new BorderLayout());
 
-        panel.add(new CellsTable().cellsPanel(), BorderLayout.LINE_START);
+        table = new CellsTable();
+
+        panel.add(table, BorderLayout.LINE_START);
 
         return(panel);
     }
@@ -92,7 +80,7 @@ public class Frame extends JFrame {
 
         cardPanel = panel;
 
-        /**The "cards" in the card layout, able to be cycled through. Name indicates layout.*/
+        //The "cards" in the card layout, able to be cycled through. Name indicates layout.
         cards.add(new MiddlePanel());
         cards.add(new MiddlePanelTwo());
         cards.add(new MiddlePanelThree());
@@ -145,5 +133,36 @@ public class Frame extends JFrame {
 
         return cards.stream().filter(c -> c.getType() == card).findFirst().orElse(null);
 
+    }
+
+    /**
+     * Sets the look and feel as well as zoom for the program
+     * @param laf The New look and feel for the application
+     * @param userZoom The zoom percentage the user selected
+     */
+    public void setLookAndFeel(String laf, float userZoom) throws UnsupportedLookAndFeelException {
+        LookAndFeel l = Themes.getTheme(laf);
+
+        //If theme is different from current theme, then change it
+        if(!UIManager.getLookAndFeel().equals(l)){
+            UIManager.setLookAndFeel(l);
+        }
+
+        FontUIResource f = (FontUIResource) l.getDefaults().get("defaultFont");
+
+        int zoom = Math.round(12F * (userZoom/100.0F));
+
+        //If font size is different, then change it
+        if(zoom != f.getSize()){
+            FontUIResource newFont = (new FontUIResource(f.getFontName(), f.getStyle(), zoom));
+
+            UIManager.getLookAndFeelDefaults()
+                    .put("defaultFont", newFont);
+        }
+
+
+        SwingUtilities.updateComponentTreeUI(this);
+
+        table.setGridColor(Color.GRAY);
     }
 }

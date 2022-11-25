@@ -9,14 +9,11 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.IOException;
 
-public class CellsTable {
+public class CellsTable extends JPanel {
     private static JTable table;
-    /**Method for returning the panel containing a scroll pane which contains the JTable.
-     *@return The panel containing the cells table.*/
-    public JPanel cellsPanel() {
-        JPanel panel = new JPanel();
-        panel.add(scrollPane());
-        return (panel);
+
+    public CellsTable(){
+        this.add(scrollPane());
     }
 
     /**Method which creates a scroll pane to contain the JTable.
@@ -122,5 +119,10 @@ public class CellsTable {
 
     public static void setRowSelection(boolean value){
         table.setColumnSelectionAllowed(value);
+    }
+
+    public void setGridColor(java.awt.Color color){
+        table.setShowGrid(true);
+        table.setGridColor(color);
     }
 }

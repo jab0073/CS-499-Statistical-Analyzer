@@ -7,15 +7,21 @@ import Graphing.GraphManager;
 import Settings.UserSettings;
 
 import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class AltMenuBar {
+    public static boolean isMacOS = false;
     private JMenuBar menuBar;
 
     public AltMenuBar() {
@@ -166,7 +172,7 @@ public class AltMenuBar {
         editCopyMenuItem.addActionListener(l -> {
             String data = CellsTable.getSelectedData();
         });
-        fileMenu.add(editCopyMenuItem);
+        editMenu.add(editCopyMenuItem);
 
         /*
             Start Settings Menu
@@ -175,6 +181,42 @@ public class AltMenuBar {
         // Build the Settings menu
         JMenu settingsMenu = new JMenu("Settings");
         settingsMenu.getAccessibleContext().setAccessibleDescription("Settings related options.");
+        if(AltMenuBar.isMacOS) {
+            JMenuItem settingsMenuItem = new JMenuItem("UI Settings");
+            settingsMenuItem.getAccessibleContext().setAccessibleDescription("Settings for user settings.");
+            settingsMenuItem.addActionListener(a -> {
+                new SettingWindow();
+            });
+            settingsMenu.add(settingsMenuItem);
+        }
+        else {
+            settingsMenu.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    new SettingWindow();
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+
+                }
+            });
+        }
         menuBar.add(settingsMenu);
 
         // TODO: Add Menu Items for Settings
@@ -186,7 +228,9 @@ public class AltMenuBar {
         // Build the Run menu
         JMenu runMenu = new JMenu("Run");
         runMenu.getAccessibleContext().setAccessibleDescription("Run related options.");
-        runMenu.addActionListener(a -> {
+        runMenu.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
                 GUIDataMaster.flush();
                 boolean success = GUIDataMaster.executeMeasures();
 
@@ -197,12 +241,34 @@ public class AltMenuBar {
 
                 ArrayList<Object> r = GUIDataMaster.getResults();
                 for(Object o : r){
-                    OutputManager.addOutput(GUIDataMaster.getGUIMeasure(r.indexOf(o)).getName(), ((o==null) ? null : o.toString()));
+                    OutputManager.addOutput(GUIDataMaster.getGUIMeasure(r.indexOf(o)).getName() ,(o==null) ? null : o.toString());
                 }
 
                 GraphManager.displayGraphs();
                 OutputManager.displayOutputs();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
         });
+
         menuBar.add(runMenu);
 
         // TODO: Add Menu Items for Run

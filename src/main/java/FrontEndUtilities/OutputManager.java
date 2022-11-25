@@ -1,6 +1,6 @@
 package FrontEndUtilities;
 
-import GUI.CellsTable;
+import Settings.UserSettings;
 import org.apache.commons.io.FilenameUtils;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtils;
@@ -8,8 +8,6 @@ import org.jfree.chart.ChartUtils;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,15 +35,15 @@ public class OutputManager {
         for(String s : outputs){
             String[] sArr = s.split(",");
             String name = sArr[0];
-            String data = sArr[1];
+            StringBuilder data = new StringBuilder(sArr[1]);
             for(int i = 2; i < sArr.length; i++){
-                data = data + "\n" + sArr[i];
+                data.append("\n").append(sArr[i]);
             }
-            data = data.indent(3);
+            data = new StringBuilder(data.toString().indent(3));
 
             String out = textPane.getText();
 
-            if(out != ""){
+            if(!Objects.equals(out, "")){
                 out += "\n";
             }
 
@@ -59,12 +57,7 @@ public class OutputManager {
         textScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         JPanel textPanel = new JPanel(new BorderLayout());
         JButton btnSaveText = new JButton("Save Output");
-        btnSaveText.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveOutputsToFile();
-            }
-        });
+        btnSaveText.addActionListener(e -> saveOutputsToFile());
 
         textPanel.add(textScroll);
         textPanel.add(btnSaveText, BorderLayout.SOUTH);
@@ -76,12 +69,7 @@ public class OutputManager {
             for(ChartPanel g : graphs){
                 JPanel graphPane = new JPanel(new BorderLayout());
                 JButton btnSave = new JButton("Save Graph");
-                btnSave.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        saveGraph(g);
-                    }
-                });
+                btnSave.addActionListener(e -> saveGraph(g));
 
                 graphPane.add(g);
                 graphPane.add(btnSave, BorderLayout.SOUTH);
@@ -144,12 +132,7 @@ public class OutputManager {
             JCheckBox selectionBox = new JCheckBox();
 
             int finalI = i;
-            selectionBox.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    outputSelections[finalI] = selectionBox.isSelected();
-                }
-            });
+            selectionBox.addActionListener(e -> outputSelections[finalI] = selectionBox.isSelected());
 
             JPanel selector = new JPanel();
             selector.setLayout(new GridLayout(1,2, 10, 10));
@@ -168,9 +151,7 @@ public class OutputManager {
 
         JPanel content = new JPanel(new BorderLayout());
 
-        JFrame frame = new JFrame();
-        frame.setContentPane(content);
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        JDialog dialog = new JDialog();
 
         for(JPanel p : selectors){
             selectionPanel.add(p);
@@ -180,12 +161,9 @@ public class OutputManager {
 
         //Add Save button to panel
         JButton btnSave = new JButton("Save Outputs");
-        btnSave.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                displayFileBrowser(outputSelections);
-                frame.dispose();
-            }
+        btnSave.addActionListener(e -> {
+            displayFileBrowser(outputSelections);
+            dialog.dispose();
         });
 
         content.add(btnSave, BorderLayout.SOUTH);
@@ -193,15 +171,22 @@ public class OutputManager {
         content.revalidate();
         content.repaint();
 
-        frame.pack();
+        dialog.setContentPane(content);
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        dialog.setModal(true);
+        dialog.getRootPane().setDefaultButton(btnSave);
 
-        frame.setVisible(true);
+        dialog.pack();
+
+        dialog.setLocationRelativeTo(GUIDataMaster.getFrameReference());
+
+        dialog.setVisible(true);
     }
 
     private static void displayFileBrowser(boolean[] selectedOutputs){
         //File browser stuff
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        fileChooser.setCurrentDirectory(new File(UserSettings.getWorkingDirectory()));
         FileNameExtensionFilter filtercsv = new FileNameExtensionFilter(
                 "Comma Separated (*.csv)", "csv");
         FileNameExtensionFilter filtertsv = new FileNameExtensionFilter(
@@ -222,9 +207,7 @@ public class OutputManager {
 
             String format = fileChooser.getFileFilter().getDescription().split("\\.")[1].replace(")", "");
 
-            if (FilenameUtils.getExtension(selectedFile.getName()).equalsIgnoreCase(format)) {
-                // filename is OK as-is
-            } else {
+            if (!FilenameUtils.getExtension(selectedFile.getName()).equalsIgnoreCase(format)) {
                 selectedFile = new File(selectedFile.getParentFile(), FilenameUtils.getBaseName(selectedFile.getName())+"."+format);
             }
 
@@ -276,9 +259,11 @@ public class OutputManager {
 
                     j++;
                 }
+
+                outputFileString.append("\n");
             }
 
-            outputFileString.append("\n");
+
 
             i++;
         }
@@ -294,7 +279,7 @@ public class OutputManager {
 
     private static void saveGraph(ChartPanel panel){
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        fileChooser.setCurrentDirectory(new File(UserSettings.getWorkingDirectory()));
         FileNameExtensionFilter filterpng = new FileNameExtensionFilter(
                 "PNG (*.png)", "png");
         fileChooser.setFileFilter(filterpng);
@@ -309,9 +294,7 @@ public class OutputManager {
 
             String format = fileChooser.getFileFilter().getDescription().split("\\.")[1].replace(")", "");
 
-            if (FilenameUtils.getExtension(selectedFile.getName()).equalsIgnoreCase(format)) {
-                // filename is OK as-is
-            } else {
+            if (!FilenameUtils.getExtension(selectedFile.getName()).equalsIgnoreCase(format)) {
                 selectedFile = new File(selectedFile.getParentFile(), FilenameUtils.getBaseName(selectedFile.getName())+"."+format);
             }
 
@@ -320,7 +303,7 @@ public class OutputManager {
                 ChartUtils.writeChartAsPNG(out, panel.getChart(), panel.getWidth(), panel.getHeight());
                 out.close();
             }catch(IOException e){
-
+                e.printStackTrace();
             }
         }
 
