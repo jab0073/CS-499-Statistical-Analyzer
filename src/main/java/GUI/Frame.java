@@ -152,14 +152,10 @@ public class Frame extends JFrame {
 
         int zoom = Math.round(12F * (userZoom/100.0F));
 
-        //If font size is different, then change it
-        if(zoom != f.getSize()){
-            FontUIResource newFont = (new FontUIResource(f.getFontName(), f.getStyle(), zoom));
+        FontUIResource newFont = (new FontUIResource(f.getFontName(), f.getStyle(), zoom));
 
-            UIManager.getLookAndFeelDefaults()
-                    .put("defaultFont", newFont);
-        }
-
+        UIManager.getLookAndFeelDefaults()
+                .put("defaultFont", newFont);
 
         SwingUtilities.updateComponentTreeUI(this);
 
