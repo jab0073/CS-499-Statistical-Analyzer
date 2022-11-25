@@ -120,6 +120,8 @@ public class GUIDataMaster {
         for(int i = 0; i < limit; i++){
             removeGUIMeasure(0);
         }
+
+        frameReference.updateRightPanelForLoad();
     }
 
     public static void newProject(){
