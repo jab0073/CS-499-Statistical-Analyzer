@@ -7,12 +7,8 @@ import Graphing.GraphManager;
 import Settings.UserSettings;
 
 import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -228,9 +224,10 @@ public class AltMenuBar {
         // Build the Run menu
         JMenu runMenu = new JMenu("Run");
         runMenu.getAccessibleContext().setAccessibleDescription("Run related options.");
-        runMenu.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
+        if(AltMenuBar.isMacOS) {
+            JMenuItem runMenuItem = new JMenuItem("Run Measures");
+            runMenuItem.getAccessibleContext().setAccessibleDescription("Run Measures");
+            runMenuItem.addActionListener(a -> {
                 GUIDataMaster.flush();
                 boolean success = GUIDataMaster.executeMeasures();
 
@@ -246,28 +243,51 @@ public class AltMenuBar {
 
                 GraphManager.displayGraphs();
                 OutputManager.displayOutputs();
-            }
+            });
+            runMenu.add(runMenuItem);
+        }
+        else {
+            runMenu.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    GUIDataMaster.flush();
+                    boolean success = GUIDataMaster.executeMeasures();
 
-            @Override
-            public void mousePressed(MouseEvent e) {
+                    if (!success) {
+                        ErrorManager.displayErrors();
+                        return;
+                    }
 
-            }
+                    ArrayList<Object> r = GUIDataMaster.getResults();
+                    for (Object o : r) {
+                        OutputManager.addOutput(GUIDataMaster.getGUIMeasure(r.indexOf(o)).getName(), (o == null) ? null : o.toString());
+                    }
 
-            @Override
-            public void mouseReleased(MouseEvent e) {
+                    GraphManager.displayGraphs();
+                    OutputManager.displayOutputs();
+                }
 
-            }
+                @Override
+                public void mousePressed(MouseEvent e) {
 
-            @Override
-            public void mouseEntered(MouseEvent e) {
+                }
 
-            }
+                @Override
+                public void mouseReleased(MouseEvent e) {
 
-            @Override
-            public void mouseExited(MouseEvent e) {
+                }
 
-            }
-        });
+                @Override
+                public void mouseEntered(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+
+                }
+            });
+        }
 
         menuBar.add(runMenu);
 
