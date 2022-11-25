@@ -128,12 +128,9 @@ public class MiddlePanelSix extends Card{
         btnImport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(dataArea0.getText().contains("Select Data from Chart")){
-                    dataArea0.setText(CellsTable.getSelectedData());
-                }
-                else{
-                    dataArea0.append(CellsTable.getSelectedData() + ",");
-                }
+
+                dataArea0.setText(CellsTable.getSelectedData());
+
                 updateMeasureData();
             }
         });
