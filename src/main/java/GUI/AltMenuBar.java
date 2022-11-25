@@ -8,12 +8,8 @@ import Graphing.GraphManager;
 import Settings.UserSettings;
 
 import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -42,13 +38,58 @@ public class AltMenuBar {
         fileNewMenu.getAccessibleContext().setAccessibleDescription("New File related options.");
         fileMenu.add(fileNewMenu);
 
-        // File -> New... -> DataSet menu item
-        JMenuItem newDataSetMenuItem = new JMenuItem("DataSet");
-        newDataSetMenuItem.getAccessibleContext().setAccessibleDescription("Create a new DataSet.");
-        newDataSetMenuItem.addActionListener(l -> {
-            // TODO: create functionality to make new dataset
+        // File -> New... -> Project menu item
+        JMenuItem newProjectMenuItem = new JMenuItem("Project");
+        newProjectMenuItem.getAccessibleContext().setAccessibleDescription("Create a new Project.");
+        newProjectMenuItem.addActionListener(l -> {
+            //Display dialog asking if the user would like to save first
+            JDialog saveBefore = new JDialog();
+            saveBefore.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+            JPanel centerPane = new JPanel();
+            JPanel buttonPane = new JPanel(new BorderLayout());
+            JPanel content = new JPanel(new BorderLayout());
+
+            JLabel message = new JLabel("Would you like to save your project?");
+
+            JButton btnYes = new JButton("Yes");
+            JButton btnNo = new JButton("No");
+            JButton btnCancel = new JButton("Cancel");
+
+            btnYes.addActionListener(y -> {
+                SaveManager.saveProgramState(false);
+                GUIDataMaster.newProject();
+                saveBefore.dispose();
+            });
+
+            btnNo.addActionListener(n -> {
+                GUIDataMaster.newProject();
+                saveBefore.dispose();
+            });
+
+            btnCancel.addActionListener(c -> {
+                saveBefore.dispose();
+            });
+
+            centerPane.add(message);
+            buttonPane.add(btnYes, BorderLayout.WEST);
+            buttonPane.add(btnNo, BorderLayout.CENTER);
+            buttonPane.add(btnCancel, BorderLayout.EAST);
+
+            content.add(centerPane, BorderLayout.CENTER);
+            content.add(buttonPane, BorderLayout.SOUTH);
+
+            saveBefore.setContentPane(content);
+
+            saveBefore.pack();
+
+            saveBefore.setLocationRelativeTo(GUIDataMaster.getFrameReference());
+
+            saveBefore.setVisible(true);
+
+
         });
-        fileNewMenu.add(newDataSetMenuItem);
+        fileNewMenu.add(newProjectMenuItem);
 
         // File -> New... -> Custom Measure menu item
         JMenuItem newCustomMeasureMenuItem = new JMenuItem("Custom Measure");
@@ -64,8 +105,8 @@ public class AltMenuBar {
         fileMenu.add(fileOpenMenu);
 
         // File -> Open... -> DataSet menu item
-        JMenuItem openDataSetMenuItem = new JMenuItem("DataSet");
-        openDataSetMenuItem.getAccessibleContext().setAccessibleDescription("Open a DataSet.");
+        JMenuItem openDataSetMenuItem = new JMenuItem("Project");
+        openDataSetMenuItem.getAccessibleContext().setAccessibleDescription("Open a Project.");
         openDataSetMenuItem.addActionListener(l -> {
             // TODO: create functionality to open dataset
             SaveManager.openSaveFile();
@@ -138,12 +179,20 @@ public class AltMenuBar {
         fileImportMenu.add(fileImportXLSXMenuItem);
 
         // File -> Export Data menu
-        JMenuItem fileExportMenuItem = new JMenuItem("Export Data");
-        fileExportMenuItem.getAccessibleContext().setAccessibleDescription("Export Data");
-        fileExportMenuItem.addActionListener(l -> {
-            SaveManager.saveProgramState();
+        JMenuItem fileSaveMenuItem = new JMenuItem("Save Project");
+        fileSaveMenuItem.getAccessibleContext().setAccessibleDescription("Save Project");
+        fileSaveMenuItem.addActionListener(l -> {
+            SaveManager.saveProgramState(false);
         });
-        fileMenu.add(fileExportMenuItem);
+        fileMenu.add(fileSaveMenuItem);
+
+        // File -> Export Data menu
+        JMenuItem fileSaveAsMenuItem = new JMenuItem("Save Project As");
+        fileSaveAsMenuItem.getAccessibleContext().setAccessibleDescription("Save Project As");
+        fileSaveAsMenuItem.addActionListener(l -> {
+            SaveManager.saveProgramState(true);
+        });
+        fileMenu.add(fileSaveAsMenuItem);
 
         // File -> Export Data menu
         JMenuItem fileExitMenuItem = new JMenuItem("Exit");

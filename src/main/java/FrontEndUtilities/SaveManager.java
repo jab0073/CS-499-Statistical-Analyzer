@@ -15,8 +15,8 @@ public class SaveManager {
     private static boolean stateCurrentlySaved = false;
     private static String currentSaveFileName = "";
 
-    public static void saveProgramState(){
-        if(stateCurrentlySaved){
+    public static void saveProgramState(boolean saveNew){
+        if(stateCurrentlySaved && !saveNew){
             saveProgramStateAs(currentSaveFileName);
         }else{
             //Display file selector

@@ -1,9 +1,12 @@
 package FrontEndUtilities;
 
+import BackEndUtilities.Sample;
 import GUI.Card;
 import GUI.CardTypes;
 import GUI.Frame;
 import Graphing.GraphManager;
+import TableUtilities.DataTable;
+
 import java.util.ArrayList;
 
 public class GUIDataMaster {
@@ -117,5 +120,18 @@ public class GUIDataMaster {
         for(int i = 0; i < limit; i++){
             removeGUIMeasure(0);
         }
+    }
+
+    public static void newProject(){
+        DataTable blank = new DataTable();
+
+        for(int i = 0; i < 50; i++){
+            blank.addRow(new Sample());
+        }
+
+        frameReference.getCellsTable().loadFromDT(blank);
+        removeAllMeasures();
+
+        frameReference.updateRightPanelForLoad();
     }
 }
