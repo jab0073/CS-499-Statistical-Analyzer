@@ -90,7 +90,9 @@ public class CellsTable extends JPanel {
             return;
         }
 
-        table.setModel(new DefaultTableModel(in.getRows().size()+20, table.getColumnCount()));
+        int numRows = Math.max(50, in.getIndexOfLastRow()+20);
+
+        table.setModel(new DefaultTableModel(numRows, table.getColumnCount()));
 
         for(int i = 0; i < in.getRows().size(); i++){
             TableUtilities.Row r = in.getRow(i);
@@ -103,7 +105,9 @@ public class CellsTable extends JPanel {
     public static void loadXLSXFile(String file) throws IOException {
         DataTable in = UIServices.fromXLSX(file, 0);
 
-        table.setModel(new DefaultTableModel(in.getRows().size()+20, table.getColumnCount()));
+        int numRows = Math.max(50, in.getIndexOfLastRow()+20);
+
+        table.setModel(new DefaultTableModel(numRows, table.getColumnCount()));
 
         for(int i = 0; i < in.getRows().size(); i++){
             TableUtilities.Row r = in.getRow(i);
@@ -137,13 +141,15 @@ public class CellsTable extends JPanel {
             for(int j = 0; j < numCols; j++){
                 String data = (String) table.getModel().getValueAt(i,j);
 
-                if(data == null || data.replace(" ", "").isEmpty())
-                    continue;
-
                 row.addCell(data);
             }
 
-            out.addRow(row.toSample());
+            row.removeTrailingEmptyCells();
+
+            if(row.size() > 0){
+                out.addRow(row);
+            }
+
         }
 
         return out;
@@ -154,12 +160,15 @@ public class CellsTable extends JPanel {
             return;
         }
 
-        table.setModel(new DefaultTableModel(in.getRows().size()+20, table.getColumnCount()));
+        int numRows = Math.max(50, in.getIndexOfLastRow()+20);
+
+        table.setModel(new DefaultTableModel(numRows, table.getColumnCount()));
 
         for(int i = 0; i < in.getRows().size(); i++){
             TableUtilities.Row r = in.getRow(i);
+
             for(int j = 0; j < r.size(); j++){
-                table.getModel().setValueAt(r.get(j).data, i, j);
+                table.getModel().setValueAt(r.get(j).data, r.getIndex(), j);
             }
         }
     }

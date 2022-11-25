@@ -198,12 +198,50 @@ public class AltMenuBar {
         JMenuItem fileExitMenuItem = new JMenuItem("Exit");
         fileExitMenuItem.getAccessibleContext().setAccessibleDescription("Exit program.");
         fileExitMenuItem.addActionListener(l -> {
-            // TODO: Add dialog box to prompt if user wants to save or export before closing
+            //Display dialog asking if the user would like to save first
+            JDialog saveBefore = new JDialog();
+            saveBefore.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-            // TODO: Save Table contents as DataSet or export to preferred file format
+            JPanel centerPane = new JPanel();
+            JPanel buttonPane = new JPanel(new BorderLayout());
+            JPanel content = new JPanel(new BorderLayout());
 
-            Frame.closeDialogs();
-            Arrays.stream(Frame.getFrames()).forEach(Window::dispose);
+            JLabel message = new JLabel("Would you like to save your project?");
+
+            JButton btnYes = new JButton("Yes");
+            JButton btnNo = new JButton("No");
+            JButton btnCancel = new JButton("Cancel");
+
+            btnYes.addActionListener(y -> {
+                SaveManager.saveProgramState(false);
+                Frame.closeDialogs();
+                Arrays.stream(Frame.getFrames()).forEach(Window::dispose);
+            });
+
+            btnNo.addActionListener(n -> {
+                Frame.closeDialogs();
+                Arrays.stream(Frame.getFrames()).forEach(Window::dispose);
+            });
+
+            btnCancel.addActionListener(c -> {
+                saveBefore.dispose();
+            });
+
+            centerPane.add(message);
+            buttonPane.add(btnYes, BorderLayout.WEST);
+            buttonPane.add(btnNo, BorderLayout.CENTER);
+            buttonPane.add(btnCancel, BorderLayout.EAST);
+
+            content.add(centerPane, BorderLayout.CENTER);
+            content.add(buttonPane, BorderLayout.SOUTH);
+
+            saveBefore.setContentPane(content);
+
+            saveBefore.pack();
+
+            saveBefore.setLocationRelativeTo(GUIDataMaster.getFrameReference());
+
+            saveBefore.setVisible(true);
 
         });
         fileMenu.add(fileExitMenuItem);

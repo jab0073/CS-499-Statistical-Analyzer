@@ -95,6 +95,10 @@ public class DataTable {
         return row;
     }
 
+    public void addRow(Row r){
+        rows.add(r);
+    }
+
     /**
      * Add a column to the table and return it.
      *
@@ -252,6 +256,17 @@ public class DataTable {
             ds.addSample(r.toSample());
         });
         return ds;
+    }
+
+    public int getIndexOfLastRow(){
+        int last = 0;
+
+        for(Row r : rows){
+            if(r.getIndex() > last)
+                last = r.getIndex();
+        }
+
+        return last;
     }
 
     @Override
