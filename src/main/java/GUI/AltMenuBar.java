@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class AltMenuBar {
+    public static boolean isMacOS = false;
     private JMenuBar menuBar;
 
     public AltMenuBar() {
@@ -171,7 +172,7 @@ public class AltMenuBar {
         editCopyMenuItem.addActionListener(l -> {
             String data = CellsTable.getSelectedData();
         });
-        fileMenu.add(editCopyMenuItem);
+        editMenu.add(editCopyMenuItem);
 
         /*
             Start Settings Menu
@@ -180,33 +181,42 @@ public class AltMenuBar {
         // Build the Settings menu
         JMenu settingsMenu = new JMenu("Settings");
         settingsMenu.getAccessibleContext().setAccessibleDescription("Settings related options.");
-        settingsMenu.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
+        if(AltMenuBar.isMacOS) {
+            JMenuItem settingsMenuItem = new JMenuItem("UI Settings");
+            settingsMenuItem.getAccessibleContext().setAccessibleDescription("Settings for user settings.");
+            settingsMenuItem.addActionListener(a -> {
                 new SettingWindow();
-            }
+            });
+            settingsMenu.add(settingsMenuItem);
+        }
+        else {
+            settingsMenu.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    new SettingWindow();
+                }
 
-            @Override
-            public void mousePressed(MouseEvent e) {
+                @Override
+                public void mousePressed(MouseEvent e) {
 
-            }
+                }
 
-            @Override
-            public void mouseReleased(MouseEvent e) {
+                @Override
+                public void mouseReleased(MouseEvent e) {
 
-            }
+                }
 
-            @Override
-            public void mouseEntered(MouseEvent e) {
+                @Override
+                public void mouseEntered(MouseEvent e) {
 
-            }
+                }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
+                @Override
+                public void mouseExited(MouseEvent e) {
 
-            }
-        });
-
+                }
+            });
+        }
         menuBar.add(settingsMenu);
 
         // TODO: Add Menu Items for Settings

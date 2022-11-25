@@ -3,6 +3,7 @@ package Settings;
 import ApplicationMain.Main;
 import BackEndUtilities.Constants;
 import FrontEndUtilities.GUIDataMaster;
+import GUI.AltMenuBar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,6 +42,7 @@ public class UserSettings {
             UserSettings.workingDirectory =  Constants.MacBeginningDir + System.getProperty("user.name") + Constants.MacDefaultDir;
             // If running on macOS, this next line puts the JMenuBar in the system menu bar
             System.setProperty("apple.laf.useScreenMenuBar", "true");
+            AltMenuBar.isMacOS = true;
             return;
         }
         UserSettings.workingDirectory = null;
