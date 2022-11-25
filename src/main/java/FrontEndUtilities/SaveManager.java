@@ -15,16 +15,6 @@ public class SaveManager {
     private static boolean stateCurrentlySaved = false;
     private static String currentSaveFileName = "";
 
-
-    public static void test(){
-
-        String t = gson.toJson(GUIDataMaster.getGUIMeasure(0));
-
-        System.out.println(t);
-
-        GUIDataMaster.addMeasure(gson.fromJson(t, GUIMeasure.class));
-    }
-
     public static void saveProgramState(){
         if(stateCurrentlySaved){
             saveProgramStateAs(currentSaveFileName);
@@ -56,6 +46,8 @@ public class SaveManager {
 
                 saveProgramStateAs(currentSaveFileName);
             }
+
+            dialog.dispose();
         }
     }
 

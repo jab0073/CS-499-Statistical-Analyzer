@@ -3,10 +3,7 @@ package FrontEndUtilities;
 import GUI.Card;
 import GUI.CardTypes;
 import GUI.Frame;
-import GUI.RightPanel;
 import Graphing.GraphManager;
-
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class GUIDataMaster {
@@ -57,7 +54,7 @@ public class GUIDataMaster {
                 results.set(i, measures.get(i).execute());
             }catch (Exception e) {
                 results.set(i, null);
-                ErrorManager.sendErrorMessage(measures.get(i).getName(), "A critical error has occured");
+                ErrorManager.sendErrorMessage(measures.get(i).getName(), "A critical error has occurred");
                 success = false;
             }
         }
@@ -68,8 +65,6 @@ public class GUIDataMaster {
                 break;
             }
         }
-
-        SaveManager.test();
 
         return success;
     }
