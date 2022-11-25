@@ -58,6 +58,29 @@ public class Row implements Cloneable{
         return cells.size();
     }
 
+    public void removeTrailingEmptyCells(){
+        int i = 0;
+        int startOfTrail = 0;
+
+        //Find the start of any trailing empty cells
+        for(Cell c : cells){
+            if(c.data != null && !c.data.replace(" ", "").isEmpty()){
+                startOfTrail = i+1;
+            }
+
+            i++;
+        }
+
+        //Make sure to not delete all the data from a filled row
+        if(startOfTrail == 0 && (cells.get(0).data != null && !cells.get(0).data.replace(" ", "").isEmpty())){
+            return;
+        }
+
+        if (cells.size() > startOfTrail) {
+            cells.subList(startOfTrail, cells.size()).clear();
+        }
+    }
+
     @Override
     public Row clone() {
         try {

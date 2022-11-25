@@ -20,6 +20,7 @@ public class Frame extends JFrame {
     private static final ArrayList<Card> cards = new ArrayList<>();
     private static JPanel cardPanel;
     private CellsTable table;
+    private RightPanel rightPanel;
 
     /**Method for generating the frame which holds the GUI*/
     public Frame() {
@@ -113,7 +114,10 @@ public class Frame extends JFrame {
      *@return The panel containing the right panel.*/
     private JPanel windowPanelRight(){
         JPanel panel = new JPanel(new BorderLayout());
-        panel.add(new RightPanel().rightPanel(), BorderLayout.CENTER);
+
+        rightPanel = new RightPanel();
+
+        panel.add(rightPanel, BorderLayout.CENTER);
         return(panel);
     }
 
@@ -160,5 +164,13 @@ public class Frame extends JFrame {
         SwingUtilities.updateComponentTreeUI(this);
 
         table.setGridColor(Color.GRAY);
+    }
+
+    public CellsTable getCellsTable(){
+        return table;
+    }
+
+    public void updateRightPanelForLoad(){
+        rightPanel.updateForLoad();
     }
 }

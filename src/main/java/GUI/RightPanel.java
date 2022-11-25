@@ -15,21 +15,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-public class RightPanel {
+public class RightPanel extends JPanel{
     private static JList<String> functionList;
     private static List<GraphTypes> graphsList;
     private static boolean selected = false;
     private static int functionIndex;
     /**Method which returns the panel which will be on the right side of the frame.
      *@return The panel which contains a scroll pane and button.*/
-    public JPanel rightPanel(){
+    public RightPanel(){
         /*Create a panel with a border layout*/
-        JPanel panel = new JPanel(new BorderLayout());
+        this.setLayout(new BorderLayout());
 
         /*Add the scroll bane and buttons panel to the right panel.*/
-        panel.add(scrollPane(), BorderLayout.CENTER);
-        panel.add(topRightPanel(), BorderLayout.NORTH);
-        return(panel);
+        this.add(scrollPane(), BorderLayout.CENTER);
+        this.add(topRightPanel(), BorderLayout.NORTH);
     }
 
     private JPanel topRightPanel(){
@@ -186,4 +185,8 @@ public class RightPanel {
     }
 
     public static boolean getSelected(){return selected;}
+
+    public void updateForLoad(){
+        updateList(true);
+    }
 }

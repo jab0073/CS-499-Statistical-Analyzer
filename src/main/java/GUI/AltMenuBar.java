@@ -3,6 +3,7 @@ package GUI;
 import FrontEndUtilities.ErrorManager;
 import FrontEndUtilities.GUIDataMaster;
 import FrontEndUtilities.OutputManager;
+import FrontEndUtilities.SaveManager;
 import Graphing.GraphManager;
 import Settings.UserSettings;
 
@@ -38,13 +39,58 @@ public class AltMenuBar {
         fileNewMenu.getAccessibleContext().setAccessibleDescription("New File related options.");
         fileMenu.add(fileNewMenu);
 
-        // File -> New... -> DataSet menu item
-        JMenuItem newDataSetMenuItem = new JMenuItem("DataSet");
-        newDataSetMenuItem.getAccessibleContext().setAccessibleDescription("Create a new DataSet.");
-        newDataSetMenuItem.addActionListener(l -> {
-            // TODO: create functionality to make new dataset
+        // File -> New... -> Project menu item
+        JMenuItem newProjectMenuItem = new JMenuItem("Project");
+        newProjectMenuItem.getAccessibleContext().setAccessibleDescription("Create a new Project.");
+        newProjectMenuItem.addActionListener(l -> {
+            //Display dialog asking if the user would like to save first
+            JDialog saveBefore = new JDialog();
+            saveBefore.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+            JPanel centerPane = new JPanel();
+            JPanel buttonPane = new JPanel(new BorderLayout());
+            JPanel content = new JPanel(new BorderLayout());
+
+            JLabel message = new JLabel("Would you like to save your project?");
+
+            JButton btnYes = new JButton("Yes");
+            JButton btnNo = new JButton("No");
+            JButton btnCancel = new JButton("Cancel");
+
+            btnYes.addActionListener(y -> {
+                SaveManager.saveProgramState(false);
+                GUIDataMaster.newProject();
+                saveBefore.dispose();
+            });
+
+            btnNo.addActionListener(n -> {
+                GUIDataMaster.newProject();
+                saveBefore.dispose();
+            });
+
+            btnCancel.addActionListener(c -> {
+                saveBefore.dispose();
+            });
+
+            centerPane.add(message);
+            buttonPane.add(btnYes, BorderLayout.WEST);
+            buttonPane.add(btnNo, BorderLayout.CENTER);
+            buttonPane.add(btnCancel, BorderLayout.EAST);
+
+            content.add(centerPane, BorderLayout.CENTER);
+            content.add(buttonPane, BorderLayout.SOUTH);
+
+            saveBefore.setContentPane(content);
+
+            saveBefore.pack();
+
+            saveBefore.setLocationRelativeTo(GUIDataMaster.getFrameReference());
+
+            saveBefore.setVisible(true);
+
+
         });
-        fileNewMenu.add(newDataSetMenuItem);
+        fileNewMenu.add(newProjectMenuItem);
 
         // File -> New... -> Custom Measure menu item
         JMenuItem newCustomMeasureMenuItem = new JMenuItem("Custom Measure");
@@ -60,10 +106,11 @@ public class AltMenuBar {
         fileMenu.add(fileOpenMenu);
 
         // File -> Open... -> DataSet menu item
-        JMenuItem openDataSetMenuItem = new JMenuItem("DataSet");
-        openDataSetMenuItem.getAccessibleContext().setAccessibleDescription("Open a DataSet.");
+        JMenuItem openDataSetMenuItem = new JMenuItem("Project");
+        openDataSetMenuItem.getAccessibleContext().setAccessibleDescription("Open a Project.");
         openDataSetMenuItem.addActionListener(l -> {
             // TODO: create functionality to open dataset
+            SaveManager.openSaveFile();
         });
         fileOpenMenu.add(openDataSetMenuItem);
 
@@ -133,23 +180,69 @@ public class AltMenuBar {
         fileImportMenu.add(fileImportXLSXMenuItem);
 
         // File -> Export Data menu
-        JMenuItem fileExportMenuItem = new JMenuItem("Export Data");
-        fileExportMenuItem.getAccessibleContext().setAccessibleDescription("Export Data");
-        fileExportMenuItem.addActionListener(l -> {
-            // TODO: create functionality to export data from table
+        JMenuItem fileSaveMenuItem = new JMenuItem("Save Project");
+        fileSaveMenuItem.getAccessibleContext().setAccessibleDescription("Save Project");
+        fileSaveMenuItem.addActionListener(l -> {
+            SaveManager.saveProgramState(false);
         });
-        fileMenu.add(fileExportMenuItem);
+        fileMenu.add(fileSaveMenuItem);
+
+        // File -> Export Data menu
+        JMenuItem fileSaveAsMenuItem = new JMenuItem("Save Project As");
+        fileSaveAsMenuItem.getAccessibleContext().setAccessibleDescription("Save Project As");
+        fileSaveAsMenuItem.addActionListener(l -> {
+            SaveManager.saveProgramState(true);
+        });
+        fileMenu.add(fileSaveAsMenuItem);
 
         // File -> Export Data menu
         JMenuItem fileExitMenuItem = new JMenuItem("Exit");
         fileExitMenuItem.getAccessibleContext().setAccessibleDescription("Exit program.");
         fileExitMenuItem.addActionListener(l -> {
-            // TODO: Add dialog box to prompt if user wants to save or export before closing
+            //Display dialog asking if the user would like to save first
+            JDialog saveBefore = new JDialog();
+            saveBefore.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-            // TODO: Save Table contents as DataSet or export to preferred file format
+            JPanel centerPane = new JPanel();
+            JPanel buttonPane = new JPanel(new BorderLayout());
+            JPanel content = new JPanel(new BorderLayout());
 
-            Frame.closeDialogs();
-            Arrays.stream(Frame.getFrames()).forEach(Window::dispose);
+            JLabel message = new JLabel("Would you like to save your project?");
+
+            JButton btnYes = new JButton("Yes");
+            JButton btnNo = new JButton("No");
+            JButton btnCancel = new JButton("Cancel");
+
+            btnYes.addActionListener(y -> {
+                SaveManager.saveProgramState(false);
+                Frame.closeDialogs();
+                Arrays.stream(Frame.getFrames()).forEach(Window::dispose);
+            });
+
+            btnNo.addActionListener(n -> {
+                Frame.closeDialogs();
+                Arrays.stream(Frame.getFrames()).forEach(Window::dispose);
+            });
+
+            btnCancel.addActionListener(c -> {
+                saveBefore.dispose();
+            });
+
+            centerPane.add(message);
+            buttonPane.add(btnYes, BorderLayout.WEST);
+            buttonPane.add(btnNo, BorderLayout.CENTER);
+            buttonPane.add(btnCancel, BorderLayout.EAST);
+
+            content.add(centerPane, BorderLayout.CENTER);
+            content.add(buttonPane, BorderLayout.SOUTH);
+
+            saveBefore.setContentPane(content);
+
+            saveBefore.pack();
+
+            saveBefore.setLocationRelativeTo(GUIDataMaster.getFrameReference());
+
+            saveBefore.setVisible(true);
 
         });
         fileMenu.add(fileExitMenuItem);

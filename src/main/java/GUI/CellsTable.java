@@ -2,6 +2,7 @@ package GUI;
 
 import Interop.UIServices;
 import TableUtilities.DataTable;
+import TableUtilities.Row;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -89,7 +90,9 @@ public class CellsTable extends JPanel {
             return;
         }
 
-        table.setModel(new DefaultTableModel(in.getRows().size()+20, table.getColumnCount()));
+        int numRows = Math.max(50, in.getIndexOfLastRow()+20);
+
+        table.setModel(new DefaultTableModel(numRows, table.getColumnCount()));
 
         for(int i = 0; i < in.getRows().size(); i++){
             TableUtilities.Row r = in.getRow(i);
@@ -102,7 +105,9 @@ public class CellsTable extends JPanel {
     public static void loadXLSXFile(String file) throws IOException {
         DataTable in = UIServices.fromXLSX(file, 0);
 
-        table.setModel(new DefaultTableModel(in.getRows().size()+20, table.getColumnCount()));
+        int numRows = Math.max(50, in.getIndexOfLastRow()+20);
+
+        table.setModel(new DefaultTableModel(numRows, table.getColumnCount()));
 
         for(int i = 0; i < in.getRows().size(); i++){
             TableUtilities.Row r = in.getRow(i);
@@ -124,5 +129,47 @@ public class CellsTable extends JPanel {
     public void setGridColor(java.awt.Color color){
         table.setShowGrid(true);
         table.setGridColor(color);
+    }
+
+    public DataTable getTableAsDT(){
+        DataTable out = new DataTable();
+        int numRows = table.getRowCount();
+        int numCols = table.getColumnCount();
+
+        for(int i = 0; i < numRows; i++){
+            TableUtilities.Row row = new Row(i);
+            for(int j = 0; j < numCols; j++){
+                String data = (String) table.getModel().getValueAt(i,j);
+
+                row.addCell(data);
+            }
+
+            row.removeTrailingEmptyCells();
+
+            if(row.size() > 0){
+                out.addRow(row);
+            }
+
+        }
+
+        return out;
+    }
+
+    public void loadFromDT(DataTable in){
+        if(in == null){
+            return;
+        }
+
+        int numRows = Math.max(50, in.getIndexOfLastRow()+20);
+
+        table.setModel(new DefaultTableModel(numRows, table.getColumnCount()));
+
+        for(int i = 0; i < in.getRows().size(); i++){
+            TableUtilities.Row r = in.getRow(i);
+
+            for(int j = 0; j < r.size(); j++){
+                table.getModel().setValueAt(r.get(j).data, r.getIndex(), j);
+            }
+        }
     }
 }

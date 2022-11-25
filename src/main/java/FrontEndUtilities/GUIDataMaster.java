@@ -1,16 +1,17 @@
 package FrontEndUtilities;
 
+import BackEndUtilities.Sample;
 import GUI.Card;
 import GUI.CardTypes;
 import GUI.Frame;
 import Graphing.GraphManager;
+import TableUtilities.DataTable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class GUIDataMaster {
-    private static ArrayList<GUIMeasure> measures = new ArrayList<>();
-    private static ArrayList<Object> results = new ArrayList<>();
+    private static final ArrayList<GUIMeasure> measures = new ArrayList<>();
+    private static final ArrayList<Object> results = new ArrayList<>();
     private static Frame frameReference;
 
     public static GUIMeasure getGUIMeasure(int index){
@@ -56,7 +57,7 @@ public class GUIDataMaster {
                 results.set(i, measures.get(i).execute());
             }catch (Exception e) {
                 results.set(i, null);
-                ErrorManager.sendErrorMessage(measures.get(i).getName(), "A critical error has occured");
+                ErrorManager.sendErrorMessage(measures.get(i).getName(), "A critical error has occurred");
                 success = false;
             }
         }
@@ -89,7 +90,6 @@ public class GUIDataMaster {
         Card c = Frame.swapCard(card);
 
         for(int i = 0; i < measure.getMinimumSamples(); i++){
-            System.out.println("Setting data " + measure.getDataAsString(i) + i + " on card " + card.name());
             c.setDataArea(i, measure.getDataAsString(i));
         }
 
@@ -104,4 +104,34 @@ public class GUIDataMaster {
     }
 
     public static Frame getFrameReference(){return frameReference; }
+
+    public static void addMeasure(GUIMeasure m){
+        measures.add(m);
+        results.add(null);
+        frameReference.updateRightPanelForLoad();
+    }
+
+    public static ArrayList<GUIMeasure> getAllMeasures() {
+        return measures;
+    }
+
+    public static void removeAllMeasures(){
+        int limit = measures.size();
+        for(int i = 0; i < limit; i++){
+            removeGUIMeasure(0);
+        }
+    }
+
+    public static void newProject(){
+        DataTable blank = new DataTable();
+
+        for(int i = 0; i < 50; i++){
+            blank.addRow(new Sample());
+        }
+
+        frameReference.getCellsTable().loadFromDT(blank);
+        removeAllMeasures();
+
+        frameReference.updateRightPanelForLoad();
+    }
 }
