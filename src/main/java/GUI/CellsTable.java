@@ -8,6 +8,8 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 public class CellsTable extends JPanel {
@@ -42,6 +44,15 @@ public class CellsTable extends JPanel {
         table.setBorder(new EtchedBorder(EtchedBorder.RAISED));
         table.setGridColor(Color.GRAY);
 
+        table.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_DELETE && table.getCellEditor() == null){
+                    deleteSelectedData();
+                }
+            }
+        });
+
         return (table);
     }
 
@@ -57,12 +68,16 @@ public class CellsTable extends JPanel {
 
         for(int rS : r){
             for(int cS : c){
-                Object value = table.getValueAt(rS, cS);
-
-                if(value == null)
+                Object obj = table.getValueAt(rS, cS);
+                String value;
+                if(obj == null){
                     continue;
-                if(value.toString().contains(" ")){
-                    String spaceLess = value.toString().replace(" ", "");
+                }else{
+                    value = obj.toString();
+                }
+
+                if(value.contains(" ")){
+                    String spaceLess = value.replace(" ", "");
 
                     if(spaceLess.length() == 0){
                         continue;
@@ -71,6 +86,10 @@ public class CellsTable extends JPanel {
                     data.append(spaceLess).append(",");
                 }
                 else{
+                    if(value.length() == 0){
+                        continue;
+                    }
+
                     data.append(value).append(",");
                 }
             }
@@ -83,6 +102,17 @@ public class CellsTable extends JPanel {
         data.deleteCharAt(data.length()-1);
 
         return data.toString();
+    }
+
+    private void deleteSelectedData(){
+        int[] r = table.getSelectedRows();
+        int[] c = table.getSelectedColumns();
+
+        for(int rS : r) {
+            for (int cS : c) {
+                table.getModel().setValueAt(null, rS, cS);
+            }
+        }
     }
 
     /**
