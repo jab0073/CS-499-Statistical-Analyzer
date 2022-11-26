@@ -28,9 +28,8 @@ public class CellsTable extends JPanel {
     /**Method which creates the JTable.
      *@return The JTable*/
     private JTable table() {
-        String[] headings = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"};
         int numRows = 50;
-        DefaultTableModel tableModel = new DefaultTableModel(numRows, headings.length);
+        DefaultTableModel tableModel = new DefaultTableModel(numRows, 12);
 
         table = new JTable(tableModel);
         table.setCellSelectionEnabled(true);
@@ -62,7 +61,13 @@ public class CellsTable extends JPanel {
                 if(value == null)
                     continue;
                 if(value.toString().contains(" ")){
+                    String spaceLess = value.toString().replace(" ", "");
 
+                    if(spaceLess.length() == 0){
+                        continue;
+                    }
+
+                    data.append(spaceLess).append(",");
                 }
                 else{
                     data.append(value).append(",");
