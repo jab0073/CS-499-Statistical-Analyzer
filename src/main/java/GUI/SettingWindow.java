@@ -1,21 +1,15 @@
 package GUI;
 
 import ApplicationMain.Main;
+import BackEndUtilities.Expressions;
 import FrontEndUtilities.GUIDataMaster;
 import Settings.Themes;
-import Settings.UserSettings;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyVetoException;
-import java.beans.VetoableChangeListener;
 import java.util.prefs.Preferences;
 
 public class SettingWindow extends JDialog {
@@ -26,6 +20,8 @@ public class SettingWindow extends JDialog {
     private JComboBox<String> themeSelector;
     private JSlider zoomSlider;
     private JLabel zoomReadout;
+    private JCheckBox EvalCheckBox;
+    private JLabel WarningLabel;
 
     public SettingWindow() {
         setContentPane(contentPane);
@@ -67,6 +63,12 @@ public class SettingWindow extends JDialog {
 
         zoomSlider.setValue((int) Math.round(currentZoomSlide));
 
+        WarningLabel.setVisible(false);
+
+        EvalCheckBox.addChangeListener(e -> WarningLabel.setVisible(EvalCheckBox.isSelected()));
+
+        EvalCheckBox.setSelected(Expressions.isEvaluationOn());
+
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -100,8 +102,15 @@ public class SettingWindow extends JDialog {
 
             Preferences prefs = Preferences.userNodeForPackage(Main.class);
 
+            if(EvalCheckBox.isSelected()){
+                Expressions.enableEvaluation();
+            }else{
+                Expressions.disableEvaluation();
+            }
+
             prefs.put("userTheme", Themes.getCurrentThemeName());
             prefs.put("userZoom", String.valueOf(zoom));
+            prefs.put("userEval", String.valueOf(EvalCheckBox.isSelected()));
 
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();

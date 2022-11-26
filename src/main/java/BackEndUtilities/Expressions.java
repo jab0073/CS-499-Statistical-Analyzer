@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class Expressions {
     private static final Logger logger = LogManager.getLogger(Expressions.class.getName());
-    private static boolean evaluate = false;
+    private static boolean evaluate = true;
     private static List<Pair> arguements = new ArrayList<>();
 
     public static void enableEvaluation() {

@@ -3,6 +3,7 @@ package Measures;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
+import BackEndUtilities.Sample;
 import FrontEndUtilities.ErrorManager;
 import GUI.CardTypes;
 import Graphing.DataFormat;
@@ -86,6 +87,18 @@ public class Binomial implements IMeasure {
     @Override
     public List<Double> run() {
         logger.debug("Running " + MeasureConstants.binomial);
+
+        if(Expressions.isEvaluationOn()){
+            DataSet newDS = new DataSet();
+            for(Sample s : inputData.getSamples()){
+                List<Double> eval = Expressions.eval(s);
+                Sample newS = new Sample(eval);
+
+                newDS.addSample(newS);
+            }
+
+            inputData = newDS;
+        }
 
         if(!this.validate())
             return null;
