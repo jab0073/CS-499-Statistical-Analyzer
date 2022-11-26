@@ -20,7 +20,7 @@ public class CellsTable extends JPanel {
     /**Method which creates a scroll pane to contain the JTable.
      *@return The scroll pane containg the JTable*/
     private JScrollPane scrollPane() {
-        JScrollPane scrollPane = new JScrollPane(table());
+        JScrollPane scrollPane = new JScrollPane(table(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setPreferredSize(new Dimension(900, 750));
         return (scrollPane);
     }
@@ -32,6 +32,7 @@ public class CellsTable extends JPanel {
         DefaultTableModel tableModel = new DefaultTableModel(numRows, 12);
 
         table = new JTable(tableModel);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setCellSelectionEnabled(true);
         table.setRowSelectionAllowed(true);
         table.setColumnSelectionAllowed(true);
@@ -96,8 +97,9 @@ public class CellsTable extends JPanel {
         }
 
         int numRows = Math.max(50, in.getIndexOfLastRow()+20);
+        int numCols = Math.max(12, in.getLongestRowSize());
 
-        table.setModel(new DefaultTableModel(numRows, table.getColumnCount()));
+        table.setModel(new DefaultTableModel(numRows, numCols));
 
         for(int i = 0; i < in.getRows().size(); i++){
             TableUtilities.Row r = in.getRow(i);
@@ -111,8 +113,9 @@ public class CellsTable extends JPanel {
         DataTable in = UIServices.fromXLSX(file, 0);
 
         int numRows = Math.max(50, in.getIndexOfLastRow()+20);
+        int numCols = Math.max(12, in.getLongestRowSize());
 
-        table.setModel(new DefaultTableModel(numRows, table.getColumnCount()));
+        table.setModel(new DefaultTableModel(numRows, numCols));
 
         for(int i = 0; i < in.getRows().size(); i++){
             TableUtilities.Row r = in.getRow(i);
@@ -166,8 +169,9 @@ public class CellsTable extends JPanel {
         }
 
         int numRows = Math.max(50, in.getIndexOfLastRow()+20);
+        int numCols = Math.max(12, in.getLongestRowSize());
 
-        table.setModel(new DefaultTableModel(numRows, table.getColumnCount()));
+        table.setModel(new DefaultTableModel(numRows, numCols));
 
         for(int i = 0; i < in.getRows().size(); i++){
             TableUtilities.Row r = in.getRow(i);
