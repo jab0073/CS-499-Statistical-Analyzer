@@ -35,9 +35,24 @@ public class OutputManager {
         for(String s : outputs){
             String[] sArr = s.split(",");
             String name = sArr[0];
-            StringBuilder data = new StringBuilder(sArr[1]);
-            for(int i = 2; i < sArr.length; i++){
-                data.append("\n").append(sArr[i]);
+            StringBuilder data = new StringBuilder();
+            for(int i = 1; i < sArr.length; i++){
+                if(sArr[i].contains(" ")){
+                    sArr[i] = sArr[i].replace(" ", "");
+                }
+                if(sArr[i].startsWith("[")){
+                    sArr[i] = sArr[i].replace("[", "");
+                }
+
+                if(sArr[i].endsWith("]")){
+                    sArr[i] = sArr[i].replace("]", "");
+                }
+
+                data.append(sArr[i]);
+
+                if(i != sArr.length -1){
+                    data.append("\n");
+                }
             }
             data = new StringBuilder(data.toString().indent(3));
 
