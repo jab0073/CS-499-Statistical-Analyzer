@@ -32,7 +32,7 @@ public class UserSettings {
             e.printStackTrace();
         }
 
-        int fontSize = (int) (12 * ((double)userZoom/100.0));
+        int fontSize = Math.round(12F * (userZoom/100.0F));
 
         UIManager.getLookAndFeelDefaults()
                 .put("defaultFont", new Font("Segoe UI", Font.PLAIN, fontSize));
