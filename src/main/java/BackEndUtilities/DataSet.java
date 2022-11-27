@@ -85,6 +85,10 @@ public class DataSet implements Cloneable{
         return this.samples.stream().map(Sample::getDataAsDouble).toList().stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
+    public List<String> getAllDataAsString(){
+        return this.samples.stream().map(Sample::getData).toList().stream().flatMap(List::stream).collect(Collectors.toList());
+    }
+
     public int getSize() {
         return this.samples.stream().mapToInt(Sample::getSize).sum();
     }

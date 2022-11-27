@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class GraphsComboBox {
-    private static DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
+    private static final DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
     private static JPanel panel;
     private static JComboBox box;
     public JPanel graphsComboBoxPanel(){
@@ -38,9 +38,21 @@ public class GraphsComboBox {
             panel.setVisible(true);
         }
 
+        DefaultComboBoxModel<String> tempModel = new DefaultComboBoxModel<>();
+
+        int preSelect = 0;
+        GraphTypes current = GUIDataMaster.getGUIMeasure(RightPanel.getCurrentMeasureIndex()).getSelectedGraph();
         for (int i = 0; i < names.length; i++) {
-            model.addElement(names[i]);
+            tempModel.addElement(names[i]);
+
+            if(current != null && names[i].equals(current.getName())){
+                preSelect = i;
+            }
         }
+
+        box.setModel(tempModel);
+
+        box.setSelectedIndex(preSelect);
     }
 
     public static DefaultComboBoxModel<String> getModel(){
@@ -58,7 +70,8 @@ public class GraphsComboBox {
         if(box.getItemAt(graphsIndex) != null) {
             String graph = box.getItemAt(graphsIndex).toString();
             for (GraphTypes value : RightPanel.getGraphsList()) {
-                if (Objects.equals(graph, value.getName())) {
+                String name = value.getName();
+                if (Objects.equals(graph, name)) {
                     GUIMeasure m = GUIDataMaster.getGUIMeasure(RightPanel.getCurrentMeasureIndex());
                     m.setSelectedGraph(value);
                 }

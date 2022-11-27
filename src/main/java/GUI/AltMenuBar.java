@@ -93,13 +93,6 @@ public class AltMenuBar {
         });
         fileNewMenu.add(newProjectMenuItem);
 
-        // File -> New... -> Custom Measure menu item
-        JMenuItem newCustomMeasureMenuItem = new JMenuItem("Custom Measure");
-        newCustomMeasureMenuItem.getAccessibleContext().setAccessibleDescription("Create a new Custom Measure.");
-        newCustomMeasureMenuItem.addActionListener(l -> {
-            // TODO: create functionality to make new user defined measure
-        });
-        fileNewMenu.add(newCustomMeasureMenuItem);
 
         // File -> Open... menu
         JMenu fileOpenMenu = new JMenu("Open...");
@@ -114,14 +107,6 @@ public class AltMenuBar {
             SaveManager.openSaveFile();
         });
         fileOpenMenu.add(openDataSetMenuItem);
-
-        // File -> Open... -> Custom Measure menu item
-        JMenuItem openCustomMeasureMenuItem = new JMenuItem("Custom Measure");
-        openCustomMeasureMenuItem.getAccessibleContext().setAccessibleDescription("Open a Custom Measure.");
-        openCustomMeasureMenuItem.addActionListener(l -> {
-            // TODO: create functionality to open user defined measure
-        });
-        fileOpenMenu.add(openCustomMeasureMenuItem);
 
         // File -> Import... menu
         JMenu fileImportMenu = new JMenu("Import...");
@@ -249,22 +234,6 @@ public class AltMenuBar {
         fileMenu.add(fileExitMenuItem);
 
         /*
-            Start Edit Menu
-         */
-
-        // Build the Edit menu
-        JMenu editMenu = new JMenu("Edit");
-        editMenu.getAccessibleContext().setAccessibleDescription("Edit related options.");
-        menuBar.add(editMenu);
-
-        JMenuItem editCopyMenuItem = new JMenuItem("Copy");
-        editCopyMenuItem.getAccessibleContext().setAccessibleDescription("Copy Selected Data.");
-        editCopyMenuItem.addActionListener(l -> {
-            String data = CellsTable.getSelectedData();
-        });
-        editMenu.add(editCopyMenuItem);
-
-        /*
             Start Settings Menu
          */
 
@@ -272,7 +241,7 @@ public class AltMenuBar {
         JMenu settingsMenu = new JMenu("Settings");
         settingsMenu.getAccessibleContext().setAccessibleDescription("Settings related options.");
         if(AltMenuBar.isMacOS) {
-            JMenuItem settingsMenuItem = new JMenuItem("UI Settings");
+            JMenuItem settingsMenuItem = new JMenuItem("User Settings");
             settingsMenuItem.getAccessibleContext().setAccessibleDescription("Settings for user settings.");
             settingsMenuItem.addActionListener(a -> {
                 new SettingWindow();

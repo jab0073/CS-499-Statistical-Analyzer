@@ -58,6 +58,7 @@ public class GUIDataMaster {
             try{
                 results.set(i, measures.get(i).execute());
             }catch (Exception e) {
+                e.printStackTrace();
                 results.set(i, null);
                 ErrorManager.sendErrorMessage(measures.get(i).getName(), "A critical error has occurred");
                 success = false;

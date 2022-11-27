@@ -118,7 +118,7 @@ public class GUIMeasure {
         Object r = m.run();
 
         if(isGraphable){
-            GraphManager.graphOutput(GraphTypes.X_Y, r, this);
+            GraphManager.graphOutput(selectedGraph, r, this);
         }
 
         return r;
