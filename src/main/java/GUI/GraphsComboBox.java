@@ -20,6 +20,7 @@ public class GraphsComboBox {
         panel = new JPanel();
         panel.add(label());
         panel.add(dropDown());
+        panel.setVisible(false);
         return panel;
     }
 
@@ -63,5 +64,9 @@ public class GraphsComboBox {
                 }
             }
         }
+    }
+
+    public static void hide(){
+        panel.setVisible(false);
     }
 }

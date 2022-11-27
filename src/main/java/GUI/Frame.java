@@ -80,6 +80,7 @@ public class Frame extends JFrame {
         cards.add(new MiddlePanelFour());
         cards.add(new MiddlePanelFive());
         cards.add(new MiddlePanelSix());
+        cards.add(new BlankMiddleCard());
 
         for(Card c : cards){
             panel.add(c, c.getType().getName());
@@ -87,7 +88,7 @@ public class Frame extends JFrame {
 
         panel.add(new GraphsComboBox().graphsComboBoxPanel());
 
-        layout.show(panel, CardTypes.ONE_DATA_ONE_VARIABLE.getName());
+        layout.show(panel, CardTypes.BLANK.getName());
 
         return(panel);
     }
