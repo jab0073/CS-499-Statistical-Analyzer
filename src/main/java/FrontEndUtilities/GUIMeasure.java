@@ -100,7 +100,7 @@ public class GUIMeasure {
         MeasureManager.getMeasure(name).setInputData(ds);
 
         for(int i = 0; i < requiredVariables.size(); i++){
-            Expressions.addArgument(requiredVariables.get(i), variableValues.get(i));
+            Expressions.setArgument(requiredVariables.get(i), variableValues.get(i));
         }
 
         Object r = MeasureManager.getMeasure(name).run();
