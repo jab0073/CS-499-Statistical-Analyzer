@@ -21,7 +21,7 @@ public class ProbabilityDistribution extends BiasCorrectable implements IMeasure
     private final int minimumSamples = 1;
     private final List<String> requiredVariables = new ArrayList<>();
     private final boolean isGraphable = true;
-    private final List<GraphTypes> validGraphs = List.of(GraphTypes.X_Y, GraphTypes.HORIZONTAL_BAR, GraphTypes.VERTICAL_BAR, GraphTypes.PIE_CHART);
+    private final List<GraphTypes> validGraphs = List.of(GraphTypes.NONE,GraphTypes.X_Y, GraphTypes.HORIZONTAL_BAR, GraphTypes.VERTICAL_BAR, GraphTypes.PIE_CHART);
     private final CardTypes cardType = CardTypes.ONE_DATA_NO_VARIABLE;
 
     public boolean isGraphable(){ return this.isGraphable; }

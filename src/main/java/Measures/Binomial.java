@@ -24,7 +24,7 @@ public class Binomial implements IMeasure {
     private final int minimumSamples = 1;
     private final List<String> requiredVariables = Arrays.asList("p", "n");
     private final boolean isGraphable = true;
-    private final List<GraphTypes> validGraphs = List.of(GraphTypes.NORMAL_CURVE);
+    private final List<GraphTypes> validGraphs = List.of(GraphTypes.NONE,GraphTypes.NORMAL_CURVE);
     private final CardTypes cardType = CardTypes.ONE_DATA_TWO_VARIABLE;
 
     public boolean isGraphable(){ return this.isGraphable; }
