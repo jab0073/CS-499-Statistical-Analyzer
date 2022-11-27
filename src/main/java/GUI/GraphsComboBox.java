@@ -57,10 +57,10 @@ public class GraphsComboBox {
     private void setGraph(int graphsIndex){
         if(box.getItemAt(graphsIndex) != null) {
             String graph = box.getItemAt(graphsIndex).toString();
-            for (Object value : RightPanel.getGraphsList()) {
-                if (Objects.equals(graph, String.valueOf(value))) {
+            for (GraphTypes value : RightPanel.getGraphsList()) {
+                if (Objects.equals(graph, value.getName())) {
                     GUIMeasure m = GUIDataMaster.getGUIMeasure(RightPanel.getCurrentMeasureIndex());
-                    m.setSelectedGraph((GraphTypes) value);
+                    m.setSelectedGraph(value);
                 }
             }
         }
