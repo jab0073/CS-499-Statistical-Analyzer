@@ -5,6 +5,7 @@ import FrontEndUtilities.GUIDataMaster;
 import FrontEndUtilities.OutputManager;
 import FrontEndUtilities.SaveManager;
 import Graphing.GraphManager;
+import Respository.RepositoryManager;
 import Settings.UserSettings;
 
 import javax.swing.*;
@@ -391,7 +392,42 @@ public class AltMenuBar {
         helpMenu.getAccessibleContext().setAccessibleDescription("Help related options.");
         menuBar.add(helpMenu);
 
-        // TODO: Add Menu Items for Help
+        if(AltMenuBar.isMacOS) {
+            JMenuItem helpMenuItem = new JMenuItem("Run Measures");
+            helpMenuItem.getAccessibleContext().setAccessibleDescription("Run Measures");
+            helpMenuItem.addActionListener(a -> {
+                RepositoryManager.openHelpDocument();
+            });
+            helpMenu.add(helpMenuItem);
+        }
+        else {
+            helpMenu.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    RepositoryManager.openHelpDocument();
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+
+                }
+            });
+        }
 
         menuBar.setVisible(true);
     }

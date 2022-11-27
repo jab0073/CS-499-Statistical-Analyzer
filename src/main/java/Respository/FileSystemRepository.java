@@ -87,7 +87,6 @@ public class FileSystemRepository implements IStorage {
 
     @Override
     public void init() {
-        System.out.println("Working directory set at " + UserSettings.getWorkingDirectory());
         ensurePath(UserSettings.getWorkingDirectory());
         ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.GRAPH_OUTPUT_FOLDER);
         ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.UDM_FOLDER);

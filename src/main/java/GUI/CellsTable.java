@@ -156,7 +156,6 @@ public class CellsTable extends JPanel {
     }
 
     public static void setColumnSelection(boolean value){
-        System.out.println("Column: " + value);
         table.setRowSelectionAllowed(value);
     }
 

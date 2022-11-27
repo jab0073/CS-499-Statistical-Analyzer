@@ -1,11 +1,17 @@
 package GUI;
 
+import Respository.RepositoryManager;
 import Settings.Themes;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class Frame extends JFrame {
@@ -17,7 +23,7 @@ public class Frame extends JFrame {
     /**Method for generating the frame which holds the GUI*/
     public Frame() {
         /*Create a frame, give it a size, set it to exit on close.*/
-        this.setTitle("Analysis");
+        this.setTitle("WASP Analyzer");
 
 
         AltMenuBar amb = new AltMenuBar();
@@ -49,6 +55,9 @@ public class Frame extends JFrame {
 
         /*Set the frame to start maximized and visible.*/
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        this.setIconImage(RepositoryManager.getImageResource("logo.png"));
+
         this.setVisible(true);
     }
 
