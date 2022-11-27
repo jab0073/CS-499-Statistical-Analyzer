@@ -160,7 +160,7 @@ public class RightPanel extends JPanel{
             }
         }
 
-        if(functionList.getModel().getSize() < 1 && !add){
+        if(functionList.getModel().getSize() < 1){
             GUIDataMaster.swapMiddleCard(CardTypes.BLANK, null);
 
             GraphsComboBox.hide();
