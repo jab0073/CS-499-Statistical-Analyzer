@@ -145,9 +145,13 @@ public class OutputManager {
             String name = s.split(",")[0];
             JLabel label = new JLabel(name);
             JCheckBox selectionBox = new JCheckBox();
+            selectionBox.setName("sel");
 
             int finalI = i;
             selectionBox.addActionListener(e -> outputSelections[finalI] = selectionBox.isSelected());
+
+            outputSelections[finalI] = true;
+            selectionBox.setSelected(true);
 
             JPanel selector = new JPanel();
             selector.setLayout(new GridLayout(1,2, 10, 10));
