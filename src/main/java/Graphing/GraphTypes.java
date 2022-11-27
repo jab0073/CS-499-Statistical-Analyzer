@@ -12,5 +12,5 @@ public enum GraphTypes {
         this.name = name;
     }
 
-    String getName(){ return this.name; }
+    public String getName(){ return this.name; }
 }

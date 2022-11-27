@@ -1,19 +1,11 @@
 package GUI;
-import FrontEndUtilities.GUIDataMaster;
-import Settings.Themes;
-import TableUtilities.Cell;
 
+import Settings.Themes;
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 public class Frame extends JFrame {
@@ -88,6 +80,7 @@ public class Frame extends JFrame {
         cards.add(new MiddlePanelFour());
         cards.add(new MiddlePanelFive());
         cards.add(new MiddlePanelSix());
+        cards.add(new BlankMiddleCard());
 
         for(Card c : cards){
             panel.add(c, c.getType().getName());
@@ -95,7 +88,7 @@ public class Frame extends JFrame {
 
         panel.add(new GraphsComboBox().graphsComboBoxPanel());
 
-        layout.show(panel, CardTypes.ONE_DATA_ONE_VARIABLE.getName());
+        layout.show(panel, CardTypes.BLANK.getName());
 
         return(panel);
     }

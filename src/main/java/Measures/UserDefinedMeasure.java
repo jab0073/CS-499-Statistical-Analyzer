@@ -111,7 +111,7 @@ public class UserDefinedMeasure implements IMeasure {
 
         if(!this.validate())
             return null;
-
+/*
         Expression exp = new Expression(this.expression);
         if(!Expressions.ensureArgument(this.dataVariable))
             Expressions.addArgument(this.dataVariable, "0");
@@ -136,7 +136,9 @@ public class UserDefinedMeasure implements IMeasure {
         if (this.aggregate.equals(aggregateMode.MEAN)) {
             finalResult /= inputData.getAllDataAsDouble().size();
         }
-        return finalResult;
+ */
+        //return finalResult;
+        return  0.0;
     }
 
     @Override

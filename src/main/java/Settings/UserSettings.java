@@ -2,6 +2,7 @@ package Settings;
 
 import ApplicationMain.Main;
 import BackEndUtilities.Constants;
+import BackEndUtilities.Expressions;
 import FrontEndUtilities.GUIDataMaster;
 import GUI.AltMenuBar;
 
@@ -22,6 +23,7 @@ public class UserSettings {
 
         String userTheme = prefs.get("userTheme", "Light");
         float userZoom = Float.parseFloat(prefs.get("userZoom", "100"));
+        boolean userEval = Boolean.parseBoolean(prefs.get("userEval", "false"));
 
         try {
             UIManager.setLookAndFeel(Themes.getTheme(userTheme));
@@ -33,6 +35,12 @@ public class UserSettings {
 
         UIManager.getLookAndFeelDefaults()
                 .put("defaultFont", new Font("Segoe UI", Font.PLAIN, fontSize));
+
+        if(userEval){
+            Expressions.enableEvaluation();
+        }else{
+            Expressions.disableEvaluation();
+        }
 
         if(System.getProperty("os.name").toLowerCase().startsWith("win")) {
             UserSettings.workingDirectory =  Constants.WindowsBeginningDefaultDir + System.getProperty("user.name") + Constants.WindowsEndingDefaultDir;

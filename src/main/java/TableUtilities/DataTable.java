@@ -15,8 +15,8 @@ public class DataTable {
     public IValidator.ValidationStatus status;
     private List<Row> rows;
 
-    private List<Column> columns;
-    private List<Cell> selectedCells;
+    private final List<Column> columns;
+    private final List<Cell> selectedCells;
     private String tableName;
     private int size;
 
@@ -179,11 +179,9 @@ public class DataTable {
      * @param col The column index of the cell to be added to the selection.
      */
     public void addToSelection(int row, int col) {
-        if(row < 0 || row >= rows.size() || col < 0 || col >= columns.size()) {
-            return;
-        }
-        else
+        if (row >= 0 && row < rows.size() && col >= 0 && col < columns.size()) {
             addToSelection(rows.get(row).get(col));
+        }
     }
 
     /**
@@ -267,6 +265,17 @@ public class DataTable {
         }
 
         return last;
+    }
+
+    public int getLongestRowSize() {
+        int longest = 0;
+
+        for(Row r : rows){
+            if(r.size() > longest)
+                longest = r.size();
+        }
+
+        return longest;
     }
 
     @Override

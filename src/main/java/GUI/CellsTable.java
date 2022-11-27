@@ -8,6 +8,8 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 public class CellsTable extends JPanel {
@@ -20,7 +22,7 @@ public class CellsTable extends JPanel {
     /**Method which creates a scroll pane to contain the JTable.
      *@return The scroll pane containg the JTable*/
     private JScrollPane scrollPane() {
-        JScrollPane scrollPane = new JScrollPane(table());
+        JScrollPane scrollPane = new JScrollPane(table(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setPreferredSize(new Dimension(900, 750));
         return (scrollPane);
     }
@@ -28,11 +30,11 @@ public class CellsTable extends JPanel {
     /**Method which creates the JTable.
      *@return The JTable*/
     private JTable table() {
-        String[] headings = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"};
         int numRows = 50;
-        DefaultTableModel tableModel = new DefaultTableModel(numRows, headings.length);
+        DefaultTableModel tableModel = new DefaultTableModel(numRows, 12);
 
         table = new JTable(tableModel);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setCellSelectionEnabled(true);
         table.setRowSelectionAllowed(true);
         table.setColumnSelectionAllowed(true);
@@ -41,6 +43,15 @@ public class CellsTable extends JPanel {
 
         table.setBorder(new EtchedBorder(EtchedBorder.RAISED));
         table.setGridColor(Color.GRAY);
+
+        table.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_DELETE && table.getCellEditor() == null){
+                    deleteSelectedData();
+                }
+            }
+        });
 
         return (table);
     }
@@ -57,14 +68,28 @@ public class CellsTable extends JPanel {
 
         for(int rS : r){
             for(int cS : c){
-                Object value = table.getValueAt(rS, cS);
-
-                if(value == null)
+                Object obj = table.getValueAt(rS, cS);
+                String value;
+                if(obj == null){
                     continue;
-                if(value.toString().contains(" ")){
+                }else{
+                    value = obj.toString();
+                }
 
+                if(value.contains(" ")){
+                    String spaceLess = value.replace(" ", "");
+
+                    if(spaceLess.length() == 0){
+                        continue;
+                    }
+
+                    data.append(spaceLess).append(",");
                 }
                 else{
+                    if(value.length() == 0){
+                        continue;
+                    }
+
                     data.append(value).append(",");
                 }
             }
@@ -79,6 +104,17 @@ public class CellsTable extends JPanel {
         return data.toString();
     }
 
+    private void deleteSelectedData(){
+        int[] r = table.getSelectedRows();
+        int[] c = table.getSelectedColumns();
+
+        for(int rS : r) {
+            for (int cS : c) {
+                table.getModel().setValueAt(null, rS, cS);
+            }
+        }
+    }
+
     /**
      * Loads a CSV file into the onscreen chart
      * @param file String representation of the file path to the target file
@@ -91,8 +127,9 @@ public class CellsTable extends JPanel {
         }
 
         int numRows = Math.max(50, in.getIndexOfLastRow()+20);
+        int numCols = Math.max(12, in.getLongestRowSize());
 
-        table.setModel(new DefaultTableModel(numRows, table.getColumnCount()));
+        table.setModel(new DefaultTableModel(numRows, numCols));
 
         for(int i = 0; i < in.getRows().size(); i++){
             TableUtilities.Row r = in.getRow(i);
@@ -106,8 +143,9 @@ public class CellsTable extends JPanel {
         DataTable in = UIServices.fromXLSX(file, 0);
 
         int numRows = Math.max(50, in.getIndexOfLastRow()+20);
+        int numCols = Math.max(12, in.getLongestRowSize());
 
-        table.setModel(new DefaultTableModel(numRows, table.getColumnCount()));
+        table.setModel(new DefaultTableModel(numRows, numCols));
 
         for(int i = 0; i < in.getRows().size(); i++){
             TableUtilities.Row r = in.getRow(i);
@@ -161,8 +199,9 @@ public class CellsTable extends JPanel {
         }
 
         int numRows = Math.max(50, in.getIndexOfLastRow()+20);
+        int numCols = Math.max(12, in.getLongestRowSize());
 
-        table.setModel(new DefaultTableModel(numRows, table.getColumnCount()));
+        table.setModel(new DefaultTableModel(numRows, numCols));
 
         for(int i = 0; i < in.getRows().size(); i++){
             TableUtilities.Row r = in.getRow(i);

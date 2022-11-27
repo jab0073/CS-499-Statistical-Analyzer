@@ -159,6 +159,12 @@ public class RightPanel extends JPanel{
                 functionList.setSelectedIndex(i);
             }
         }
+
+        if(functionList.getModel().getSize() < 1 && !add){
+            GUIDataMaster.swapMiddleCard(CardTypes.BLANK, null);
+
+            GraphsComboBox.hide();
+        }
     }
 
     private void setGraphsList(List<GraphTypes> list){
@@ -168,8 +174,8 @@ public class RightPanel extends JPanel{
     public static String[] getGraphsListStr(){
         String[] arr = new String[graphsList.size()];
         int i = 0;
-        for (Object value : graphsList) {
-            arr[i] = String.valueOf(value);
+        for (GraphTypes value : graphsList) {
+            arr[i] = value.getName();
             i++;
         }
         return(arr);

@@ -5,16 +5,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mariuszgromada.math.mxparser.*;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Expressions {
     private static final Logger logger = LogManager.getLogger(Expressions.class.getName());
-    private static boolean evaluate = false;
-    private static List<Pair> arguements = new ArrayList<>();
+    private static boolean evaluate = true;
+    private static final Map<String, String> arguments = new HashMap<>();
 
     public static void enableEvaluation() {
         logger.debug("Expression evaluation on");
@@ -32,27 +29,36 @@ public class Expressions {
     }
 
     public static void addArgument(String variable, String value) {
-        Pair toAdd = new Pair(variable);
-        if(!Expressions.arguements.contains(toAdd)) {
-            toAdd.setValue(value);
-            Expressions.arguements.add(toAdd);
-            logger.debug("Argument added: " + toAdd.get());
+        if(!Expressions.arguments.containsKey(variable)) {
+            Expressions.arguments.put(variable, value);
+            logger.debug("Argument added: " + variable);
         }
         else {
             logger.debug("Argument variable already exists.");
         }
     }
 
+    public static void setArgument(String variable, String value){
+        if(!Expressions.arguments.containsKey(variable)) {
+            Expressions.arguments.put(variable, value);
+            logger.debug("Argument added: " + variable);
+        }
+        else {
+            Expressions.arguments.replace(variable, value);
+            logger.debug("Changed value of variable " + variable);
+        }
+    }
+
     public static String getArgument(String variable) {
-        return Expressions.arguements.stream().filter(a -> variable.equals(a.getVariable())).map(Pair::getValue).toList().get(0);
+        return Expressions.arguments.get(variable);
     }
 
     public static boolean ensureArgument(String variable) {
-        boolean contains = arguements.contains(new Pair(variable));
+        boolean contains = arguments.containsKey(variable);
 
         if(contains){
-            String varValue = arguements.get(arguements.indexOf(new Pair(variable))).getValue();
-            if(Objects.equals(varValue, "")){
+            String varValue = arguments.get(variable);
+            if(varValue.equals("")){
                 ErrorManager.sendErrorMessage("Variables", "Value of variable " + variable + " not set");
             }else if(!isNumeric(varValue)){
                 ErrorManager.sendErrorMessage("Variables", "Value of variable " + variable + " not valid");
@@ -66,20 +72,16 @@ public class Expressions {
         //return !Expressions.arguements.stream().filter(a -> variable.equals(a.getVariable())).map(Pair::getValue).toList().isEmpty();
     }
 
-    public static List<Pair> getArguements() {
-        return Expressions.arguements;
-    }
-
-    public static List<String> getStringArguements() {
-        return Expressions.arguements.stream().map(Pair::get).collect(Collectors.toList());
+    public static Map<String, String> getArguments() {
+        return Expressions.arguments;
     }
 
     public static void clearArguments() {
-        Expressions.arguements.clear();
+        Expressions.arguments.clear();
     }
 
     public static void removeArgument(String variable) {
-        Expressions.arguements = Expressions.arguements.stream().filter(p -> !variable.equals(p.getVariable())).collect(Collectors.toList());
+        Expressions.arguments.remove(variable);
     }
 
     /**
@@ -91,9 +93,9 @@ public class Expressions {
     public static double eval(String expression) {
         logger.debug("Evaluating expressions");
         Expression exp = new Expression(expression);
-        if(!Expressions.arguements.isEmpty()) {
-            for (Pair argues : Expressions.arguements) {
-                Argument arg = new Argument(argues.get());
+        if(!Expressions.arguments.isEmpty()) {
+            for (String key : Expressions.arguments.keySet()) {
+                Argument arg = new Argument(arguments.get(key));
                 exp.addArguments(arg);
             }
         }
@@ -113,9 +115,9 @@ public class Expressions {
 
         List<Expression> exps = dataset.getData().stream().map(d -> {
             Expression exp = new Expression(d);
-            if(!Expressions.arguements.isEmpty()) {
-                for (Pair var : Expressions.arguements) {
-                    Argument arg = new Argument(var.get());
+            if(!Expressions.arguments.isEmpty()) {
+                for (String key : Expressions.arguments.keySet()) {
+                    Argument arg = new Argument(arguments.get(key));
                     exp.addArguments(arg);
                 }
             }
@@ -136,11 +138,11 @@ public class Expressions {
         logger.debug("Evaluating expressions");
         List<Expression> exps = expressions.stream().map(d -> {
             Expression exp = new Expression(d);
-            if(!Expressions.arguements.isEmpty()) {
-                Expressions.arguements.forEach(v -> {
-                    Argument arg = new Argument(v.get());
+            if(!Expressions.arguments.isEmpty()) {
+                for (String key : Expressions.arguments.keySet()) {
+                    Argument arg = new Argument(arguments.get(key));
                     exp.addArguments(arg);
-                });
+                }
             }
             return exp;
         }).toList();

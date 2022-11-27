@@ -107,9 +107,18 @@ public class MiddlePanelTwo extends Card{
         btnImport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String d = CellsTable.getSelectedData();
 
-                dataArea1.setText(CellsTable.getSelectedData());
+                if(d == null){
+                    return;
+                }
 
+                //If Shift is held when clicking
+                if((e.getModifiers() & 1) != 0){
+                    dataArea1.append("," + d);
+                }else{
+                    dataArea1.setText(d);
+                }
                 updateMeasureData();
             }
         });
@@ -123,8 +132,18 @@ public class MiddlePanelTwo extends Card{
         btnImport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String d = CellsTable.getSelectedData();
 
-                dataArea0.setText(CellsTable.getSelectedData());
+                if(d == null){
+                    return;
+                }
+
+                //If Shift is held when clicking
+                if((e.getModifiers() & 1) != 0){
+                    dataArea0.append("," + d);
+                }else{
+                    dataArea0.setText(d);
+                }
 
                 updateMeasureData2();
             }

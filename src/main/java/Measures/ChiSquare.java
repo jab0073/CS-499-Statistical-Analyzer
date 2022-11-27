@@ -3,6 +3,7 @@ package Measures;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
 import BackEndUtilities.MeasureConstants;
+import BackEndUtilities.Sample;
 import FrontEndUtilities.ErrorManager;
 import GUI.CardTypes;
 import Graphing.DataFormat;
@@ -11,17 +12,16 @@ import Interfaces.IMeasure;
 import Interfaces.IValidator;
 import org.apache.commons.math3.distribution.ChiSquaredDistribution;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class ChiSquare implements IMeasure {
     private DataSet inputData;
     private final String name = MeasureConstants.chi;
     private final int minimumSamples = 1;
-    private final List<String> requiredVariables = Arrays.asList("p", "n");
+    private final List<String> requiredVariables = Arrays.asList("d");
     private final boolean isGraphable = false;
     private final List<GraphTypes> validGraphs = List.of();
-    private final CardTypes cardType = CardTypes.ONE_DATA_TWO_VARIABLE;
+    private final CardTypes cardType = CardTypes.ONE_DATA_ONE_VARIABLE;
 
     public boolean isGraphable(){ return this.isGraphable; }
 
@@ -85,6 +85,18 @@ public class ChiSquare implements IMeasure {
     public List<Double> run() {
         logger.debug("Running " + MeasureConstants.chi);
 
+        if(Expressions.isEvaluationOn()){
+            DataSet newDS = new DataSet();
+            for(Sample s : inputData.getSamples()){
+                List<Double> eval = Expressions.eval(s);
+                Sample newS = new Sample(eval);
+
+                newDS.addSample(newS);
+            }
+
+            inputData = newDS;
+        }
+
         if(!this.validate())
             return null;
 
@@ -92,7 +104,16 @@ public class ChiSquare implements IMeasure {
 
         ChiSquaredDistribution csd = new ChiSquaredDistribution(dof);
 
-        List<Double> result = inputData.getAllDataAsDouble().stream().map(d -> csd.density(d.intValue())).toList();
+        ArrayList<Double> data = new ArrayList<>();
+        for(Double val : inputData.getAllDataAsDouble()){
+            if(!data.contains(val)){
+                data.add(val);
+            }
+        }
+
+        Collections.sort(data);
+
+        List<Double> result = data.stream().map(d -> csd.density(d.intValue())).toList();
 
         if(result.stream().anyMatch(d -> Double.isNaN(d))) {
             return null;
@@ -100,6 +121,7 @@ public class ChiSquare implements IMeasure {
 
         return result;
     }
+
     @Override
     public DataFormat getOutputFormat(){ return DataFormat.DOUBLE_LIST; }
 

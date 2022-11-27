@@ -89,6 +89,9 @@ public class GUIDataMaster {
     public static void swapMiddleCard(CardTypes card, GUIMeasure measure){
         Card c = Frame.swapCard(card);
 
+        if(card == CardTypes.BLANK)
+            return;
+
         for(int i = 0; i < measure.getMinimumSamples(); i++){
             c.setDataArea(i, measure.getDataAsString(i));
         }
