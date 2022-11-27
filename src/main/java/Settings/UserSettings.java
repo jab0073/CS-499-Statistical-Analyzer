@@ -24,6 +24,7 @@ public class UserSettings {
         String userTheme = prefs.get("userTheme", "Light");
         float userZoom = Float.parseFloat(prefs.get("userZoom", "100"));
         boolean userEval = Boolean.parseBoolean(prefs.get("userEval", "false"));
+        boolean userBias = Boolean.parseBoolean(prefs.get("userBias", "false"));
 
         try {
             UIManager.setLookAndFeel(Themes.getTheme(userTheme));
@@ -41,6 +42,8 @@ public class UserSettings {
         }else{
             Expressions.disableEvaluation();
         }
+
+        GUIDataMaster.setBiasCorrection(userBias);
 
         if(System.getProperty("os.name").toLowerCase().startsWith("win")) {
             UserSettings.workingDirectory =  Constants.WindowsBeginningDefaultDir + System.getProperty("user.name") + Constants.WindowsEndingDefaultDir;

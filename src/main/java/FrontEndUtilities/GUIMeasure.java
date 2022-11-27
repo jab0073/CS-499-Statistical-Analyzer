@@ -5,6 +5,7 @@ import GUI.CardTypes;
 import Graphing.DataFormat;
 import Graphing.GraphManager;
 import Graphing.GraphTypes;
+import Interfaces.BiasCorrectable;
 import Interfaces.IMeasure;
 import org.jfree.chart.plot.PlotRenderingInfo;
 
@@ -23,6 +24,7 @@ public class GUIMeasure {
     private GraphTypes selectedGraph = null;
     private DataFormat outputFormat = null;
     private CardTypes cardType = CardTypes.TWO_DATA_NO_VARIABLE;
+    private boolean biasCorrection = false;
 
     public GUIMeasure(String name){
         IMeasure m = MeasureManager.getMeasure(name);
@@ -103,7 +105,17 @@ public class GUIMeasure {
             Expressions.setArgument(requiredVariables.get(i), variableValues.get(i));
         }
 
-        Object r = MeasureManager.getMeasure(name).run();
+        IMeasure m = MeasureManager.getMeasure(name);
+
+        if(m instanceof BiasCorrectable){
+            if(biasCorrection){
+                ((BiasCorrectable) m).biasCorrected();
+            }else{
+                ((BiasCorrectable) m).nonBiasCorrected();
+            }
+        }
+
+        Object r = m.run();
 
         if(isGraphable){
             GraphManager.graphOutput(GraphTypes.X_Y, r, this);
@@ -207,4 +219,8 @@ public class GUIMeasure {
     public int getNumVariables(){ return requiredVariables.size(); }
 
     public String getVariableName(int i){ return requiredVariables.get(i) ; }
+
+    public void setBiasCorrection(boolean biasCorrection) {
+        this.biasCorrection = biasCorrection;
+    }
 }
