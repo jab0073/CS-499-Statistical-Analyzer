@@ -123,7 +123,7 @@ public class LeastSquareLine implements IMeasure {
         xArray = trimSamples(xArray, maxLen);
         yArray = trimSamples(yArray, maxLen);
 
-        double[][] xyArray = this.pair(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
+        double[][] xyArray = pair(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
         sr.addData(xyArray);
 
         double b = sr.getIntercept();

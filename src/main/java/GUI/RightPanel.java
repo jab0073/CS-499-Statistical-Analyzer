@@ -20,8 +20,7 @@ public class RightPanel extends JPanel{
     private static List<GraphTypes> graphsList;
     private static boolean selected = false;
     private static int functionIndex;
-    /**Method which returns the panel which will be on the right side of the frame.
-     *@return The panel which contains a scroll pane and button.*/
+    /**Method which returns the panel which will be on the right side of the frame. */
     public RightPanel(){
         /*Create a panel with a border layout*/
         this.setLayout(new BorderLayout());
@@ -65,13 +64,7 @@ public class RightPanel extends JPanel{
                     GUIMeasure m = GUIDataMaster.getGUIMeasure(functionList.getSelectedIndex());
                     GUIDataMaster.swapMiddleCard(m.getCardType(), m);
                     IMeasure i = MeasureManager.getMeasure(m.getName());
-
-                    if(i != null){
-                        setGraphsList(i.getValidGraphs());
-                    }else{
-                        setGraphsList(List.of());
-                    }
-
+                    setGraphsList(m.getValidGraphs());
                     GraphsComboBox.getModel().removeAllElements();
                     GraphsComboBox.setModel();
                 }
@@ -95,14 +88,13 @@ public class RightPanel extends JPanel{
     /**Method which creates a label for the "|" character
      *@return The jlabel.*/
     private JLabel label(){
-        JLabel label = new JLabel("|");
 
-        return(label);
+        return(new JLabel("|"));
     }
 
     private JComboBox dropDown(){
         String[] names = MeasureManager.getAllMeasureNames().toArray(new String[0]);
-        JComboBox box = new JComboBox(names);
+        JComboBox<String> box = new JComboBox<>(names);
         box.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

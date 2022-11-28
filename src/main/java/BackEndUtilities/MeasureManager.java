@@ -1,8 +1,6 @@
 package BackEndUtilities;
 
 import Interfaces.IMeasure;
-import Measures.UserDefinedMeasure;
-import Respository.RepositoryManager;
 import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;
@@ -23,12 +21,10 @@ public class MeasureManager {
         Set<Class<? extends IMeasure>> set = new HashSet<>(reflections.getSubTypesOf(IMeasure.class));
 
         for(Class<? extends IMeasure> c : set){
-            if(!c.getName().equals(UserDefinedMeasure.class.getName())) { // Making sure the UserDefinedMeasure class instance isn't created
-                IMeasure a = c.getDeclaredConstructor().newInstance();
-                measures.add(a);
-            }
+            IMeasure a = c.getDeclaredConstructor().newInstance();
+            measures.add(a);
+
         }
-        //measures.addAll(RepositoryManager.getAllUserDefinedMeasures()); // Adding all the User Defined Measures from the Repository Manager
     }
 
     /**
@@ -53,14 +49,5 @@ public class MeasureManager {
             measures.add(measure);
     }
 
-    public static String getRandomMeasureName(){
-        String name = "";
-        int size = measures.size();
-
-        name = measures.get((int) (Math.random() * size)).getName();
-
-
-        return name;
-    }
 }
 

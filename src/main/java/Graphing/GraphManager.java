@@ -2,13 +2,9 @@ package Graphing;
 
 import FrontEndUtilities.GUIMeasure;
 import FrontEndUtilities.OutputManager;
-import Interfaces.IMeasure;
-import Measures.UserDefinedMeasure;
 import org.jfree.chart.ChartPanel;
 import org.reflections.Reflections;
 
-import javax.swing.*;
-import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;

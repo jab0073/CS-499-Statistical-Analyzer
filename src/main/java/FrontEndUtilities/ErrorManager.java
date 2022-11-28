@@ -2,12 +2,10 @@ package FrontEndUtilities;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class ErrorManager {
-    private static ArrayList<String> errors = new ArrayList<>();
+    private static final ArrayList<String>  errors = new ArrayList<>();
 
     public static void displayErrors(){
         if(errors.size() == 0) return;

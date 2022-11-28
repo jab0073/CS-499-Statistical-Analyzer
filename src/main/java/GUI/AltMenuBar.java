@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 public class AltMenuBar {
     public static boolean isMacOS = false;
-    private JMenuBar menuBar;
+    private final JMenuBar menuBar;
 
     public AltMenuBar() {
         // Create the menu bar

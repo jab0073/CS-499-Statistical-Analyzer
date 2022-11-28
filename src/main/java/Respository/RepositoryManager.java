@@ -10,7 +10,6 @@ import TableUtilities.DataTable;
 import com.opencsv.CSVWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.xmlbeans.impl.xb.xsdschema.Attribute;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

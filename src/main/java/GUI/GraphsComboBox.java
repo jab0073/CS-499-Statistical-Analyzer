@@ -1,15 +1,10 @@
 package GUI;
 
-import BackEndUtilities.MeasureManager;
 import FrontEndUtilities.GUIDataMaster;
 import FrontEndUtilities.GUIMeasure;
 import Graphing.GraphTypes;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
 import java.util.Objects;
 
 public class GraphsComboBox {

@@ -17,13 +17,12 @@ import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class DynamicJavaClassLoader {
     private static final Logger logger = LogManager.getLogger(DynamicJavaClassLoader.class);
 
-    public static void init() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, IOException {
+    public static void init(){
 
         File[] files = new File(UserSettings.getWorkingDirectory() + "/" + Constants.UDM_FOLDER).listFiles();
         //If this pathname does not denote a directory, then listFiles() returns null.
@@ -60,13 +59,14 @@ public class DynamicJavaClassLoader {
                                 logger.debug(FilenameUtils.getBaseName(file.getName()) + ": content re-written");
                             } finally {
                                 try {
+                                    assert writer != null;
                                     writer.close();
                                 } catch (Exception e) {
                                     logger.error("An error occurred.");
                                 }
                             }
 
-                            /** Compilation Requirements *********************************************************************************************/
+                            /* Compilation Requirements *********************************************************************************************/
                             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
                             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
                             StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);

@@ -15,7 +15,6 @@ import org.apache.commons.math3.distribution.BinomialDistribution;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Binomial implements IMeasure {
 

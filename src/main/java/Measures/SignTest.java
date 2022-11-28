@@ -10,12 +10,9 @@ import Graphing.DataFormat;
 import Graphing.GraphTypes;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.distribution.BinomialDistribution;
-import org.apache.commons.math3.stat.StatUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SignTest implements IMeasure {
@@ -144,14 +141,12 @@ public class SignTest implements IMeasure {
 
         double r = bd.cumulativeProbability(Math.min(negativeDifference, positiveDifference));
 
-        String result = String.format("""
+        return String.format("""
                 Negative Differences: %d
                 Positive Differences: %d
                 Ties                : %d
                 P-Value             : %.4f
                 """, negativeDifference, positiveDifference, ties, r);
-
-        return result;
     }
 
     @Override

@@ -7,23 +7,22 @@ import Graphing.GraphManager;
 import Graphing.GraphTypes;
 import Interfaces.BiasCorrectable;
 import Interfaces.IMeasure;
-import org.jfree.chart.plot.PlotRenderingInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class GUIMeasure {
-    private ArrayList<String>[] measureData;
-    private String name = "";
-    private int minimumSamples = 0;
-    private List<String> requiredVariables = new ArrayList<>();
-    private List<String> variableValues = new ArrayList<>();
-    private boolean isGraphable = false;
-    private List<GraphTypes> validGraphs = new ArrayList<>();
+    private final ArrayList<String>[] measureData;
+    private final String name;
+    private final int minimumSamples;
+    private final List<String> requiredVariables;
+    private final List<String> variableValues = new ArrayList<>();
+    private final boolean isGraphable;
+    private final List<GraphTypes> validGraphs = new ArrayList<>();
     private GraphTypes selectedGraph = null;
-    private DataFormat outputFormat = null;
-    private CardTypes cardType = CardTypes.TWO_DATA_NO_VARIABLE;
+    private final DataFormat outputFormat;
+    private final CardTypes cardType;
     private boolean biasCorrection = false;
 
     public GUIMeasure(String name){
@@ -214,6 +213,8 @@ public class GUIMeasure {
     public GraphTypes getSelectedGraph(){
         return this.selectedGraph;
     }
+
+    public List<GraphTypes> getValidGraphs(){return this.validGraphs; }
 
     public DataFormat getOutputFormat(){ return outputFormat; }
 

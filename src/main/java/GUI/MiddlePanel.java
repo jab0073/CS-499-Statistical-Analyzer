@@ -8,7 +8,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Arrays;
 
 public class MiddlePanel extends Card{
     private final CardTypes type = CardTypes.ONE_DATA_NO_VARIABLE;
