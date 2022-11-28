@@ -69,7 +69,7 @@ public class RightPanel extends JPanel{
                     if(i != null){
                         setGraphsList(i.getValidGraphs());
                     }else{
-                        setGraphsList(List.of(GraphTypes.NONE));
+                        setGraphsList(List.of());
                     }
 
                     GraphsComboBox.getModel().removeAllElements();
