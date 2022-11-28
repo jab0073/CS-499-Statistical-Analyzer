@@ -1,5 +1,7 @@
 package FrontEndUtilities;
 
+import BackEndUtilities.Constants;
+import GUI.SingleRootFileSystemView;
 import Settings.UserSettings;
 import org.apache.commons.io.FilenameUtils;
 import org.jfree.chart.ChartPanel;
@@ -7,6 +9,7 @@ import org.jfree.chart.ChartUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -202,10 +205,14 @@ public class OutputManager {
         dialog.setVisible(true);
     }
 
-    private static void displayFileBrowser(boolean[] selectedOutputs){
+    private static void displayFileBrowser(boolean[] selectedOutputs) {
         //File browser stuff
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(UserSettings.getWorkingDirectory()));
+        String singleFolder = UserSettings.getWorkingDirectory() + "/" + Constants.EXPORT_FOLDER;
+        File root = new File(singleFolder);
+        FileSystemView fsv = new SingleRootFileSystemView(root);
+        JFileChooser fileChooser = new JFileChooser(fsv);
+        //JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(singleFolder));
         FileNameExtensionFilter filtercsv = new FileNameExtensionFilter(
                 "Comma Separated (*.csv)", "csv");
         FileNameExtensionFilter filtertsv = new FileNameExtensionFilter(
@@ -227,15 +234,12 @@ public class OutputManager {
             String format = fileChooser.getFileFilter().getDescription().split("\\.")[1].replace(")", "");
 
             if (!FilenameUtils.getExtension(selectedFile.getName()).equalsIgnoreCase(format)) {
-                selectedFile = new File(selectedFile.getParentFile(), FilenameUtils.getBaseName(selectedFile.getName())+"."+format);
+                selectedFile = new File(selectedFile.getParentFile(), FilenameUtils.getBaseName(selectedFile.getName()) + "." + format);
             }
 
             prepareAndSaveFile(selectedFile.getAbsolutePath(), selectedOutputs);
         }
-
         dialog.dispose();
-
-
     }
 
     private static void prepareAndSaveFile(String fileLocation, boolean[] selectedOutputs){
@@ -281,9 +285,6 @@ public class OutputManager {
 
                 outputFileString.append("\n");
             }
-
-
-
             i++;
         }
 
@@ -297,12 +298,18 @@ public class OutputManager {
     }
 
     private static void saveGraph(ChartPanel panel){
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(UserSettings.getWorkingDirectory()));
+        String singleFolder = UserSettings.getWorkingDirectory() + "/" + Constants.GRAPH_OUTPUT_FOLDER;
+        File root = new File(singleFolder);
+        FileSystemView fsv = new SingleRootFileSystemView(root);
+        JFileChooser fileChooser = new JFileChooser(fsv);
+        //JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(singleFolder));
         FileNameExtensionFilter filterpng = new FileNameExtensionFilter(
                 "PNG (*.png)", "png");
+        FileNameExtensionFilter filterjpeg = new FileNameExtensionFilter(
+                "JPEG (*.jpg)", "jpg");
         fileChooser.setFileFilter(filterpng);
-
+        fileChooser.addChoosableFileFilter(filterjpeg);
         JDialog dialog = new JDialog();
 
         int result = fileChooser.showSaveDialog(dialog);
@@ -318,9 +325,14 @@ public class OutputManager {
             }
 
             try {
-                OutputStream out = new FileOutputStream(selectedFile);
-                ChartUtils.writeChartAsPNG(out, panel.getChart(), panel.getWidth(), panel.getHeight());
-                out.close();
+                if(format.equals("png")) {
+                    OutputStream out = new FileOutputStream(selectedFile);
+                    ChartUtils.writeChartAsPNG(out, panel.getChart(), panel.getWidth(), panel.getHeight());
+                    out.close();
+                }
+                else
+                    ChartUtils.saveChartAsJPEG(selectedFile, panel.getChart(), panel.getWidth(), panel.getHeight());
+
             }catch(IOException e){
                 e.printStackTrace();
             }

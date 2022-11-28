@@ -1,11 +1,12 @@
 package Respository;
 
 import BackEndUtilities.Constants;
-import BackEndUtilities.DataSet;
-import BackEndUtilities.Sample;
-import Interfaces.IStorage;
+import FrontEndUtilities.GUIDataMaster;
+import FrontEndUtilities.GUIMeasure;
+import FrontEndUtilities.SaveManager;
 import Settings.UserSettings;
-import com.google.gson.Gson;
+import TableUtilities.DataTable;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,106 +15,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
 
-public class FileSystemRepository implements IStorage {
+public class FileSystemRepository {
 
     private static final Logger logger = LogManager.getLogger(FileSystemRepository.class.getName());
-
-    @Override
-    public boolean put(DataSet ds, String name, String folder) {
-        ensurePath(folder);
-        Path targetName = getFileName(name, folder);
-        ds.setName(name);
-        Gson gson = new Gson();
-        try {
-            Writer writer = new FileWriter(targetName.toString());
-            gson.toJson(ds, writer);
-            writer.flush();
-            writer.close();
-            logger.debug(name + " written to " + targetName);
-        return true;
-        } catch (IOException e) {
-            logger.error(name + " failed to write to " + targetName);
-            return false;
-        }
-    }
-
-    @Override
-    public boolean put(Sample s, String name, String folder) {
-        ensurePath(folder);
-        Path targetName = getFileName(name, folder);
-        Gson gson = new Gson();
-        try {
-            Writer writer = new FileWriter(targetName.toString());
-            gson.toJson(s, writer);
-            writer.flush();
-            writer.close();
-            logger.debug(name + " written to " + targetName);
-            return true;
-        } catch (IOException e) {
-            logger.error(name + " failed to write to " + targetName);
-            return false;
-        }
-    }
-
-    @Override
-    public DataSet getDataSet(String name, String folder) {
-        Path targetName = getFileName(name, folder);
-        if (Files.exists(targetName)) {
-            Gson gson = new Gson();
-            try {
-                DataSet obj =  gson.fromJson(new FileReader(targetName.toString()), DataSet.class);
-                logger.debug("Successfully loaded dataset from " + targetName);
-                return obj;
-            } catch (FileNotFoundException e) {
-                logger.error("!!! Failed to load dataset from " + targetName);
-                return null;
-            }
-        }
-        return null;
-    }
-
-    private Path getFileName(String name, String folder) {
-        return Paths.get(folder + "/" + name + ".json");
-    }
-
-    @Override
-    public void init() {
-        ensurePath(UserSettings.getWorkingDirectory());
-        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.GRAPH_OUTPUT_FOLDER);
-        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.UDM_FOLDER);
-        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.DATASET_FOLDER);
-        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.SAMPLE_FOLDER);
-        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.EXPORT_FOLDER);
-    }
-
-    @Override
-    public List<DataSet> loadDataSets(String folder) {
-        try {
-            return Files.list(Paths.get(folder))
-                    .map(path -> {
-                        if (path.toString().toLowerCase().endsWith(".json")) {
-                            Gson gson = new Gson();
-                            try {
-                                DataSet obj =  gson.fromJson(new FileReader(path.toString()), DataSet.class);
-                                logger.debug("Successfully loaded dataset from " + path);
-                                return obj;
-                            } catch (FileNotFoundException e) {
-                                logger.error("!!! Failed to load dataset from " + path);
-                                return null;
-                            }
-                        }
-                        return null;
-                    }).filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     public static void ensurePath(String path) {
         Path pathy = Paths.get(path);
@@ -126,7 +32,58 @@ public class FileSystemRepository implements IStorage {
         }
     }
 
-    @Override
+    public boolean put(String fileName, String folderName) {
+        ensurePath(folderName);
+        Path targetName = getFileName(fileName, folderName);
+
+        ArrayList<GUIMeasure> guiMeasures = GUIDataMaster.getAllMeasures();
+        DataTable table = GUIDataMaster.getFrameReference().getCellsTable().getTableAsDT();
+
+        SaveManager.SaveObject saveObject = new SaveManager.SaveObject(guiMeasures, table);
+        try {
+            Writer writer = new FileWriter(targetName.toString());
+            SaveManager.getGson().toJson(saveObject, writer);
+            writer.flush();
+            writer.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void get(String fileName, String folderName) {
+        ensurePath(folderName);
+        Path targetName = getFileName(fileName, folderName);
+
+        try {
+            SaveManager.SaveObject input = SaveManager.getGson().fromJson(new FileReader(targetName.toString()), SaveManager.SaveObject.class);
+
+            GUIDataMaster.removeAllMeasures();
+
+            input.measures.forEach(GUIDataMaster::addMeasure);
+
+            GUIDataMaster.getFrameReference().getCellsTable().loadFromDT(input.table);
+
+            SaveManager.setCurrentSaveFileName(FilenameUtils.getBaseName(targetName.getFileName().toString()));
+            SaveManager.setStateCurrentlySaved(true);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Path getFileName(String name, String folder) {
+        return Paths.get(folder + "/" + name + ".sasf");
+    }
+
+    public void init() {
+        ensurePath(UserSettings.getWorkingDirectory());
+        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.GRAPH_OUTPUT_FOLDER);
+        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.UDM_FOLDER);
+        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.PROJECTS_FOLDER);
+        ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.EXPORT_FOLDER);
+    }
+
     public void putFile(File file, String fileID, String folder) {
         ensurePath(UserSettings.getWorkingDirectory() + folder);
         try {
@@ -136,7 +93,6 @@ public class FileSystemRepository implements IStorage {
         }
     }
 
-    @Override
     public File getFile(String fileID, String folder) {
         Path p = Paths.get(UserSettings.getWorkingDirectory() + folder + "/" + fileID);
         if (Files.exists(p))
@@ -144,7 +100,6 @@ public class FileSystemRepository implements IStorage {
         return null;
     }
 
-    @Override
     public boolean deleteFile(String fileID, String folder) {
         Path p = Paths.get(folder + "/" + fileID);
         if (Files.exists(p)) {
