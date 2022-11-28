@@ -23,62 +23,24 @@ public class RepositoryManager {
     public static List<DataSet> loadedDataSets;
     private static final Logger logger = LogManager.getLogger(RepositoryManager.class.getName());
 
-    private static IStorage storage;
+    private static FileSystemRepository storage;
 
-    public static List<DataSet> getAllDataSets() {
-        return loadedDataSets;
-    }
+   public static void putSaveState(String fileName) {
+       storage.put(fileName, getProjectFolderPath());
+   }
 
-    public static DataSet getDataSetFromStorage(String name) {
-        String folder = getDataSetFolderPath();
-        return loadedDataSets.stream().filter(ds->ds.getName().equalsIgnoreCase(name))
-                .findFirst()
-                .orElseGet(()->{
-                    try {
-                        DataSet r= storage.getDataSet(name, folder);
-                        loadedDataSets.add(r);
-                        return r;
-                    } catch (Exception e) {
-                        logger.error(e);
-                        return null;
-                    }
-                });
-    }
-
-    public static DataSet getDataSet(String name) {
-        return loadedDataSets.stream().filter(ds->ds.getName().equalsIgnoreCase(name))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public static DataSet getDataSet(int index) {
-        return loadedDataSets.get(index);
-    }
-
-    public static boolean hasDataSet(String name) {
-        return loadedDataSets.stream().map(ds -> ds.getName().equalsIgnoreCase(name)).findAny().isPresent();
-    }
-
-    public static DataSet putDataSet(DataSet ds, String name) {
-        if (ds == null) throw new AssertionError("This method must be called with a DataSet, even if it is an empty instance");
-        DataSet ds2 = getDataSet(name);  //If the udm already exists, get the instance
-
-        if (ds2 == null) {   //If it does not, make a new one and add it to loaded user defined measures
-            ds2 = ds;
-            loadedDataSets.add(ds2);
-        }
-        storage.put(ds2, name, getDataSetFolderPath());
-        return ds2;
-    }
+   public static void getSaveState(String fileName) {
+       storage.get(fileName, getProjectFolderPath());
+   }
 
     private static String getUDMFolderPath()
     {
         return UserSettings.getWorkingDirectory()  + "/" + Constants.UDM_FOLDER;
     }
 
-    private static String getDataSetFolderPath()
+    private static String getProjectFolderPath()
     {
-        return UserSettings.getWorkingDirectory() + "/" + Constants.DATASET_FOLDER;
+        return UserSettings.getWorkingDirectory() + "/" + Constants.PROJECTS_FOLDER;
     }
 
     private static String getExportFolderPath()
@@ -140,27 +102,10 @@ public class RepositoryManager {
         return null;
     }
 
-    public static void deleteDataSet(String name) {
-        DataSet ds = getDataSet(name);
-        if (ds != null && ds.getAllDataAsDouble() != null){
-            storage.deleteFile(name, getDataSetFolderPath());
-            loadedDataSets.remove(ds);
-        }
-    }
-
-    public static void removeFromLoadedDataSets(String name) {
-        DataSet ds = getDataSet(name);
-        if(ds != null) {
-            loadedDataSets.remove(ds);
-        }
-    }
-
     public static void init() {
         loadedDataSets = new ArrayList<>();
         storage = new FileSystemRepository();
-        UserSettings.init();
         storage.init();
-        loadedDataSets.addAll(storage.loadDataSets(getDataSetFolderPath()));
     }
 
     public static void openHelpDocument(){
@@ -195,6 +140,10 @@ public class RepositoryManager {
                 // no application registered for PDFs
             }
         }
+    }
+
+    public static void buildWD() {
+       storage.init();
     }
 
     public static BufferedImage getImageResource(String name){

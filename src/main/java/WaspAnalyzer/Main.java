@@ -5,6 +5,7 @@ import Graphing.GraphManager;
 import Respository.RepositoryManager;
 
 import Settings.Themes;
+import Settings.UserSettings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,7 +18,7 @@ public class Main {
         logger.debug("Starting ApplicationMain.Main.");
 
         Themes.init();
-
+        UserSettings.init();
         RepositoryManager.init();
         MeasureManager.init();
         DynamicJavaClassLoader.init();

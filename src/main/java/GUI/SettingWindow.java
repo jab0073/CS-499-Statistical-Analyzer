@@ -1,5 +1,6 @@
 package GUI;
 
+import Settings.UserSettings;
 import WaspAnalyzer.Main;
 import BackEndUtilities.Expressions;
 import FrontEndUtilities.GUIDataMaster;
@@ -10,6 +11,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.util.prefs.Preferences;
 
 public class SettingWindow extends JDialog {
@@ -23,6 +25,9 @@ public class SettingWindow extends JDialog {
     private JCheckBox EvalCheckBox;
     private JLabel WarningLabel;
     private JCheckBox biasCheckBox;
+    private JTextField workingDirectoryTextField;
+    private JLabel wdLabel;
+    private JButton browseButton;
 
     public SettingWindow() {
         setContentPane(contentPane);
@@ -72,6 +77,19 @@ public class SettingWindow extends JDialog {
 
         biasCheckBox.setSelected(GUIDataMaster.isBiasCorrection());
 
+        this.workingDirectoryTextField.setText(UserSettings.getWorkingDirectory());
+
+        this.browseButton.addActionListener(a -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int option = fileChooser.showOpenDialog(GUIDataMaster.getFrameReference());
+            if(option == JFileChooser.APPROVE_OPTION){
+                this.workingDirectoryTextField.setText(fileChooser.getSelectedFile().getAbsolutePath());
+            }else{
+                this.workingDirectoryTextField.setText(UserSettings.getWorkingDirectory());
+            }
+        });
+
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -113,10 +131,13 @@ public class SettingWindow extends JDialog {
 
             GUIDataMaster.setBiasCorrection(biasCheckBox.isSelected());
 
+            UserSettings.setWorkingDirectory(this.workingDirectoryTextField.getText());
+
             prefs.put("userTheme", Themes.getCurrentThemeName());
             prefs.put("userZoom", String.valueOf(zoom));
             prefs.put("userEval", String.valueOf(EvalCheckBox.isSelected()));
             prefs.put("userBias", String.valueOf(biasCheckBox.isSelected()));
+            prefs.put("userWD", UserSettings.getWorkingDirectory());
 
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();

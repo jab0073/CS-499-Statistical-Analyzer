@@ -1,5 +1,7 @@
 package Settings;
 
+import Respository.FileSystemRepository;
+import Respository.RepositoryManager;
 import WaspAnalyzer.Main;
 import BackEndUtilities.Constants;
 import BackEndUtilities.Expressions;
@@ -20,6 +22,12 @@ public class UserSettings {
      */
     public static void init() {
         Preferences prefs = Preferences.userNodeForPackage(Main.class);
+
+        if (System.getProperty("os.name").toLowerCase().startsWith("mac")) {
+            // If running on macOS, this next line puts the JMenuBar in the system menu bar
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
+            AltMenuBar.isMacOS = true;
+        }
 
         String userTheme = prefs.get("userTheme", "Light");
         float userZoom = Float.parseFloat(prefs.get("userZoom", "100"));
@@ -45,23 +53,24 @@ public class UserSettings {
 
         GUIDataMaster.setBiasCorrection(userBias);
 
-        if(System.getProperty("os.name").toLowerCase().startsWith("win")) {
-            UserSettings.workingDirectory =  Constants.WindowsBeginningDefaultDir + System.getProperty("user.name") + Constants.WindowsEndingDefaultDir;
-            return;
+        UserSettings.workingDirectory = prefs.get("userWD", "N/A");
+        if(UserSettings.workingDirectory.equals("N/A")) {
+            if (!AltMenuBar.isMacOS) {
+                UserSettings.workingDirectory = Constants.WindowsBeginningDefaultDir + System.getProperty("user.name") + Constants.WindowsEndingDefaultDir;
+            } else {
+                UserSettings.workingDirectory = Constants.MacBeginningDir + System.getProperty("user.name") + Constants.MacDefaultDir;
+            }
         }
-        else if(System.getProperty("os.name").toLowerCase().startsWith("mac")) {
-            UserSettings.workingDirectory =  Constants.MacBeginningDir + System.getProperty("user.name") + Constants.MacDefaultDir;
-            // If running on macOS, this next line puts the JMenuBar in the system menu bar
-            System.setProperty("apple.laf.useScreenMenuBar", "true");
-            AltMenuBar.isMacOS = true;
-            return;
-        }
-        UserSettings.workingDirectory = null;
     }
 
     public static String getWorkingDirectory() {
         return UserSettings.workingDirectory;
     }
 
+    public static void setWorkingDirectory(String workingDirectory) {
+        UserSettings.workingDirectory = workingDirectory;
+        RepositoryManager.buildWD();
+        GUIDataMaster.getFrameReference().updateWD();
+    }
 
 }

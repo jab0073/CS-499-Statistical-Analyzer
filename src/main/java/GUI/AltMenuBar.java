@@ -59,19 +59,22 @@ public class AltMenuBar {
             JButton btnCancel = new JButton("Cancel");
 
             btnYes.addActionListener(y -> {
+
                 SaveManager.saveProgramState(false);
+                SaveManager.setStateCurrentlySaved(false);
+                SaveManager.setCurrentSaveFileName("");
                 GUIDataMaster.newProject();
                 saveBefore.dispose();
             });
 
             btnNo.addActionListener(n -> {
+                SaveManager.setStateCurrentlySaved(false);
+                SaveManager.setCurrentSaveFileName("");
                 GUIDataMaster.newProject();
                 saveBefore.dispose();
             });
 
-            btnCancel.addActionListener(c -> {
-                saveBefore.dispose();
-            });
+            btnCancel.addActionListener(c -> saveBefore.dispose());
 
             centerPane.add(message);
             buttonPane.add(btnYes, BorderLayout.WEST);
@@ -89,7 +92,6 @@ public class AltMenuBar {
 
             saveBefore.setVisible(true);
 
-
         });
         fileNewMenu.add(newProjectMenuItem);
 
@@ -99,13 +101,10 @@ public class AltMenuBar {
         fileNewMenu.getAccessibleContext().setAccessibleDescription("Open File related options.");
         fileMenu.add(fileOpenMenu);
 
-        // File -> Open... -> DataSet menu item
+        // File -> Open... -> Project menu item
         JMenuItem openDataSetMenuItem = new JMenuItem("Project");
         openDataSetMenuItem.getAccessibleContext().setAccessibleDescription("Open a Project.");
-        openDataSetMenuItem.addActionListener(l -> {
-            // TODO: create functionality to open dataset
-            SaveManager.openSaveFile();
-        });
+        openDataSetMenuItem.addActionListener(l -> SaveManager.openSaveFile());
         fileOpenMenu.add(openDataSetMenuItem);
 
         // File -> Import... menu
@@ -165,23 +164,19 @@ public class AltMenuBar {
         });
         fileImportMenu.add(fileImportXLSXMenuItem);
 
-        // File -> Export Data menu
+        // File -> Save Project Data menu
         JMenuItem fileSaveMenuItem = new JMenuItem("Save Project");
         fileSaveMenuItem.getAccessibleContext().setAccessibleDescription("Save Project");
-        fileSaveMenuItem.addActionListener(l -> {
-            SaveManager.saveProgramState(false);
-        });
+        fileSaveMenuItem.addActionListener(l -> SaveManager.saveProgramState(false));
         fileMenu.add(fileSaveMenuItem);
 
-        // File -> Export Data menu
+        // File -> Save Project As menu
         JMenuItem fileSaveAsMenuItem = new JMenuItem("Save Project As");
         fileSaveAsMenuItem.getAccessibleContext().setAccessibleDescription("Save Project As");
-        fileSaveAsMenuItem.addActionListener(l -> {
-            SaveManager.saveProgramState(true);
-        });
+        fileSaveAsMenuItem.addActionListener(l -> SaveManager.saveProgramState(true));
         fileMenu.add(fileSaveAsMenuItem);
 
-        // File -> Export Data menu
+        // File -> Exit menu
         JMenuItem fileExitMenuItem = new JMenuItem("Exit");
         fileExitMenuItem.getAccessibleContext().setAccessibleDescription("Exit program.");
         fileExitMenuItem.addActionListener(l -> {
@@ -200,6 +195,7 @@ public class AltMenuBar {
             JButton btnCancel = new JButton("Cancel");
 
             btnYes.addActionListener(y -> {
+
                 SaveManager.saveProgramState(false);
                 Frame.closeDialogs();
                 Arrays.stream(Frame.getFrames()).forEach(Window::dispose);
@@ -210,9 +206,7 @@ public class AltMenuBar {
                 Arrays.stream(Frame.getFrames()).forEach(Window::dispose);
             });
 
-            btnCancel.addActionListener(c -> {
-                saveBefore.dispose();
-            });
+            btnCancel.addActionListener(c -> saveBefore.dispose());
 
             centerPane.add(message);
             buttonPane.add(btnYes, BorderLayout.WEST);
@@ -243,9 +237,7 @@ public class AltMenuBar {
         if(AltMenuBar.isMacOS) {
             JMenuItem settingsMenuItem = new JMenuItem("User Settings");
             settingsMenuItem.getAccessibleContext().setAccessibleDescription("Settings for user settings.");
-            settingsMenuItem.addActionListener(a -> {
-                new SettingWindow();
-            });
+            settingsMenuItem.addActionListener(a -> new SettingWindow());
             settingsMenu.add(settingsMenuItem);
         }
         else {
@@ -364,9 +356,7 @@ public class AltMenuBar {
         if(AltMenuBar.isMacOS) {
             JMenuItem helpMenuItem = new JMenuItem("Run Measures");
             helpMenuItem.getAccessibleContext().setAccessibleDescription("Run Measures");
-            helpMenuItem.addActionListener(a -> {
-                RepositoryManager.openHelpDocument();
-            });
+            helpMenuItem.addActionListener(a -> RepositoryManager.openHelpDocument());
             helpMenu.add(helpMenuItem);
         }
         else {

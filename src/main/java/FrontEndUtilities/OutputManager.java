@@ -1,5 +1,7 @@
 package FrontEndUtilities;
 
+import BackEndUtilities.Constants;
+import GUI.SingleRootFileSystemView;
 import Settings.UserSettings;
 import org.apache.commons.io.FilenameUtils;
 import org.jfree.chart.ChartPanel;
@@ -7,6 +9,7 @@ import org.jfree.chart.ChartUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -21,6 +24,10 @@ public class OutputManager {
         outputs.add(measureName + "," + output);
     }
 
+    /**
+     * It creates a JFrame with a JTextPane and a JScrollPane, and then adds the textPane to the scrollPane, and then adds
+     * the scrollPane to the frame
+     */
     public static void displayOutputs(){
         if(outputs.size() == 0) return;
 
@@ -111,15 +118,26 @@ public class OutputManager {
         frame.repaint();
     }
 
+    /**
+     * It adds a graph to the list of graphs
+     *
+     * @param graph The graph to be added to the list of graphs.
+     */
     public static void addGraph(ChartPanel graph){
         graphs.add(graph);
     }
 
+    /**
+     * It clears the output
+     */
     public static void clearOutput(){
         outputs.clear();
         graphs.clear();
     }
 
+    /**
+     * This function will open a file browser and allow the user to select where to save the output files
+     */
     public static void saveOutputsToFile(){
         //Open Selection menu
             //User Selects what outputs to save
@@ -133,6 +151,9 @@ public class OutputManager {
         //save file
     }
 
+    /**
+     * This function displays a dialog box that allows the user to select which outputs they want to save to a file
+     */
     private static void displayOutputSelection(){
         boolean[] outputSelections = new boolean[outputs.size()];
 
@@ -202,10 +223,19 @@ public class OutputManager {
         dialog.setVisible(true);
     }
 
-    private static void displayFileBrowser(boolean[] selectedOutputs){
+    /**
+     * It creates a file browser that only allows the user to select a file in a specific folder
+     *
+     * @param selectedOutputs boolean array of the selected outputs
+     */
+    private static void displayFileBrowser(boolean[] selectedOutputs) {
         //File browser stuff
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(UserSettings.getWorkingDirectory()));
+        String singleFolder = UserSettings.getWorkingDirectory() + "/" + Constants.EXPORT_FOLDER;
+        File root = new File(singleFolder);
+        FileSystemView fsv = new SingleRootFileSystemView(root);
+        JFileChooser fileChooser = new JFileChooser(fsv);
+        //JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(singleFolder));
         FileNameExtensionFilter filtercsv = new FileNameExtensionFilter(
                 "Comma Separated (*.csv)", "csv");
         FileNameExtensionFilter filtertsv = new FileNameExtensionFilter(
@@ -227,17 +257,28 @@ public class OutputManager {
             String format = fileChooser.getFileFilter().getDescription().split("\\.")[1].replace(")", "");
 
             if (!FilenameUtils.getExtension(selectedFile.getName()).equalsIgnoreCase(format)) {
-                selectedFile = new File(selectedFile.getParentFile(), FilenameUtils.getBaseName(selectedFile.getName())+"."+format);
+                selectedFile = new File(selectedFile.getParentFile(), FilenameUtils.getBaseName(selectedFile.getName()) + "." + format);
             }
 
             prepareAndSaveFile(selectedFile.getAbsolutePath(), selectedOutputs);
         }
-
         dialog.dispose();
-
-
     }
 
+    /**
+     * It takes the file location and the boolean array of selected outputs, and then it creates a string builder, and then
+     * it loops through the boolean array, and if the boolean is true, it gets the name of the output, and then it splits
+     * the output by commas, and then it copies the array of strings from the second element to the end, and then it
+     * appends the name of the output to the string builder, and then it loops through the array of strings, and it removes
+     * the brackets from the beginning and end of the string, and then it replaces the new line characters with commas, and
+     * then it appends the string to the string builder, and then it appends a comma to the string builder, and then it
+     * appends a new line character to the string builder, and then it writes the string builder to the file, and then it
+     * closes the file
+     *
+     * @param fileLocation The location of the file to be saved.
+     * @param selectedOutputs A boolean array that is the same length as the number of outputs. If the value at a given
+     * index is true, then the output at that index will be included in the output file.
+     */
     private static void prepareAndSaveFile(String fileLocation, boolean[] selectedOutputs){
 
         StringBuilder outputFileString = new StringBuilder();
@@ -281,9 +322,6 @@ public class OutputManager {
 
                 outputFileString.append("\n");
             }
-
-
-
             i++;
         }
 
@@ -296,13 +334,24 @@ public class OutputManager {
         }
     }
 
+    /**
+     * It creates a JFileChooser that only allows you to save files in a specific folder
+     *
+     * @param panel The ChartPanel object that contains the chart you want to save.
+     */
     private static void saveGraph(ChartPanel panel){
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(UserSettings.getWorkingDirectory()));
+        String singleFolder = UserSettings.getWorkingDirectory() + "/" + Constants.GRAPH_OUTPUT_FOLDER;
+        File root = new File(singleFolder);
+        FileSystemView fsv = new SingleRootFileSystemView(root);
+        JFileChooser fileChooser = new JFileChooser(fsv);
+        //JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(singleFolder));
         FileNameExtensionFilter filterpng = new FileNameExtensionFilter(
                 "PNG (*.png)", "png");
+        FileNameExtensionFilter filterjpeg = new FileNameExtensionFilter(
+                "JPEG (*.jpg)", "jpg");
         fileChooser.setFileFilter(filterpng);
-
+        fileChooser.addChoosableFileFilter(filterjpeg);
         JDialog dialog = new JDialog();
 
         int result = fileChooser.showSaveDialog(dialog);
@@ -318,9 +367,14 @@ public class OutputManager {
             }
 
             try {
-                OutputStream out = new FileOutputStream(selectedFile);
-                ChartUtils.writeChartAsPNG(out, panel.getChart(), panel.getWidth(), panel.getHeight());
-                out.close();
+                if(format.equals("png")) {
+                    OutputStream out = new FileOutputStream(selectedFile);
+                    ChartUtils.writeChartAsPNG(out, panel.getChart(), panel.getWidth(), panel.getHeight());
+                    out.close();
+                }
+                else
+                    ChartUtils.saveChartAsJPEG(selectedFile, panel.getChart(), panel.getWidth(), panel.getHeight());
+
             }catch(IOException e){
                 e.printStackTrace();
             }
