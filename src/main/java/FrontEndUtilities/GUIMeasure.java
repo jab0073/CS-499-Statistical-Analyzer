@@ -99,13 +99,18 @@ public class GUIMeasure {
             ds.addSample(s);
         }
 
-        MeasureManager.getMeasure(name).setInputData(ds);
+        IMeasure m = MeasureManager.getMeasure(name);
+
+        if(m == null){
+            ErrorManager.sendErrorMessage(name, "The program does not have this Custom Measure installed");
+            return null;
+        }
+
+        m.setInputData(ds);
 
         for(int i = 0; i < requiredVariables.size(); i++){
             Expressions.setArgument(requiredVariables.get(i), variableValues.get(i));
         }
-
-        IMeasure m = MeasureManager.getMeasure(name);
 
         if(m instanceof BiasCorrectable){
             if(biasCorrection){

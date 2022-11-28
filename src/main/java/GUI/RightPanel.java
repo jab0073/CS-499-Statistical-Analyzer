@@ -65,7 +65,13 @@ public class RightPanel extends JPanel{
                     GUIMeasure m = GUIDataMaster.getGUIMeasure(functionList.getSelectedIndex());
                     GUIDataMaster.swapMiddleCard(m.getCardType(), m);
                     IMeasure i = MeasureManager.getMeasure(m.getName());
-                    setGraphsList(i.getValidGraphs());
+
+                    if(i != null){
+                        setGraphsList(i.getValidGraphs());
+                    }else{
+                        setGraphsList(List.of(GraphTypes.NONE));
+                    }
+
                     GraphsComboBox.getModel().removeAllElements();
                     GraphsComboBox.setModel();
                 }
