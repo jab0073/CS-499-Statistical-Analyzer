@@ -11,10 +11,8 @@ import Interfaces.BiasCorrectable;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.math3.stat.StatUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class StandardDeviation extends BiasCorrectable implements IMeasure {

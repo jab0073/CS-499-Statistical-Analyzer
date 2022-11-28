@@ -11,7 +11,6 @@ import Graphing.GraphTypes;
 import Interfaces.BiasCorrectable;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
-import org.apache.commons.math3.distribution.NormalDistribution;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,7 @@ public class ProbabilityDistribution extends BiasCorrectable implements IMeasure
     private final int minimumSamples = 1;
     private final List<String> requiredVariables = new ArrayList<>();
     private final boolean isGraphable = true;
-    private final List<GraphTypes> validGraphs = List.of(GraphTypes.X_Y);
+    private final List<GraphTypes> validGraphs = List.of(GraphTypes.NONE,GraphTypes.X_Y, GraphTypes.HORIZONTAL_BAR, GraphTypes.VERTICAL_BAR, GraphTypes.PIE_CHART);
     private final CardTypes cardType = CardTypes.ONE_DATA_NO_VARIABLE;
 
     public boolean isGraphable(){ return this.isGraphable; }
@@ -69,7 +68,7 @@ public class ProbabilityDistribution extends BiasCorrectable implements IMeasure
 
     @Override
     public boolean validate() {
-        if (this.inputData == null || this.inputData.getAllDataAsDouble().size() == 0) {
+        if (this.inputData == null || this.inputData.getAllDataAsString().size() == 0) {
             ErrorManager.sendErrorMessage(name, "No Data supplied to evaluate");
             return false;
         }
@@ -107,17 +106,17 @@ public class ProbabilityDistribution extends BiasCorrectable implements IMeasure
         if(!this.validate())
             return null;
 
-        List<Double> data = this.inputData.getAllDataAsDouble();
+        List<String> data = this.inputData.getAllDataAsString();
 
-        ArrayList<Double> values = new ArrayList<>();
+        ArrayList<String> values = new ArrayList<>();
         ArrayList<Integer> occurrences = new ArrayList<>();
 
-        for(double d : data){
-            if(values.contains(d)){
-                int i = values.indexOf(d);
+        for(String s : data){
+            if(values.contains(s)){
+                int i = values.indexOf(s);
                 occurrences.set(i, occurrences.get(i) + 1);
             }else{
-                values.add(d);
+                values.add(s);
                 occurrences.add(1);
             }
         }
@@ -126,7 +125,7 @@ public class ProbabilityDistribution extends BiasCorrectable implements IMeasure
 
         for(int i = 0; i < values.size(); i++){
             double p = (double)occurrences.get(i) / (double)data.size();
-            double v = values.get(i);
+            String v = values.get(i);
 
             result.add(v + ": " + p);
         }

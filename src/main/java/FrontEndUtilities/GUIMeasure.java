@@ -5,24 +5,25 @@ import GUI.CardTypes;
 import Graphing.DataFormat;
 import Graphing.GraphManager;
 import Graphing.GraphTypes;
+import Interfaces.BiasCorrectable;
 import Interfaces.IMeasure;
-import org.jfree.chart.plot.PlotRenderingInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class GUIMeasure {
-    private ArrayList<String>[] measureData;
-    private String name = "";
-    private int minimumSamples = 0;
-    private List<String> requiredVariables = new ArrayList<>();
-    private List<String> variableValues = new ArrayList<>();
-    private boolean isGraphable = false;
-    private List<GraphTypes> validGraphs = new ArrayList<>();
+    private final ArrayList<String>[] measureData;
+    private final String name;
+    private final int minimumSamples;
+    private final List<String> requiredVariables;
+    private final List<String> variableValues = new ArrayList<>();
+    private final boolean isGraphable;
+    private final List<GraphTypes> validGraphs = new ArrayList<>();
     private GraphTypes selectedGraph = null;
-    private DataFormat outputFormat = null;
-    private CardTypes cardType = CardTypes.TWO_DATA_NO_VARIABLE;
+    private final DataFormat outputFormat;
+    private final CardTypes cardType;
+    private boolean biasCorrection = false;
 
     public GUIMeasure(String name){
         IMeasure m = MeasureManager.getMeasure(name);
@@ -97,16 +98,31 @@ public class GUIMeasure {
             ds.addSample(s);
         }
 
-        MeasureManager.getMeasure(name).setInputData(ds);
+        IMeasure m = MeasureManager.getMeasure(name);
+
+        if(m == null){
+            ErrorManager.sendErrorMessage(name, "The program does not have this Custom Measure installed");
+            return null;
+        }
+
+        m.setInputData(ds);
 
         for(int i = 0; i < requiredVariables.size(); i++){
             Expressions.setArgument(requiredVariables.get(i), variableValues.get(i));
         }
 
-        Object r = MeasureManager.getMeasure(name).run();
+        if(m instanceof BiasCorrectable){
+            if(biasCorrection){
+                ((BiasCorrectable) m).biasCorrected();
+            }else{
+                ((BiasCorrectable) m).nonBiasCorrected();
+            }
+        }
 
-        if(isGraphable){
-            GraphManager.graphOutput(GraphTypes.X_Y, r, this);
+        Object r = m.run();
+
+        if(isGraphable && selectedGraph != GraphTypes.NONE){
+            GraphManager.graphOutput(selectedGraph, r, this);
         }
 
         return r;
@@ -198,6 +214,8 @@ public class GUIMeasure {
         return this.selectedGraph;
     }
 
+    public List<GraphTypes> getValidGraphs(){return this.validGraphs; }
+
     public DataFormat getOutputFormat(){ return outputFormat; }
 
     public CardTypes getCardType(){ return cardType; }
@@ -207,4 +225,8 @@ public class GUIMeasure {
     public int getNumVariables(){ return requiredVariables.size(); }
 
     public String getVariableName(int i){ return requiredVariables.get(i) ; }
+
+    public void setBiasCorrection(boolean biasCorrection) {
+        this.biasCorrection = biasCorrection;
+    }
 }

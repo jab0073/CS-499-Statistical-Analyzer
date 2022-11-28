@@ -23,7 +23,7 @@ public class LeastSquareLine implements IMeasure {
     private final int minimumSamples = 2;
     private final List<String> requiredVariables = new ArrayList<>();
     private final boolean isGraphable = true;
-    private final List<GraphTypes> validGraphs = List.of(GraphTypes.X_Y);
+    private final List<GraphTypes> validGraphs = List.of(GraphTypes.NONE,GraphTypes.X_Y);
     private final CardTypes cardType = CardTypes.TWO_DATA_NO_VARIABLE;
 
     public boolean isGraphable(){ return this.isGraphable; }
@@ -123,7 +123,7 @@ public class LeastSquareLine implements IMeasure {
         xArray = trimSamples(xArray, maxLen);
         yArray = trimSamples(yArray, maxLen);
 
-        double[][] xyArray = this.pair(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
+        double[][] xyArray = pair(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
         sr.addData(xyArray);
 
         double b = sr.getIntercept();

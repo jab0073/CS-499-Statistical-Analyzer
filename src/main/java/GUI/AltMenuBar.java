@@ -5,6 +5,7 @@ import FrontEndUtilities.GUIDataMaster;
 import FrontEndUtilities.OutputManager;
 import FrontEndUtilities.SaveManager;
 import Graphing.GraphManager;
+import Respository.RepositoryManager;
 import Settings.UserSettings;
 
 import javax.swing.*;
@@ -19,7 +20,7 @@ import java.util.Arrays;
 
 public class AltMenuBar {
     public static boolean isMacOS = false;
-    private JMenuBar menuBar;
+    private final JMenuBar menuBar;
 
     public AltMenuBar() {
         // Create the menu bar
@@ -92,13 +93,6 @@ public class AltMenuBar {
         });
         fileNewMenu.add(newProjectMenuItem);
 
-        // File -> New... -> Custom Measure menu item
-        JMenuItem newCustomMeasureMenuItem = new JMenuItem("Custom Measure");
-        newCustomMeasureMenuItem.getAccessibleContext().setAccessibleDescription("Create a new Custom Measure.");
-        newCustomMeasureMenuItem.addActionListener(l -> {
-            // TODO: create functionality to make new user defined measure
-        });
-        fileNewMenu.add(newCustomMeasureMenuItem);
 
         // File -> Open... menu
         JMenu fileOpenMenu = new JMenu("Open...");
@@ -113,14 +107,6 @@ public class AltMenuBar {
             SaveManager.openSaveFile();
         });
         fileOpenMenu.add(openDataSetMenuItem);
-
-        // File -> Open... -> Custom Measure menu item
-        JMenuItem openCustomMeasureMenuItem = new JMenuItem("Custom Measure");
-        openCustomMeasureMenuItem.getAccessibleContext().setAccessibleDescription("Open a Custom Measure.");
-        openCustomMeasureMenuItem.addActionListener(l -> {
-            // TODO: create functionality to open user defined measure
-        });
-        fileOpenMenu.add(openCustomMeasureMenuItem);
 
         // File -> Import... menu
         JMenu fileImportMenu = new JMenu("Import...");
@@ -248,22 +234,6 @@ public class AltMenuBar {
         fileMenu.add(fileExitMenuItem);
 
         /*
-            Start Edit Menu
-         */
-
-        // Build the Edit menu
-        JMenu editMenu = new JMenu("Edit");
-        editMenu.getAccessibleContext().setAccessibleDescription("Edit related options.");
-        menuBar.add(editMenu);
-
-        JMenuItem editCopyMenuItem = new JMenuItem("Copy");
-        editCopyMenuItem.getAccessibleContext().setAccessibleDescription("Copy Selected Data.");
-        editCopyMenuItem.addActionListener(l -> {
-            String data = CellsTable.getSelectedData();
-        });
-        editMenu.add(editCopyMenuItem);
-
-        /*
             Start Settings Menu
          */
 
@@ -271,7 +241,7 @@ public class AltMenuBar {
         JMenu settingsMenu = new JMenu("Settings");
         settingsMenu.getAccessibleContext().setAccessibleDescription("Settings related options.");
         if(AltMenuBar.isMacOS) {
-            JMenuItem settingsMenuItem = new JMenuItem("UI Settings");
+            JMenuItem settingsMenuItem = new JMenuItem("User Settings");
             settingsMenuItem.getAccessibleContext().setAccessibleDescription("Settings for user settings.");
             settingsMenuItem.addActionListener(a -> {
                 new SettingWindow();
@@ -391,7 +361,42 @@ public class AltMenuBar {
         helpMenu.getAccessibleContext().setAccessibleDescription("Help related options.");
         menuBar.add(helpMenu);
 
-        // TODO: Add Menu Items for Help
+        if(AltMenuBar.isMacOS) {
+            JMenuItem helpMenuItem = new JMenuItem("Run Measures");
+            helpMenuItem.getAccessibleContext().setAccessibleDescription("Run Measures");
+            helpMenuItem.addActionListener(a -> {
+                RepositoryManager.openHelpDocument();
+            });
+            helpMenu.add(helpMenuItem);
+        }
+        else {
+            helpMenu.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    RepositoryManager.openHelpDocument();
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+
+                }
+            });
+        }
 
         menuBar.setVisible(true);
     }

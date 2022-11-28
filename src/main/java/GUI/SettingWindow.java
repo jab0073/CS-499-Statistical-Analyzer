@@ -1,6 +1,6 @@
 package GUI;
 
-import ApplicationMain.Main;
+import WaspAnalyzer.Main;
 import BackEndUtilities.Expressions;
 import FrontEndUtilities.GUIDataMaster;
 import Settings.Themes;
@@ -22,6 +22,7 @@ public class SettingWindow extends JDialog {
     private JLabel zoomReadout;
     private JCheckBox EvalCheckBox;
     private JLabel WarningLabel;
+    private JCheckBox biasCheckBox;
 
     public SettingWindow() {
         setContentPane(contentPane);
@@ -69,6 +70,8 @@ public class SettingWindow extends JDialog {
 
         EvalCheckBox.setSelected(Expressions.isEvaluationOn());
 
+        biasCheckBox.setSelected(GUIDataMaster.isBiasCorrection());
+
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -108,9 +111,12 @@ public class SettingWindow extends JDialog {
                 Expressions.disableEvaluation();
             }
 
+            GUIDataMaster.setBiasCorrection(biasCheckBox.isSelected());
+
             prefs.put("userTheme", Themes.getCurrentThemeName());
             prefs.put("userZoom", String.valueOf(zoom));
             prefs.put("userEval", String.valueOf(EvalCheckBox.isSelected()));
+            prefs.put("userBias", String.valueOf(biasCheckBox.isSelected()));
 
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();

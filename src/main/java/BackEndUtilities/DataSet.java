@@ -1,16 +1,11 @@
 package BackEndUtilities;
 
 import Interfaces.IValidator;
-import Interop.UIServices;
-import Measures.Measures;
 import TableUtilities.DataTable;
 import Validators.DataValidator;
-import com.google.gson.Gson;
-import com.opencsv.CSVWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,6 +78,10 @@ public class DataSet implements Cloneable{
 
     public List<Double> getAllDataAsDouble() {
         return this.samples.stream().map(Sample::getDataAsDouble).toList().stream().flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    public List<String> getAllDataAsString(){
+        return this.samples.stream().map(Sample::getData).toList().stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
     public int getSize() {

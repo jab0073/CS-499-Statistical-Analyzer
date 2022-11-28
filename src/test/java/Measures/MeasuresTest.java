@@ -3,7 +3,6 @@ package Measures;
 import BackEndUtilities.*;
 import Interfaces.IMeasure;
 import Respository.RepositoryManager;
-import Settings.UserSettings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
@@ -94,7 +93,7 @@ public class MeasuresTest {
             IMeasure measure = MeasureManager.getMeasure(m);
             measure.setInputData(normalSet);
 
-            Long startTime = System.nanoTime();
+            long startTime = System.nanoTime();
             Object result = measure.run();
             double execTime = (System.nanoTime() - startTime) / (float) 1_000_000_000;
 
@@ -131,7 +130,7 @@ public class MeasuresTest {
             IMeasure measure = MeasureManager.getMeasure(m);
             measure.setInputData(smallSet);
 
-            Long startTime = System.nanoTime();
+            long startTime = System.nanoTime();
             Object result = measure.run();
             double execTime = (System.nanoTime() - startTime) / (float) 1_000_000_000;
 
@@ -162,13 +161,13 @@ public class MeasuresTest {
         df.setRoundingMode(RoundingMode.CEILING);
 
         for(String m : measureNames){
-            Boolean eval = false;
+            boolean eval = false;
 
             logger.info("  Testing " + m + ":");
             IMeasure measure = MeasureManager.getMeasure(m);
             measure.setInputData(nullSet);
 
-            Long startTime = System.nanoTime();
+            long startTime = System.nanoTime();
             Object result = measure.run();
             double execTime = (System.nanoTime() - startTime) / (float) 1_000_000_000;
 
@@ -190,13 +189,13 @@ public class MeasuresTest {
         df.setRoundingMode(RoundingMode.CEILING);
 
         for(String m : measureNames){
-            Boolean eval = false;
+            boolean eval = false;
 
             logger.info("  Testing " + m + ":");
             IMeasure measure = MeasureManager.getMeasure(m);
             measure.setInputData(emptySet);
 
-            Long startTime = System.nanoTime();
+            long startTime = System.nanoTime();
             Object result = measure.run();
             double execTime = (System.nanoTime() - startTime) / (float) 1_000_000_000;
 
@@ -229,7 +228,7 @@ public class MeasuresTest {
                 continue;
             }
 
-            Long startTime = System.nanoTime();
+            long startTime = System.nanoTime();
             Object result = measure.run();
             double execTime = (System.nanoTime() - startTime) / (float) 1_000_000_000;
 
@@ -271,7 +270,7 @@ public class MeasuresTest {
                 continue;
             }
 
-            Long startTime = System.nanoTime();
+            long startTime = System.nanoTime();
             Object result = measure.run();
             double execTime = (System.nanoTime() - startTime) / (float) 1_000_000_000;
 
@@ -308,7 +307,7 @@ public class MeasuresTest {
             IMeasure measure = MeasureManager.getMeasure(m);
             measure.setInputData(oddSet);
 
-            Long startTime = System.nanoTime();
+            long startTime = System.nanoTime();
             Object result = measure.run();
             double execTime = (System.nanoTime() - startTime) / (float) 1_000_000_000;
 
@@ -437,7 +436,7 @@ public class MeasuresTest {
         expectedZero = new HashMap<String, Object>();
             expectedZero.put(MeasureConstants.binomial, 0.0);
             expectedZero.put(MeasureConstants.chi, 0.0);
-            expectedZero.put(MeasureConstants.coefficient, 2.0%0);
+            expectedZero.put(MeasureConstants.coefficient, 0.0);
             expectedZero.put(MeasureConstants.correlation, 0.0);
             expectedZero.put(MeasureConstants.least, 0.0);
             expectedZero.put(MeasureConstants.mean, 0.0);

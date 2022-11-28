@@ -5,18 +5,17 @@ import BackEndUtilities.DataSet;
 import BackEndUtilities.Sample;
 import Interfaces.IStorage;
 import Interop.UIServices;
-import Measures.UserDefinedMeasure;
 import Settings.UserSettings;
 import TableUtilities.DataTable;
 import com.opencsv.CSVWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jfree.data.general.DatasetChangeEvent;
 
-import javax.xml.crypto.Data;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +46,6 @@ public class RepositoryManager {
     }
 
     public static DataSet getDataSet(String name) {
-        // loadedDataSets.forEach(d -> System.out.println(d.getName()));
         return loadedDataSets.stream().filter(ds->ds.getName().equalsIgnoreCase(name))
                 .findFirst()
                 .orElse(null);
@@ -163,5 +161,52 @@ public class RepositoryManager {
         UserSettings.init();
         storage.init();
         loadedDataSets.addAll(storage.loadDataSets(getDataSetFolderPath()));
+    }
+
+    public static void openHelpDocument(){
+        if (Desktop.isDesktopSupported()) {
+            try {
+                File helpDoc = new File(UserSettings.getWorkingDirectory() + "/Help Document.pdf");
+
+                if(helpDoc.exists()){
+                    Desktop.getDesktop().open(helpDoc);
+                }else{
+                    InputStream jarPdf = RepositoryManager.class.getClassLoader().getResourceAsStream("docs/Help Document.pdf");
+
+                    try {
+                        File pdfTemp = new File(UserSettings.getWorkingDirectory() + "/Help Document.pdf");
+
+                        FileOutputStream fos = new FileOutputStream(pdfTemp);
+                        while (true) {
+                            assert jarPdf != null;
+                            if (!(jarPdf.available() > 0)) break;
+
+                            fos.write(jarPdf.read());
+                        }
+                        fos.close();
+
+                        Desktop.getDesktop().open(pdfTemp);
+                    }catch (IOException e) {
+                        System.out.println("erreur : " + e);
+                    }
+                }
+
+            } catch (IOException ex) {
+                // no application registered for PDFs
+            }
+        }
+    }
+
+    public static BufferedImage getImageResource(String name){
+        String path = "images/"+name;
+        try {
+            URL resource = RepositoryManager.class.getClassLoader().getResource("images/logo.png");
+            assert resource != null;
+            return ImageIO.read(resource);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

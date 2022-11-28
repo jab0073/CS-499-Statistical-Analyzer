@@ -2,7 +2,6 @@ package Interfaces;
 
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Sample;
-import Measures.UserDefinedMeasure;
 
 import java.io.File;
 import java.util.List;

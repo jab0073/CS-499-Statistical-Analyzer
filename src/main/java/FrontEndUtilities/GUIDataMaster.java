@@ -13,6 +13,7 @@ public class GUIDataMaster {
     private static final ArrayList<GUIMeasure> measures = new ArrayList<>();
     private static final ArrayList<Object> results = new ArrayList<>();
     private static Frame frameReference;
+    private static boolean biasCorrection = false;
 
     public static GUIMeasure getGUIMeasure(int index){
         return measures.get(index);
@@ -53,9 +54,11 @@ public class GUIDataMaster {
         boolean success = true;
 
         for(int i = 0; i < measures.size(); i++){
+            measures.get(i).setBiasCorrection(biasCorrection);
             try{
                 results.set(i, measures.get(i).execute());
             }catch (Exception e) {
+                e.printStackTrace();
                 results.set(i, null);
                 ErrorManager.sendErrorMessage(measures.get(i).getName(), "A critical error has occurred");
                 success = false;
@@ -138,5 +141,13 @@ public class GUIDataMaster {
         removeAllMeasures();
 
         frameReference.updateRightPanelForLoad();
+    }
+
+    public static void setBiasCorrection(boolean biasCorrection) {
+        GUIDataMaster.biasCorrection = biasCorrection;
+    }
+
+    public static boolean isBiasCorrection() {
+        return biasCorrection;
     }
 }

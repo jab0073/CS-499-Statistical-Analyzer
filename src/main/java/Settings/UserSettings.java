@@ -1,6 +1,6 @@
 package Settings;
 
-import ApplicationMain.Main;
+import WaspAnalyzer.Main;
 import BackEndUtilities.Constants;
 import BackEndUtilities.Expressions;
 import FrontEndUtilities.GUIDataMaster;
@@ -24,6 +24,7 @@ public class UserSettings {
         String userTheme = prefs.get("userTheme", "Light");
         float userZoom = Float.parseFloat(prefs.get("userZoom", "100"));
         boolean userEval = Boolean.parseBoolean(prefs.get("userEval", "false"));
+        boolean userBias = Boolean.parseBoolean(prefs.get("userBias", "false"));
 
         try {
             UIManager.setLookAndFeel(Themes.getTheme(userTheme));
@@ -31,7 +32,7 @@ public class UserSettings {
             e.printStackTrace();
         }
 
-        int fontSize = (int) (12 * ((double)userZoom/100.0));
+        int fontSize = Math.round(12F * (userZoom/100.0F));
 
         UIManager.getLookAndFeelDefaults()
                 .put("defaultFont", new Font("Segoe UI", Font.PLAIN, fontSize));
@@ -41,6 +42,8 @@ public class UserSettings {
         }else{
             Expressions.disableEvaluation();
         }
+
+        GUIDataMaster.setBiasCorrection(userBias);
 
         if(System.getProperty("os.name").toLowerCase().startsWith("win")) {
             UserSettings.workingDirectory =  Constants.WindowsBeginningDefaultDir + System.getProperty("user.name") + Constants.WindowsEndingDefaultDir;

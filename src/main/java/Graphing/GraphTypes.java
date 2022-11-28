@@ -5,7 +5,8 @@ public enum GraphTypes {
     VERTICAL_BAR ("Vertical Bar Graph"),
     X_Y ("X-Y Graph"),
     NORMAL_CURVE ("Normal Curve"),
-    PIE_CHART ("Pie Chart");
+    PIE_CHART ("Pie Chart"),
+    NONE ("None");
 
     private final String name;
     GraphTypes(String name){

@@ -1,7 +1,6 @@
 package Graphing;
 
 import FrontEndUtilities.GUIMeasure;
-import Interfaces.IMeasure;
 
 public interface IGraph {
     //MAKE SURE ALL IGRAPH IMPLEMENTATIONS CONTAIN A CONSTRUCTOR

@@ -4,13 +4,8 @@ import BackEndUtilities.Constants;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Sample;
 import Interfaces.IStorage;
-import Interop.UIServices;
-import Measures.Measures;
-import Measures.UserDefinedMeasure;
 import Settings.UserSettings;
-import TableUtilities.DataTable;
 import com.google.gson.Gson;
-import com.opencsv.CSVWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -87,7 +82,6 @@ public class FileSystemRepository implements IStorage {
 
     @Override
     public void init() {
-        System.out.println("Working directory set at " + UserSettings.getWorkingDirectory());
         ensurePath(UserSettings.getWorkingDirectory());
         ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.GRAPH_OUTPUT_FOLDER);
         ensurePath(UserSettings.getWorkingDirectory() + "/" + Constants.UDM_FOLDER);
