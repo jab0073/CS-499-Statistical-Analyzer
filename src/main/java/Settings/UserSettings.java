@@ -1,6 +1,6 @@
 package Settings;
 
-import ApplicationMain.Main;
+import WaspAnalyzer.Main;
 import BackEndUtilities.Constants;
 import BackEndUtilities.Expressions;
 import FrontEndUtilities.GUIDataMaster;

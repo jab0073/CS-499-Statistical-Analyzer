@@ -1,4 +1,4 @@
-package ApplicationMain;
+package WaspAnalyzer;
 
 import BackEndUtilities.*;
 import Graphing.GraphManager;

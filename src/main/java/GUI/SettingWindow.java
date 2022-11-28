@@ -1,6 +1,6 @@
 package GUI;
 
-import ApplicationMain.Main;
+import WaspAnalyzer.Main;
 import BackEndUtilities.Expressions;
 import FrontEndUtilities.GUIDataMaster;
 import Settings.Themes;
