@@ -7,6 +7,11 @@ import java.util.ArrayList;
 public class ErrorManager {
     private static final ArrayList<String>  errors = new ArrayList<>();
 
+    /**
+     * "If there are errors, display them in a dialog box."
+     *
+     * The first thing we do is check if there are any errors. If there aren't, we return
+     */
     public static void displayErrors(){
         if(errors.size() == 0) return;
 

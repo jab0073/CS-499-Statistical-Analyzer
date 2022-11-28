@@ -24,6 +24,10 @@ public class OutputManager {
         outputs.add(measureName + "," + output);
     }
 
+    /**
+     * It creates a JFrame with a JTextPane and a JScrollPane, and then adds the textPane to the scrollPane, and then adds
+     * the scrollPane to the frame
+     */
     public static void displayOutputs(){
         if(outputs.size() == 0) return;
 
@@ -114,15 +118,26 @@ public class OutputManager {
         frame.repaint();
     }
 
+    /**
+     * It adds a graph to the list of graphs
+     *
+     * @param graph The graph to be added to the list of graphs.
+     */
     public static void addGraph(ChartPanel graph){
         graphs.add(graph);
     }
 
+    /**
+     * It clears the output
+     */
     public static void clearOutput(){
         outputs.clear();
         graphs.clear();
     }
 
+    /**
+     * This function will open a file browser and allow the user to select where to save the output files
+     */
     public static void saveOutputsToFile(){
         //Open Selection menu
             //User Selects what outputs to save
@@ -136,6 +151,9 @@ public class OutputManager {
         //save file
     }
 
+    /**
+     * This function displays a dialog box that allows the user to select which outputs they want to save to a file
+     */
     private static void displayOutputSelection(){
         boolean[] outputSelections = new boolean[outputs.size()];
 
@@ -205,6 +223,11 @@ public class OutputManager {
         dialog.setVisible(true);
     }
 
+    /**
+     * It creates a file browser that only allows the user to select a file in a specific folder
+     *
+     * @param selectedOutputs boolean array of the selected outputs
+     */
     private static void displayFileBrowser(boolean[] selectedOutputs) {
         //File browser stuff
         String singleFolder = UserSettings.getWorkingDirectory() + "/" + Constants.EXPORT_FOLDER;
@@ -242,6 +265,20 @@ public class OutputManager {
         dialog.dispose();
     }
 
+    /**
+     * It takes the file location and the boolean array of selected outputs, and then it creates a string builder, and then
+     * it loops through the boolean array, and if the boolean is true, it gets the name of the output, and then it splits
+     * the output by commas, and then it copies the array of strings from the second element to the end, and then it
+     * appends the name of the output to the string builder, and then it loops through the array of strings, and it removes
+     * the brackets from the beginning and end of the string, and then it replaces the new line characters with commas, and
+     * then it appends the string to the string builder, and then it appends a comma to the string builder, and then it
+     * appends a new line character to the string builder, and then it writes the string builder to the file, and then it
+     * closes the file
+     *
+     * @param fileLocation The location of the file to be saved.
+     * @param selectedOutputs A boolean array that is the same length as the number of outputs. If the value at a given
+     * index is true, then the output at that index will be included in the output file.
+     */
     private static void prepareAndSaveFile(String fileLocation, boolean[] selectedOutputs){
 
         StringBuilder outputFileString = new StringBuilder();
@@ -297,6 +334,11 @@ public class OutputManager {
         }
     }
 
+    /**
+     * It creates a JFileChooser that only allows you to save files in a specific folder
+     *
+     * @param panel The ChartPanel object that contains the chart you want to save.
+     */
     private static void saveGraph(ChartPanel panel){
         String singleFolder = UserSettings.getWorkingDirectory() + "/" + Constants.GRAPH_OUTPUT_FOLDER;
         File root = new File(singleFolder);

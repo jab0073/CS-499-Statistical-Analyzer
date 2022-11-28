@@ -1,5 +1,8 @@
 package BackEndUtilities;
 
+/**
+ * Contains constants that are used throughout the program
+ */
 public class Constants {
 
     public static final String PROGRAM_NAME = "WASP Analyzer";

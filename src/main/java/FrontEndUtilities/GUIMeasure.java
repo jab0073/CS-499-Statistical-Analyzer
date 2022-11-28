@@ -89,6 +89,12 @@ public class GUIMeasure {
 
     }
 
+    /**
+     * Retrieves a list of data, a list of variables, and a list of variable values, and then runs the measure
+     * with the given data and variables
+     *
+     * @return The result of the measure.
+     */
     public Object execute(){
         DataSet ds = new DataSet();
 

@@ -2,7 +2,6 @@ package FrontEndUtilities;
 
 import BackEndUtilities.Constants;
 import GUI.SingleRootFileSystemView;
-import Respository.FileSystemRepository;
 import Respository.RepositoryManager;
 import Settings.UserSettings;
 import TableUtilities.DataTable;
@@ -15,6 +14,10 @@ import javax.swing.filechooser.FileSystemView;
 import java.io.*;
 import java.util.ArrayList;
 
+
+/**
+ * A class that handles saving and loading of the program state
+ */
 public class SaveManager {
     private static final Gson gson = new Gson();
     private static boolean stateCurrentlySaved = false;
@@ -41,6 +44,13 @@ public class SaveManager {
         GUIDataMaster.getFrameReference().changeStatus(SaveManager.currentSaveFileName);
     }
 
+    /**
+     * If the user has already saved a state, then save the state to the same file. If the user has not saved a state, then
+     * prompt the user for a file name and save the state to that file
+     *
+     * @param saveNew If true, the user will be prompted to enter a new file name. If false, the current save file name
+     * will be used.
+     */
     public static void saveProgramState(boolean saveNew){
         if(stateCurrentlySaved && !saveNew){
             RepositoryManager.putSaveState(currentSaveFileName.replace(".sasf", ""));
@@ -72,6 +82,9 @@ public class SaveManager {
         }
     }
 
+    /**
+     * Open a file chooser dialog, and if the user selects a file, load the save state with the same name as the file.
+     */
     public static void openSaveFile(){
         File root = new File(UserSettings.getWorkingDirectory() + "/" + Constants.PROJECTS_FOLDER);
         FileSystemView fsv = new SingleRootFileSystemView(root);
@@ -95,6 +108,9 @@ public class SaveManager {
         dialog.dispose();
     }
 
+    /**
+     * A class that holds GUIMeasure objects and a DataTable object
+     */
     public static class SaveObject{
         public ArrayList<GUIMeasure> measures;
         public DataTable table;
