@@ -44,6 +44,12 @@ public class OutputManager {
             String name = sArr[0];
             StringBuilder data = new StringBuilder();
             for(int i = 1; i < sArr.length; i++){
+                if(i > 10){
+                    int remaining = sArr.length-10;
+                    data.append("And ").append(remaining).append(" more...");
+                    break;
+                }
+
                 if(sArr[i].contains(" ")){
                     sArr[i] = sArr[i].replace(" ", "");
                 }
