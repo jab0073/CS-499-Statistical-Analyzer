@@ -1,9 +1,9 @@
 package Interfaces;
 
 import BackEndUtilities.DataSet;
-import GUI.CardTypes;
-import Graphing.DataFormat;
-import Graphing.GraphTypes;
+import Enums.CardTypes;
+import Enums.DataFormat;
+import Enums.GraphTypes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

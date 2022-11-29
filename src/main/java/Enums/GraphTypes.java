@@ -1,4 +1,4 @@
-package Graphing;
+package Enums;
 
 public enum GraphTypes {
     HORIZONTAL_BAR ("Horizontal Bar Graph"),

@@ -1,11 +1,11 @@
 package GUI;
 
-import FrontEndUtilities.ErrorManager;
+import Managers.ErrorManager;
 import FrontEndUtilities.GUIDataMaster;
-import FrontEndUtilities.OutputManager;
-import FrontEndUtilities.SaveManager;
-import Graphing.GraphManager;
-import Respository.RepositoryManager;
+import Managers.OutputManager;
+import Managers.SaveManager;
+import Managers.GraphManager;
+import Managers.RepositoryManager;
 import Settings.UserSettings;
 
 import javax.swing.*;

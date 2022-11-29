@@ -1,7 +1,8 @@
-package Graphing;
+package Managers;
 
 import FrontEndUtilities.GUIMeasure;
-import FrontEndUtilities.OutputManager;
+import Enums.GraphTypes;
+import Interfaces.IGraph;
 import org.jfree.chart.ChartPanel;
 import org.reflections.Reflections;
 

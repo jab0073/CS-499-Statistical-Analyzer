@@ -1,8 +1,10 @@
 package Measures;
 
 import BackEndUtilities.*;
+import Constants.MeasureConstants;
 import Interfaces.IMeasure;
-import Respository.RepositoryManager;
+import Managers.MeasureManager;
+import Managers.RepositoryManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;

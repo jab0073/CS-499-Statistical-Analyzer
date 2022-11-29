@@ -1,8 +1,12 @@
 package Graphing;
 
 import BackEndUtilities.Expressions;
-import BackEndUtilities.MeasureConstants;
+import Constants.MeasureConstants;
+import Enums.DataFormat;
+import Enums.GraphTypes;
 import FrontEndUtilities.GUIMeasure;
+import Interfaces.IGraph;
+import Managers.GraphManager;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -16,7 +20,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 import java.awt.*;
 import java.util.*;
 
-public class NormalGraph implements IGraph{
+public class NormalGraph implements IGraph {
     private final GraphTypes type = GraphTypes.NORMAL_CURVE;
     private String data = "";
     private DataFormat dataFormat = DataFormat.MX_PLUS_B;
@@ -63,8 +67,6 @@ public class NormalGraph implements IGraph{
                 false, true, false
         );
 
-
-
         ChartPanel chartPanel = new ChartPanel(xylinechart);
         chartPanel.setPreferredSize(new java.awt.Dimension(560,367));
         chartPanel.setName(measure.getName());
@@ -79,6 +81,7 @@ public class NormalGraph implements IGraph{
         renderer.setSeriesLinesVisible(1, true);
         renderer.setSeriesShapesVisible(0, false);
         renderer.setSeriesShapesVisible(1, false);
+
         plot.setRenderer(renderer);
 
         GraphManager.addGraphPanel(chartPanel);
@@ -166,7 +169,7 @@ public class NormalGraph implements IGraph{
     }
 
     private double findSmallest(ArrayList<String> data){
-        double smallest = 999999999999999999999.0;
+        double smallest = Double.POSITIVE_INFINITY;
         for(String s : data){
             double d = Double.parseDouble(s);
             if(d < smallest){
@@ -178,7 +181,7 @@ public class NormalGraph implements IGraph{
     }
 
     private double findLargest(ArrayList<String> data){
-        double largest = -999999999999999999999.0;
+        double largest = Double.NEGATIVE_INFINITY;
         for(String s : data){
             double d = Double.parseDouble(s);
             if(d > largest){

@@ -1,4 +1,4 @@
-package BackEndUtilities;
+package Constants;
 
 /**
  * Contains constants that are used throughout the program

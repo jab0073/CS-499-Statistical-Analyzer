@@ -1,4 +1,4 @@
-package GUI;
+package Enums;
 
 public enum CardTypes {
     ONE_DATA_NO_VARIABLE ("ODNV"),
@@ -14,5 +14,5 @@ public enum CardTypes {
         this.name = name;
     }
 
-    String getName(){ return this.name; }
+    public String getName(){ return this.name; }
 }

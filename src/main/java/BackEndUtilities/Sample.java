@@ -1,6 +1,6 @@
 package BackEndUtilities;
 
-import FrontEndUtilities.ErrorManager;
+import Managers.ErrorManager;
 import Interfaces.IValidator;
 import Validators.DataValidator;
 import org.apache.logging.log4j.LogManager;

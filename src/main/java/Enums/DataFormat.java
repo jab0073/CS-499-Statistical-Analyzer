@@ -1,4 +1,4 @@
-package Graphing;
+package Enums;
 
 public enum DataFormat {
     MX_PLUS_B,

@@ -1,6 +1,10 @@
 package Graphing;
 
+import Enums.DataFormat;
+import Enums.GraphTypes;
 import FrontEndUtilities.GUIMeasure;
+import Interfaces.IGraph;
+import Managers.GraphManager;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -12,7 +16,7 @@ import org.jfree.data.general.PieDataset;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-public class PieGraph implements IGraph{
+public class PieGraph implements IGraph {
     private final GraphTypes type = GraphTypes.PIE_CHART;
     private String data = "";
     private DataFormat dataFormat = DataFormat.MX_PLUS_B;

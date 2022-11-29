@@ -1,6 +1,6 @@
 package BackEndUtilities;
 
-import FrontEndUtilities.ErrorManager;
+import Managers.ErrorManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mariuszgromada.math.mxparser.*;

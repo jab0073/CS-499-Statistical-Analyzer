@@ -1,7 +1,9 @@
 package GUI;
 
-import BackEndUtilities.Constants;
-import Respository.RepositoryManager;
+import Constants.Constants;
+import Enums.CardTypes;
+import GUI.Panels.*;
+import Managers.RepositoryManager;
 import Settings.Themes;
 import Settings.UserSettings;
 

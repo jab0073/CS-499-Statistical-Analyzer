@@ -2,11 +2,11 @@ package Measures;
 
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
-import BackEndUtilities.MeasureConstants;
+import Constants.MeasureConstants;
 import BackEndUtilities.Sample;
-import FrontEndUtilities.ErrorManager;
-import GUI.CardTypes;
-import Graphing.GraphTypes;
+import Managers.ErrorManager;
+import Enums.CardTypes;
+import Enums.GraphTypes;
 import Interfaces.BiasCorrectable;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;

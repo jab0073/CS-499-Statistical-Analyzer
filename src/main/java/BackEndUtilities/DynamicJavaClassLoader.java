@@ -1,6 +1,8 @@
 package BackEndUtilities;
 
+import Constants.Constants;
 import Interfaces.IMeasure;
+import Managers.MeasureManager;
 import Settings.UserSettings;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
@@ -47,6 +49,10 @@ public class DynamicJavaClassLoader {
                 try {
                     logger.debug(FilenameUtils.getBaseName(file.getName()) + ": Trying to load.");
                     String content = Files.readString(file.toPath(), Charset.defaultCharset());
+                    if(!content.startsWith("package CustomMeasures")) {
+                        logger.error(FilenameUtils.getBaseName(file.getName())+ ": Custom Measure isn't in package CustomMeasure");
+                        return;
+                    }
 
                     File javaFile = new File("CustomMeasures/" + FilenameUtils.getBaseName(file.getName()) + ".java");
                     File classFile = new File("CustomMeasures/" + FilenameUtils.getBaseName(file.getName()) + ".class");
@@ -150,15 +156,14 @@ public class DynamicJavaClassLoader {
                                 
                 import BackEndUtilities.DataSet;
                 import BackEndUtilities.Expressions;
-                import BackEndUtilities.MeasureConstants;
+                import Constants.MeasureConstants;
                 import BackEndUtilities.Sample;
-                import FrontEndUtilities.ErrorManager;
-                import GUI.CardTypes;
-                import Graphing.DataFormat;
-                import Graphing.GraphTypes;
+                import Managers.ErrorManager;
+                import Enums.CardTypes;
+                import Enums.DataFormat;
+                import Enums.GraphTypes;
                 import Interfaces.IMeasure;
                 import Interfaces.IValidator;
-                import org.apache.commons.math3.distribution.BinomialDistribution;
                                 
                 import java.util.ArrayList;
                 import java.util.Arrays;

@@ -1,6 +1,8 @@
-package GUI;
+package GUI.Panels;
 
-import FrontEndUtilities.ErrorManager;
+import Enums.CardTypes;
+import GUI.Card;
+import Managers.ErrorManager;
 import java.awt.*;
 
 public class BlankMiddleCard extends Card {

@@ -1,8 +1,8 @@
 package Settings;
 
-import Respository.RepositoryManager;
+import Managers.RepositoryManager;
 import WaspAnalyzer.Main;
-import BackEndUtilities.Constants;
+import Constants.Constants;
 import BackEndUtilities.Expressions;
 import FrontEndUtilities.GUIDataMaster;
 import GUI.AltMenuBar;

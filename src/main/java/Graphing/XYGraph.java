@@ -1,6 +1,10 @@
 package Graphing;
 
+import Enums.DataFormat;
+import Enums.GraphTypes;
 import FrontEndUtilities.GUIMeasure;
+import Interfaces.IGraph;
+import Managers.GraphManager;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -14,7 +18,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class XYGraph implements IGraph{
+public class XYGraph implements IGraph {
     private final GraphTypes type = GraphTypes.X_Y;
     private String data = "";
     private DataFormat dataFormat = DataFormat.MX_PLUS_B;

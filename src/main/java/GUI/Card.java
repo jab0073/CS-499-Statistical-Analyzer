@@ -1,5 +1,7 @@
 package GUI;
 
+import Enums.CardTypes;
+
 import javax.swing.*;
 
 /**

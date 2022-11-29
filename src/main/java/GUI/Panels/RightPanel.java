@@ -1,8 +1,10 @@
-package GUI;
-import BackEndUtilities.MeasureManager;
+package GUI.Panels;
+import Enums.CardTypes;
+import GUI.GraphsComboBox;
+import Managers.MeasureManager;
 import FrontEndUtilities.GUIDataMaster;
 import FrontEndUtilities.GUIMeasure;
-import Graphing.GraphTypes;
+import Enums.GraphTypes;
 import Interfaces.IMeasure;
 
 import javax.swing.*;
