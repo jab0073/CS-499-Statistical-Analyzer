@@ -1,7 +1,6 @@
-package GUI.Panels;
+package GUI.Cards;
 
 import Enums.CardTypes;
-import GUI.Card;
 import GUI.CellsTable;
 import Managers.ErrorManager;
 import FrontEndUtilities.GUIDataMaster;

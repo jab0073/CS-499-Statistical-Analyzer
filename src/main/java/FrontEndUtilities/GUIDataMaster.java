@@ -1,7 +1,7 @@
 package FrontEndUtilities;
 
 import BackEndUtilities.Sample;
-import GUI.Card;
+import GUI.Cards.Card;
 import Enums.CardTypes;
 import GUI.Frame;
 import Managers.ErrorManager;

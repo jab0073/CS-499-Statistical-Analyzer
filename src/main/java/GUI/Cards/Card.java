@@ -1,4 +1,4 @@
-package GUI;
+package GUI.Cards;
 
 import Enums.CardTypes;
 

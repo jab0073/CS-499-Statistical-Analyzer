@@ -29,9 +29,6 @@ public class DynamicJavaClassLoader {
      * loads them into the program
      */
     public static void init(){
-        templateFile = new File(UserSettings.getWorkingDirectory() + "/" + Constants.UDM_FOLDER + "/TEMPLATE.java");
-        if(!templateFile.exists())
-            generateTemplate();
         File[] files = new File(UserSettings.getWorkingDirectory() + "/" + Constants.UDM_FOLDER).listFiles();
         //If this pathname does not denote a directory, then listFiles() returns null.
         if (files == null) {
@@ -150,7 +147,7 @@ public class DynamicJavaClassLoader {
         }
     }
 
-    private static void generateTemplate() {
+    public static void generateTemplate(String className, String requiredVariables, String isGraphable, String selectedGraphs, String cardType, String numberSamples, String returnType) {
         String template = """
                 package CustomMeasures;
                                 
@@ -189,25 +186,25 @@ public class DynamicJavaClassLoader {
                     BLANK
                  */
                                 
-                public class TEMPLATE implements IMeasure {
+                public class %s implements IMeasure {
                                 
                     private DataSet inputData;
-                    private final String name = "TEMPLATE";
-                    private final int minimumSamples = 1;
-                    private final List<String> requiredVariables = Arrays.asList();
-                    private final boolean isGraphable = true;
-                    private final List<GraphTypes> validGraphs = List.of(GraphTypes.NONE);
-                    private final CardTypes cardType = CardTypes.BLANK;
+                    private final String name = "%s";
+                    private final int minimumSamples = %s;
+                    private final List<String> requiredVariables = Arrays.asList(%s);
+                    private final boolean isGraphable = %s;
+                    private final List<GraphTypes> validGraphs = List.of(%s);
+                    private final CardTypes cardType = %s;
                                 
                     public boolean isGraphable(){ return this.isGraphable; }
                                 
                     public List<GraphTypes> getValidGraphs(){ return this.validGraphs; }
                                 
-                    public TEMPLATE() {
+                    public %s() {
                         this.inputData = new DataSet();
                     }
                                 
-                    public TEMPLATE(DataSet inputData) {
+                    public %s(DataSet inputData) {
                         this.inputData = inputData;
                     }
                                 
@@ -270,7 +267,7 @@ public class DynamicJavaClassLoader {
                     // Change the return type, add functionality, return the results
                                 
                     @Override
-                    public Object run() {
+                    public %s run() {
                                 
                         // Don't touch
                         logger.debug("Running " + this.name);
@@ -298,18 +295,24 @@ public class DynamicJavaClassLoader {
                         int n = Integer.parseInt(Expressions.getArgument("n"));
                                 
                         double p = Double.parseDouble(Expressions.getArgument("p"));
+                        
+                        Remember:
+                        You listed %s
+                        as required variables so
+                        make sure you use them!
                                 
                         */
                                 
                         // Add functionality below here
                        
-                        List<Double> result = new ArrayList<>();
+                        %s result;
                                 
-                        return result;
+                        return null;
                     }
                 }
                                 
-                """;
+                """.formatted(className,className,numberSamples,requiredVariables,isGraphable,selectedGraphs,cardType,className,className,returnType,requiredVariables,returnType);
+        File templateFile = new File(UserSettings.getWorkingDirectory() + "/" + Constants.UDM_FOLDER + "/"+ className +".java");
         try {
             FileWriter fw = new FileWriter(templateFile);
             fw.write(template);

@@ -1,5 +1,6 @@
 package GUI;
 
+import BackEndUtilities.DynamicJavaClassLoader;
 import Managers.ErrorManager;
 import FrontEndUtilities.GUIDataMaster;
 import Managers.OutputManager;
@@ -95,6 +96,12 @@ public class AltMenuBar {
         });
         fileNewMenu.add(newProjectMenuItem);
 
+        JMenuItem customMeasureMenuItem = new JMenuItem("Custom Measure");
+        customMeasureMenuItem.addActionListener(a -> {
+            CustomMeasureTemplateDialog cmtd = new CustomMeasureTemplateDialog();
+            //cmtd.setVisible(true);
+        });
+        fileNewMenu.add(customMeasureMenuItem);
 
         // File -> Open... menu
         JMenu fileOpenMenu = new JMenu("Open...");
@@ -175,6 +182,10 @@ public class AltMenuBar {
         fileSaveAsMenuItem.getAccessibleContext().setAccessibleDescription("Save Project As");
         fileSaveAsMenuItem.addActionListener(l -> SaveManager.saveProgramState(true));
         fileMenu.add(fileSaveAsMenuItem);
+
+        JMenuItem fileReloadCustomMeasures = new JMenuItem("Reload Custom Measures");
+        fileReloadCustomMeasures.addActionListener(a -> DynamicJavaClassLoader.init());
+        fileMenu.add(fileReloadCustomMeasures);
 
         // File -> Exit menu
         JMenuItem fileExitMenuItem = new JMenuItem("Exit");
@@ -354,8 +365,8 @@ public class AltMenuBar {
         menuBar.add(helpMenu);
 
         if(AltMenuBar.isMacOS) {
-            JMenuItem helpMenuItem = new JMenuItem("Run Measures");
-            helpMenuItem.getAccessibleContext().setAccessibleDescription("Run Measures");
+            JMenuItem helpMenuItem = new JMenuItem("Documentation");
+            helpMenuItem.getAccessibleContext().setAccessibleDescription("Open Documentation");
             helpMenuItem.addActionListener(a -> RepositoryManager.openHelpDocument());
             helpMenu.add(helpMenuItem);
         }

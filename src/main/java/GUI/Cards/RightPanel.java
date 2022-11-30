@@ -1,4 +1,4 @@
-package GUI.Panels;
+package GUI.Cards;
 import Enums.CardTypes;
 import GUI.GraphsComboBox;
 import Managers.MeasureManager;

@@ -2,7 +2,7 @@ package GUI;
 
 import Constants.Constants;
 import Enums.CardTypes;
-import GUI.Panels.*;
+import GUI.Cards.*;
 import Managers.RepositoryManager;
 import Settings.Themes;
 import Settings.UserSettings;
