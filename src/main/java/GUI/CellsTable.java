@@ -1,6 +1,6 @@
 package GUI;
 
-import Interop.UIServices;
+import Managers.InputManager;
 import TableUtilities.DataTable;
 import TableUtilities.Row;
 
@@ -115,13 +115,7 @@ public class CellsTable extends JPanel {
         }
     }
 
-    /**
-     * Loads a CSV file into the onscreen chart
-     * @param file String representation of the file path to the target file
-     */
-    public static void loadFile(String file){
-        DataTable in = UIServices.fromCSV(file);
-
+    private static void fromDataTable(DataTable in) {
         if(in == null){
             return;
         }
@@ -139,20 +133,20 @@ public class CellsTable extends JPanel {
         }
     }
 
+    /**
+     * Loads a CSV file into the onscreen chart
+     * @param file String representation of the file path to the target file
+     */
+    public static void loadFile(String file){
+        fromDataTable(InputManager.fromCSV(file));
+    }
+
+    public static void loadTSVFile(String file) {
+        fromDataTable(InputManager.fromTSV(file));
+    }
+
     public static void loadXLSXFile(String file) throws IOException {
-        DataTable in = UIServices.fromXLSX(file, 0);
-
-        int numRows = Math.max(50, in.getIndexOfLastRow()+20);
-        int numCols = Math.max(12, in.getLongestRowSize());
-
-        table.setModel(new DefaultTableModel(numRows, numCols));
-
-        for(int i = 0; i < in.getRows().size(); i++){
-            TableUtilities.Row r = in.getRow(i);
-            for(int j = 0; j < r.size(); j++){
-                table.getModel().setValueAt(r.get(j).data, i, j);
-            }
-        }
+        fromDataTable(InputManager.fromXLSX(file));
     }
 
     public static void setColumnSelection(boolean value){

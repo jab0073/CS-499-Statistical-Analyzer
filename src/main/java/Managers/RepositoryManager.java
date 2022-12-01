@@ -3,7 +3,6 @@ package Managers;
 import Constants.Constants;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Sample;
-import Interop.UIServices;
 import Respository.FileSystemRepository;
 import Settings.UserSettings;
 import TableUtilities.DataTable;
@@ -96,7 +95,7 @@ public class RepositoryManager {
 
 
     public static DataSet importCSV(String fileName) {
-        DataTable dt = UIServices.fromCSV(fileName);
+        DataTable dt = InputManager.fromCSV(fileName);
         if (dt != null)
             return dt.toDataSet();
         return null;

@@ -145,6 +145,32 @@ public class AltMenuBar {
         });
         fileImportMenu.add(fileImportCSVMenuItem);
 
+        // File -> Import... -> CSV Data menu
+        JMenuItem fileImportTSVMenuItem = new JMenuItem("TSV");
+        fileImportTSVMenuItem.getAccessibleContext().setAccessibleDescription("Import TSV data.");
+        fileImportTSVMenuItem.addActionListener(l -> {
+
+            // From MenuBar File button action listener
+
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new File(UserSettings.getWorkingDirectory()));
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("TSV Files", "tsv");
+            fileChooser.setFileFilter(filter);
+
+            JDialog dialog = new JDialog();
+
+            int result = fileChooser.showOpenDialog(dialog);
+
+            dialog.setVisible(true);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                CellsTable.loadTSVFile(selectedFile.getAbsolutePath());
+            }
+            dialog.dispose();
+
+        });
+        fileImportMenu.add(fileImportTSVMenuItem);
+
         // File -> Import... -> XLSX Data menu
         JMenuItem fileImportXLSXMenuItem = new JMenuItem("XLSX");
         fileImportXLSXMenuItem.getAccessibleContext().setAccessibleDescription("Import XLSX data.");
