@@ -14,6 +14,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Abstraction of IMeasure interface intended to be used in GUI code in place of IMeasure.
+ * Contains the same data as the reference IMeasure, however data collection does not convert data to the DataSet format required by
+ * IMeasure until it is time to execute the measure, hopefully improving performance
+ */
 public class GUIMeasure {
     private final ArrayList<String>[] measureData;
     private final String name;
@@ -27,8 +32,15 @@ public class GUIMeasure {
     private final CardTypes cardType;
     private boolean biasCorrection = false;
 
+    /**
+     * GUIMeasure Constructor
+     * @param name the name of the measure
+     */
     public GUIMeasure(String name){
+        //Get reference of IMeasure with the same name to copy data from
         IMeasure m = MeasureManager.getMeasure(name);
+
+        //Copy data from m
         this.name = name;
         this.minimumSamples = m.getMinimumSamples();
         this.requiredVariables = m.getRequiredVariables();
@@ -100,19 +112,23 @@ public class GUIMeasure {
     public Object execute(){
         DataSet ds = new DataSet();
 
+        //Convert String data into a DataSet for the measure
         for(ArrayList<String> arr : measureData){
             Sample s = new Sample();
             s.setData(arr);
             ds.addSample(s);
         }
 
+        //Reference the measure to execute
         IMeasure m = MeasureManager.getMeasure(name);
 
+        //Check if the measure to be executed actually exists
         if(m == null){
             ErrorManager.sendErrorMessage(name, "The program does not have this Custom Measure installed");
             return null;
         }
 
+        //Set data required for the measure
         m.setInputData(ds);
 
         for(int i = 0; i < requiredVariables.size(); i++){
@@ -127,8 +143,10 @@ public class GUIMeasure {
             }
         }
 
+        //Execute the measure
         Object r = m.run();
 
+        //Graph the measure with the selected graph, if applicable
         if(isGraphable && selectedGraph != GraphTypes.NONE){
             GraphManager.graphOutput(selectedGraph, r, this);
         }
@@ -159,6 +177,10 @@ public class GUIMeasure {
         return name;
     }
 
+    /**
+     * Retrieves the measure's data as a CSV style string
+     * @return the data as a string
+     */
     public String getDataAsString(){
         StringBuilder data = new StringBuilder();
 
@@ -179,6 +201,11 @@ public class GUIMeasure {
         return data.toString();
     }
 
+    /**
+     * Retrieves the data of a specific set of data as a CSV style string
+     * @param index the index of the set of data to retrieve
+     * @return the data as a string
+     */
     public String getDataAsString(int index){
         StringBuilder data = new StringBuilder();
 
@@ -200,6 +227,11 @@ public class GUIMeasure {
         return data.toString();
     }
 
+    /**
+     * Get the currently set value of a variable
+     * @param index the index of the variable to retrieve
+     * @return String representation of the variable value
+     */
     public String getVariableValue(int index){
         String var = variableValues.get(index);
 

@@ -79,7 +79,6 @@ public class MiddlePanelFive extends Card {
     private JTextField variableArea(){
         variableArea0 = new JTextField();
         variableArea0.setEditable(false);
-        variableArea0.setBackground(Color.WHITE);
 
         variableArea0.getDocument().addDocumentListener(new DocumentListener() {
             @Override

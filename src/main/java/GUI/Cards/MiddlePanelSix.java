@@ -67,7 +67,6 @@ public class MiddlePanelSix extends Card {
     private JTextField dataAreaTwo(){
         variableArea0 = new JTextField();
         variableArea0.setEditable(false);
-        variableArea0.setBackground(Color.WHITE);
 
         return(variableArea0);
     }
@@ -75,7 +74,6 @@ public class MiddlePanelSix extends Card {
     private JTextField dataAreaThree(){
         variableArea1 = new JTextField();
         variableArea1.setEditable(false);
-        variableArea1.setBackground(Color.WHITE);
 
         return(variableArea1);
     }
