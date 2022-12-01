@@ -57,10 +57,6 @@ public class OutputManager {
                     break;
                 }
 
-                if(sArr[i].contains(" ")){
-                    sArr[i] = sArr[i].replace(" ", "");
-                }
-
                 //Remove [] from the start and end of results
                 if(sArr[i].startsWith("[")){
                     sArr[i] = sArr[i].replace("[", "");
