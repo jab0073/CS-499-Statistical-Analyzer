@@ -23,7 +23,6 @@ import java.util.List;
 
 public class DynamicJavaClassLoader {
     private static final Logger logger = LogManager.getLogger(DynamicJavaClassLoader.class);
-    private static File templateFile;
     /**
      * It reads all the .java files in the UDM folder, writes them to the CustomMeasures folder, compiles them, and then
      * loads them into the program

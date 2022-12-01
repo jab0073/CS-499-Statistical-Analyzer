@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class CustomMeasureTemplateDialog extends JDialog {
     private JPanel contentPane;
@@ -29,15 +30,27 @@ public class CustomMeasureTemplateDialog extends JDialog {
     private JLabel graphListLabel;
     private JList<CardTypes> cardList;
     private JLabel cardLabel;
+    private JLabel errorLabel;
 
     public CustomMeasureTemplateDialog() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
+        final String ID_PATTERN = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
+        final Pattern classNamePattern = Pattern.compile(ID_PATTERN);
+
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                onOK();
+                String className = classTextArea.getText();
+                if (!classNamePattern.matcher(className).matches()) {
+                    errorLabel.setText("Class Name invalid");
+                    errorLabel.setForeground(Color.RED);
+                } else {
+                    errorLabel.setText("");
+                    errorLabel.setForeground(Color.RED);
+                    onOK();
+                }
             }
         });
 
@@ -72,7 +85,7 @@ public class CustomMeasureTemplateDialog extends JDialog {
         spinModel.setValue(1);
         spinModel.setMinimum(1);
         spinModel.setStepSize(1);
-        spinModel.setMaximum(Double.POSITIVE_INFINITY);
+        spinModel.setMaximum(99999);
         this.numSamplesSpinner.setModel(spinModel);
 
         this.graphsList.setCellRenderer(new CheckboxListCellRenderer());
@@ -109,6 +122,24 @@ public class CustomMeasureTemplateDialog extends JDialog {
         cardListModel.addElement(CardTypes.TWO_DATA_NO_VARIABLE);
         this.cardList.setModel(cardListModel);
 
+        this.classTextArea.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                String className = classTextArea.getText();
+                if (!classNamePattern.matcher(className).matches()) {
+                    errorLabel.setText("Class Name invalid");
+                    errorLabel.setForeground(Color.RED);
+                } else {
+                    errorLabel.setText("");
+                    errorLabel.setForeground(Color.RED);
+                }
+            }
+            @Override
+            public void keyPressed(KeyEvent e) {}
+
+            @Override
+            public void keyReleased(KeyEvent e) {}
+        });
 
         this.pack();
 
