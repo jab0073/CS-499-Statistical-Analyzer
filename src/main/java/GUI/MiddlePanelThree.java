@@ -43,7 +43,6 @@ public class MiddlePanelThree extends Card{
      *@return The text area*/
     private JTextField dataArea(){
         variableArea0 = new JTextField();
-        variableArea0.setBackground(Color.WHITE);
         variableArea0.setEditable(false);
 
         return(variableArea0);

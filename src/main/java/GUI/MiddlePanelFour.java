@@ -40,18 +40,10 @@ public class MiddlePanelFour extends Card{
         this.add(topPanel(), c);
     }
 
-    /**Creates a scroll pane for the text area.
-     *@return A scroll pane containing a text area.
-    private JScrollPane middlePanel() {
-        JScrollPane pane = new JScrollPane(variableArea0());
-        pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        return (pane);
-    }*/
     /**Creates a text area that user can input data into.
      *@return The text area*/
     private JTextField dataArea(){
         variableArea0 = new JTextField();
-        variableArea0.setBackground(Color.WHITE);
         variableArea0.setEditable(false);
 
         return(variableArea0);
@@ -60,7 +52,6 @@ public class MiddlePanelFour extends Card{
     private JTextField dataAreaTwo(){
         variableArea1 = new JTextField();
         variableArea1.setEditable(false);
-        variableArea1.setBackground(Color.WHITE);
 
         return(variableArea1);
     }
