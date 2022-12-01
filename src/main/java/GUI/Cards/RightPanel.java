@@ -118,7 +118,7 @@ public class RightPanel extends JPanel{
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                FrontEndUtilities.GUIDataMaster.newGUIMeasure(dropDown().getItemAt(functionIndex).toString());
+                FrontEndUtilities.GUIDataMaster.newGUIMeasure(box.getItemAt(functionIndex));
                 updateList(true);
             }
         });
