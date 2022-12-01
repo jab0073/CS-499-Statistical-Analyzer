@@ -190,4 +190,8 @@ public class GUIDataMaster {
     public static boolean isBiasCorrection() {
         return biasCorrection;
     }
+
+    public static void updateMeasureListForDynamicLoad(){
+        frameReference.updateMeasureDropdown();
+    }
 }

@@ -203,4 +203,8 @@ public class Frame extends JFrame {
             this.repaint();
 
     }
+
+    public void updateMeasureDropdown(){
+        rightPanel.updateDropdown();
+    }
 }
