@@ -1,5 +1,7 @@
-package Graphing;
+package Interfaces;
 
+import Enums.DataFormat;
+import Enums.GraphTypes;
 import FrontEndUtilities.GUIMeasure;
 
 public interface IGraph {

@@ -1,7 +1,9 @@
 package GUI;
 
-import BackEndUtilities.Constants;
-import Respository.RepositoryManager;
+import Constants.Constants;
+import Enums.CardTypes;
+import GUI.Cards.*;
+import Managers.RepositoryManager;
 import Settings.Themes;
 import Settings.UserSettings;
 
@@ -200,5 +202,9 @@ public class Frame extends JFrame {
             this.revalidate();
             this.repaint();
 
+    }
+
+    public void updateMeasureDropdown(){
+        rightPanel.updateDropdown();
     }
 }

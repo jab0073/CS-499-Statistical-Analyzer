@@ -1,10 +1,12 @@
 package FrontEndUtilities;
 
 import BackEndUtilities.Sample;
-import GUI.Card;
-import GUI.CardTypes;
+import GUI.Cards.Card;
+import Enums.CardTypes;
 import GUI.Frame;
-import Graphing.GraphManager;
+import Managers.ErrorManager;
+import Managers.GraphManager;
+import Managers.OutputManager;
 import TableUtilities.DataTable;
 
 import java.util.ArrayList;
@@ -187,5 +189,9 @@ public class GUIDataMaster {
 
     public static boolean isBiasCorrection() {
         return biasCorrection;
+    }
+
+    public static void updateMeasureListForDynamicLoad(){
+        frameReference.updateMeasureDropdown();
     }
 }

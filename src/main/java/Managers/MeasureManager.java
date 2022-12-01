@@ -1,5 +1,6 @@
-package BackEndUtilities;
+package Managers;
 
+import FrontEndUtilities.GUIDataMaster;
 import Interfaces.IMeasure;
 import org.reflections.Reflections;
 
@@ -47,6 +48,7 @@ public class MeasureManager {
     public static void dynamicallyAddMeasure(IMeasure measure) {
         if(!measures.contains(measure))
             measures.add(measure);
+            GUIDataMaster.updateMeasureListForDynamicLoad();
     }
 
 }

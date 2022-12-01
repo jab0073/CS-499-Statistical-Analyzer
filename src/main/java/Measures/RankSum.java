@@ -2,12 +2,12 @@ package Measures;
 
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
-import BackEndUtilities.MeasureConstants;
+import Constants.MeasureConstants;
 import BackEndUtilities.Sample;
-import FrontEndUtilities.ErrorManager;
-import GUI.CardTypes;
-import Graphing.DataFormat;
-import Graphing.GraphTypes;
+import Managers.ErrorManager;
+import Enums.CardTypes;
+import Enums.DataFormat;
+import Enums.GraphTypes;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
 import org.apache.commons.lang3.ArrayUtils;

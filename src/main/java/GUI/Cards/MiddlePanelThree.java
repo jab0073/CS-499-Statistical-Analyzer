@@ -1,6 +1,8 @@
-package GUI;
+package GUI.Cards;
 
-import FrontEndUtilities.ErrorManager;
+import Enums.CardTypes;
+import GUI.CellsTable;
+import Managers.ErrorManager;
 import FrontEndUtilities.GUIDataMaster;
 
 import javax.swing.*;
@@ -8,7 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MiddlePanelThree extends Card{
+public class MiddlePanelThree extends Card {
     private final CardTypes type = CardTypes.NO_DATA_ONE_VARIABLE;
 
     private static JTextField variableArea0;

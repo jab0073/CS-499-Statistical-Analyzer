@@ -1,10 +1,9 @@
-package Respository;
+package Managers;
 
-import BackEndUtilities.Constants;
+import Constants.Constants;
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Sample;
-import Interfaces.IStorage;
-import Interop.UIServices;
+import Respository.FileSystemRepository;
 import Settings.UserSettings;
 import TableUtilities.DataTable;
 import com.opencsv.CSVWriter;
@@ -96,7 +95,7 @@ public class RepositoryManager {
 
 
     public static DataSet importCSV(String fileName) {
-        DataTable dt = UIServices.fromCSV(fileName);
+        DataTable dt = InputManager.fromCSV(fileName);
         if (dt != null)
             return dt.toDataSet();
         return null;

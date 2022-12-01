@@ -2,7 +2,8 @@ package GUI;
 
 import FrontEndUtilities.GUIDataMaster;
 import FrontEndUtilities.GUIMeasure;
-import Graphing.GraphTypes;
+import Enums.GraphTypes;
+import GUI.Cards.RightPanel;
 
 import javax.swing.*;
 import java.util.Objects;

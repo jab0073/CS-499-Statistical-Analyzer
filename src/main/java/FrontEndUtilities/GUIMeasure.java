@@ -1,12 +1,14 @@
 package FrontEndUtilities;
 
 import BackEndUtilities.*;
-import GUI.CardTypes;
-import Graphing.DataFormat;
-import Graphing.GraphManager;
-import Graphing.GraphTypes;
+import Enums.CardTypes;
+import Enums.DataFormat;
+import Managers.ErrorManager;
+import Managers.GraphManager;
+import Enums.GraphTypes;
 import Interfaces.BiasCorrectable;
 import Interfaces.IMeasure;
+import Managers.MeasureManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;

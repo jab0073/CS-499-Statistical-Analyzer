@@ -1,4 +1,4 @@
-package Interop;
+package Managers;
 
 import BackEndUtilities.Sample;
 import TableUtilities.DataTable;
@@ -18,9 +18,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.*;
 import java.util.*;
 
-public class UIServices {
+public class InputManager {
 
-    static final Logger logger = LogManager.getLogger(UIServices.class.getName());
+    static final Logger logger = LogManager.getLogger(InputManager.class.getName());
 
     /**
      * It reads a CSV file and returns a DataTable object.
@@ -54,7 +54,7 @@ public class UIServices {
      * @return A DataTable object
      */
     public static DataTable fromCSV(String tableName, String file) {
-        DataTable dt = UIServices.fromCSV(file);
+        DataTable dt = InputManager.fromCSV(file);
         if(dt != null) {
             dt.setTableName(tableName);
             return dt;
@@ -106,40 +106,46 @@ public class UIServices {
         return dt;
     }
 
+    public static DataTable fromTSV(String file) {
+        return fromDelimitedFile(file, '\t');
+    }
+
     /**
      * It takes a file path and a sheet number, and returns a DataTable object
      *
      * @param filePath The path to the file you want to read.
-     * @param sheetNumber The sheet number you want to read from.
      * @return A DataTable object
      */
-    public static DataTable fromXLSX(String filePath, int sheetNumber) throws IOException {
+    public static DataTable fromXLSX(String filePath) throws IOException {
         FileInputStream file = new FileInputStream(filePath);
         Workbook workbook = new XSSFWorkbook(file);
 
-        Sheet sheet = workbook.getSheetAt(sheetNumber);
-
         DataTable dt = new DataTable();
-        for (org.apache.poi.ss.usermodel.Row cells : sheet) {
-            Sample ds = new Sample();
 
-            Iterator<org.apache.poi.ss.usermodel.Cell> cellIterator = cells.cellIterator();
-            while (cellIterator.hasNext()) {
-                org.apache.poi.ss.usermodel.Cell cell = cellIterator.next();
+        for(int i=0; i <= workbook.getNumberOfSheets() ; i++) {
+            Sheet sheet = workbook.getSheetAt(i);
 
-                if(cell.getCellType() == CellType.STRING)
-                    ds.addData(cell.getStringCellValue());
-                else if (cell.getCellType() == CellType.NUMERIC) {
-                    ds.addData(String.valueOf(cell.getNumericCellValue()));
-                } else if (cell.getCellType() == CellType.FORMULA) {
-                    switch (cell.getCachedFormulaResultType()) {
-                        case BOOLEAN -> ds.addData(String.valueOf(cell.getBooleanCellValue()));
-                        case NUMERIC -> ds.addData(String.valueOf(cell.getNumericCellValue()));
-                        case STRING -> ds.addData(cell.getRichStringCellValue().getString());
+            for (org.apache.poi.ss.usermodel.Row cells : sheet) {
+                Sample ds = new Sample();
+
+                Iterator<org.apache.poi.ss.usermodel.Cell> cellIterator = cells.cellIterator();
+                while (cellIterator.hasNext()) {
+                    org.apache.poi.ss.usermodel.Cell cell = cellIterator.next();
+
+                    if (cell.getCellType() == CellType.STRING)
+                        ds.addData(cell.getStringCellValue());
+                    else if (cell.getCellType() == CellType.NUMERIC) {
+                        ds.addData(String.valueOf(cell.getNumericCellValue()));
+                    } else if (cell.getCellType() == CellType.FORMULA) {
+                        switch (cell.getCachedFormulaResultType()) {
+                            case BOOLEAN -> ds.addData(String.valueOf(cell.getBooleanCellValue()));
+                            case NUMERIC -> ds.addData(String.valueOf(cell.getNumericCellValue()));
+                            case STRING -> ds.addData(cell.getRichStringCellValue().getString());
+                        }
                     }
                 }
+                dt.addRow(ds.clone());
             }
-            dt.addRow(ds.clone());
         }
         return dt;
     }
@@ -149,11 +155,10 @@ public class UIServices {
      *
      * @param tableName The name of the table.
      * @param filePath The path to the file you want to read.
-     * @param sheetNumber The sheet number in the Excel file to read.
      * @return A DataTable object
      */
-    public static DataTable fromXLSX(String tableName, String filePath, int sheetNumber) throws IOException {
-        DataTable dt = UIServices.fromXLSX(filePath, sheetNumber);
+    public static DataTable fromXLSX(String tableName, String filePath) throws IOException {
+        DataTable dt = InputManager.fromXLSX(filePath);
         dt.setTableName(tableName);
         return dt;
     }

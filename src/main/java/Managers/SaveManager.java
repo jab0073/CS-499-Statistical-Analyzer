@@ -1,8 +1,9 @@
-package FrontEndUtilities;
+package Managers;
 
-import BackEndUtilities.Constants;
+import Constants.Constants;
+import FrontEndUtilities.GUIDataMaster;
+import FrontEndUtilities.GUIMeasure;
 import GUI.SingleRootFileSystemView;
-import Respository.RepositoryManager;
 import Settings.UserSettings;
 import TableUtilities.DataTable;
 import com.google.gson.Gson;

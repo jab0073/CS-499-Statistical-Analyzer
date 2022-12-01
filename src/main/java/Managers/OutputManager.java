@@ -1,6 +1,7 @@
-package FrontEndUtilities;
+package Managers;
 
-import BackEndUtilities.Constants;
+import Constants.Constants;
+import FrontEndUtilities.GUIDataMaster;
 import GUI.SingleRootFileSystemView;
 import Settings.UserSettings;
 import org.apache.commons.io.FilenameUtils;

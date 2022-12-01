@@ -1,8 +1,10 @@
-package GUI;
-import BackEndUtilities.MeasureManager;
+package GUI.Cards;
+import Enums.CardTypes;
+import GUI.GraphsComboBox;
+import Managers.MeasureManager;
 import FrontEndUtilities.GUIDataMaster;
 import FrontEndUtilities.GUIMeasure;
-import Graphing.GraphTypes;
+import Enums.GraphTypes;
 import Interfaces.IMeasure;
 
 import javax.swing.*;
@@ -18,6 +20,7 @@ import java.util.Vector;
 public class RightPanel extends JPanel{
     private static JList<String> functionList;
     private static List<GraphTypes> graphsList;
+    JComboBox<String> box;
     private static boolean selected = false;
     private static int functionIndex;
     /**Method which returns the panel which will be on the right side of the frame. */
@@ -94,7 +97,7 @@ public class RightPanel extends JPanel{
 
     private JComboBox dropDown(){
         String[] names = MeasureManager.getAllMeasureNames().toArray(new String[0]);
-        JComboBox<String> box = new JComboBox<>(names);
+        box = new JComboBox<>(names);
         box.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -192,5 +195,12 @@ public class RightPanel extends JPanel{
 
     public void updateForLoad(){
         updateList(true);
+    }
+
+    public void updateDropdown(){
+        String[] names = MeasureManager.getAllMeasureNames().toArray(new String[0]);
+        ComboBoxModel<String> newModel = new DefaultComboBoxModel<>(names);
+
+        box.setModel(newModel);
     }
 }

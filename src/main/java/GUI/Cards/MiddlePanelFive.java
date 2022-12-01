@@ -1,22 +1,26 @@
-package GUI;
+package GUI.Cards;
 
-import FrontEndUtilities.ErrorManager;
+import Enums.CardTypes;
+import GUI.CellsTable;
+import Managers.ErrorManager;
 import FrontEndUtilities.GUIDataMaster;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MiddlePanelFour extends Card{
-    private final CardTypes type = CardTypes.NO_DATA_TWO_VARIABLE;
-    private static JTextField variableArea0;
-    private static JTextField variableArea1;
+public class MiddlePanelFive extends Card {
+    private static final CardTypes type = CardTypes.ONE_DATA_ONE_VARIABLE;
+    private JTextArea dataArea0;
+    private JTextField variableArea0;
 
+    private JLabel dataLabel0;
     private JLabel variableLabel0;
-    private JLabel variableLabel1;
 
-    public MiddlePanelFour(){
+    public MiddlePanelFive(){
         /*Create a JPanel with a grid bag layout*/
         this.setLayout(new GridBagLayout());
 
@@ -26,13 +30,11 @@ public class MiddlePanelFour extends Card{
         c.anchor = GridBagConstraints.LINE_END;
         c.gridx = 2;
         c.gridy = 1;
-        this.add(dataArea(), c);
+        this.add(scrollPane(), c);
         c.gridy = 2;
-        c.insets = new Insets(10, 0, 0, 0);
         this.add(topPanel2(), c);
-        c.insets = new Insets(0, 0, 0, 0);
         c.gridy = 3;
-        this.add(dataAreaTwo(), c);
+        this.add(variableArea(), c);
 
         /*Change the y position value for the gridbag constraints and apply to the panel containing the
          * button and label.*/
@@ -41,28 +43,62 @@ public class MiddlePanelFour extends Card{
     }
 
     /**Creates a scroll pane for the text area.
-     *@return A scroll pane containing a text area.
-    private JScrollPane middlePanel() {
-        JScrollPane pane = new JScrollPane(variableArea0());
+     *@return A scroll pane containing a text area.*/
+    private JScrollPane scrollPane() {
+        JScrollPane pane = new JScrollPane(dataArea());
         pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         return (pane);
-    }*/
+    }
     /**Creates a text area that user can input data into.
      *@return The text area*/
-    private JTextField dataArea(){
-        variableArea0 = new JTextField();
-        variableArea0.setBackground(Color.WHITE);
-        variableArea0.setEditable(false);
+    private JTextArea dataArea(){
+        dataArea0 = new JTextArea("Select Data from Chart", 20, 15);
+        dataArea0.setEditable(false);
+        dataArea0.setLineWrap(true);
 
-        return(variableArea0);
+        dataArea0.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateMeasureData();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateMeasureData();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
+
+        return(dataArea0);
     }
 
-    private JTextField dataAreaTwo(){
-        variableArea1 = new JTextField();
-        variableArea1.setEditable(false);
-        variableArea1.setBackground(Color.WHITE);
+    private JTextField variableArea(){
+        variableArea0 = new JTextField();
+        variableArea0.setEditable(false);
+        variableArea0.setBackground(Color.WHITE);
 
-        return(variableArea1);
+        variableArea0.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateMeasureData();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateMeasureData();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
+
+        return(variableArea0);
     }
 
     /**Method which creates panel to contain the button and label.
@@ -86,7 +122,7 @@ public class MiddlePanelFour extends Card{
     /**Method which creates the label.
      *@return The label*/
     private JLabel dataLabel(){
-        return(variableLabel1 = new JLabel("Data"));
+        return(dataLabel0 = new JLabel("Data"));
     }
 
     private JLabel dataLabel2(){
@@ -101,7 +137,18 @@ public class MiddlePanelFour extends Card{
         btnImport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                variableArea0.setText(CellsTable.getSelectedData());
+                String d = CellsTable.getSelectedData();
+
+                if(d == null){
+                    return;
+                }
+
+                //If Shift is held when clicking
+                if((e.getModifiers() & 1) != 0){
+                    dataArea0.append("," + d);
+                }else{
+                    dataArea0.setText(d);
+                }
                 updateMeasureData();
             }
         });
@@ -115,7 +162,7 @@ public class MiddlePanelFour extends Card{
         btnImport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                variableArea1.setText(CellsTable.getSelectedData());
+                variableArea0.setText(CellsTable.getSelectedData());
                 updateMeasureDataTwo();
             }
         });
@@ -124,6 +171,17 @@ public class MiddlePanelFour extends Card{
     }
 
     private void updateMeasureData(){
+        String[] data = dataArea0.getText().split(",");
+
+        int s = RightPanel.getCurrentMeasureIndex();
+        if(s < 0){
+            return;
+        }
+
+        GUIDataMaster.getGUIMeasure(s).addData(false, 0, data);
+    }
+
+    private void updateMeasureDataTwo(){
         String[] data = variableArea0.getText().split(",");
 
         int s = RightPanel.getCurrentMeasureIndex();
@@ -134,17 +192,6 @@ public class MiddlePanelFour extends Card{
         GUIDataMaster.getGUIMeasure(s).setVariable(variableLabel0.getText(), data[0]);
     }
 
-    private void updateMeasureDataTwo(){
-        String[] data = variableArea1.getText().split(",");
-
-        int s = RightPanel.getCurrentMeasureIndex();
-        if(s < 0){
-            return;
-        }
-
-        GUIDataMaster.getGUIMeasure(s).setVariable(variableLabel1.getText(), data[0]);
-    }
-
     @Override
     public CardTypes getType() {
         return type;
@@ -152,28 +199,32 @@ public class MiddlePanelFour extends Card{
 
     @Override
     public void setDataArea(int index, String data) {
-        ErrorManager.sendErrorMessage("GUI", "Program attempted to set data for a data field which does not exist");
+        switch (index) {
+            case 0 -> dataArea0.setText(data);
+            default -> ErrorManager.sendErrorMessage("GUI", "Program attempted to set data for a data field which does not exist");
+        }
     }
 
     @Override
     public void setVariableArea(int index, String data) {
         switch (index) {
             case 0 -> variableArea0.setText(data);
-            case 1 -> variableArea1.setText(data);
             default -> ErrorManager.sendErrorMessage("GUI", "Program attempted to set data for a data field which does not exist");
         }
     }
 
     @Override
     public void setDataLabel(int index, String label) {
-        ErrorManager.sendErrorMessage("GUI", "Program attempted to set name for a label which does not exist");
+        switch (index) {
+            case 0 -> dataLabel0.setText(label);
+            default -> ErrorManager.sendErrorMessage("GUI", "Program attempted to set name for a label which does not exist");
+        }
     }
 
     @Override
     public void setVariableLabel(int index, String label) {
         switch (index) {
             case 0 -> variableLabel0.setText(label);
-            case 1 -> variableLabel1.setText(label);
             default -> ErrorManager.sendErrorMessage("GUI", "Program attempted to set name for a label which does not exist");
         }
     }

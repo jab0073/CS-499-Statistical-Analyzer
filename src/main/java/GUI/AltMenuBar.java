@@ -1,11 +1,12 @@
 package GUI;
 
-import FrontEndUtilities.ErrorManager;
+import BackEndUtilities.DynamicJavaClassLoader;
+import Managers.ErrorManager;
 import FrontEndUtilities.GUIDataMaster;
-import FrontEndUtilities.OutputManager;
-import FrontEndUtilities.SaveManager;
-import Graphing.GraphManager;
-import Respository.RepositoryManager;
+import Managers.OutputManager;
+import Managers.SaveManager;
+import Managers.GraphManager;
+import Managers.RepositoryManager;
 import Settings.UserSettings;
 
 import javax.swing.*;
@@ -95,6 +96,12 @@ public class AltMenuBar {
         });
         fileNewMenu.add(newProjectMenuItem);
 
+        JMenuItem customMeasureMenuItem = new JMenuItem("Custom Measure");
+        customMeasureMenuItem.addActionListener(a -> {
+            CustomMeasureTemplateDialog cmtd = new CustomMeasureTemplateDialog();
+            //cmtd.setVisible(true);
+        });
+        fileNewMenu.add(customMeasureMenuItem);
 
         // File -> Open... menu
         JMenu fileOpenMenu = new JMenu("Open...");
@@ -138,6 +145,32 @@ public class AltMenuBar {
         });
         fileImportMenu.add(fileImportCSVMenuItem);
 
+        // File -> Import... -> CSV Data menu
+        JMenuItem fileImportTSVMenuItem = new JMenuItem("TSV");
+        fileImportTSVMenuItem.getAccessibleContext().setAccessibleDescription("Import TSV data.");
+        fileImportTSVMenuItem.addActionListener(l -> {
+
+            // From MenuBar File button action listener
+
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new File(UserSettings.getWorkingDirectory()));
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("TSV Files", "tsv");
+            fileChooser.setFileFilter(filter);
+
+            JDialog dialog = new JDialog();
+
+            int result = fileChooser.showOpenDialog(dialog);
+
+            dialog.setVisible(true);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                CellsTable.loadTSVFile(selectedFile.getAbsolutePath());
+            }
+            dialog.dispose();
+
+        });
+        fileImportMenu.add(fileImportTSVMenuItem);
+
         // File -> Import... -> XLSX Data menu
         JMenuItem fileImportXLSXMenuItem = new JMenuItem("XLSX");
         fileImportXLSXMenuItem.getAccessibleContext().setAccessibleDescription("Import XLSX data.");
@@ -175,6 +208,10 @@ public class AltMenuBar {
         fileSaveAsMenuItem.getAccessibleContext().setAccessibleDescription("Save Project As");
         fileSaveAsMenuItem.addActionListener(l -> SaveManager.saveProgramState(true));
         fileMenu.add(fileSaveAsMenuItem);
+
+        JMenuItem fileReloadCustomMeasures = new JMenuItem("Reload Custom Measures");
+        fileReloadCustomMeasures.addActionListener(a -> DynamicJavaClassLoader.init());
+        fileMenu.add(fileReloadCustomMeasures);
 
         // File -> Exit menu
         JMenuItem fileExitMenuItem = new JMenuItem("Exit");
@@ -354,8 +391,8 @@ public class AltMenuBar {
         menuBar.add(helpMenu);
 
         if(AltMenuBar.isMacOS) {
-            JMenuItem helpMenuItem = new JMenuItem("Run Measures");
-            helpMenuItem.getAccessibleContext().setAccessibleDescription("Run Measures");
+            JMenuItem helpMenuItem = new JMenuItem("Documentation");
+            helpMenuItem.getAccessibleContext().setAccessibleDescription("Open Documentation");
             helpMenuItem.addActionListener(a -> RepositoryManager.openHelpDocument());
             helpMenu.add(helpMenuItem);
         }
