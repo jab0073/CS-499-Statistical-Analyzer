@@ -30,24 +30,38 @@ public class OutputManager {
      * the scrollPane to the frame
      */
     public static void displayOutputs(){
+        //If there are no outputs, just quit
         if(outputs.size() == 0) return;
 
+        //Create new JFrame to display the outputs on
         JFrame frame = new JFrame("");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(1000, 750);
         frame.setLayout(new BorderLayout());
 
+        //Create the text box to hold the outputs
         JTextPane textPane = new JTextPane();
         textPane.setEditable(false);
 
+        //Big long nested loops to retrieve and format outputs in a pleasing manner
         for(String s : outputs){
             String[] sArr = s.split(",");
             String name = sArr[0];
             StringBuilder data = new StringBuilder();
+
+            //If the output is longer than 10 lines, just tell the user that there are more results and don't flood the results screen
             for(int i = 1; i < sArr.length; i++){
+                if(i > 10){
+                    int remaining = sArr.length-10;
+                    data.append("And ").append(remaining).append(" more...\nSave to see full results");
+                    break;
+                }
+
                 if(sArr[i].contains(" ")){
                     sArr[i] = sArr[i].replace(" ", "");
                 }
+
+                //Remove [] from the start and end of results
                 if(sArr[i].startsWith("[")){
                     sArr[i] = sArr[i].replace("[", "");
                 }
@@ -76,6 +90,7 @@ public class OutputManager {
             textPane.setText(out);
         }
 
+        //Create scroll pane, save button and JPanel for the text results
         JScrollPane textScroll = new JScrollPane(textPane);
         textScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         JPanel textPanel = new JPanel(new BorderLayout());
@@ -85,10 +100,14 @@ public class OutputManager {
         textPanel.add(textScroll);
         textPanel.add(btnSaveText, BorderLayout.SOUTH);
 
+        //If there are graphs to display
         if(graphs.size() > 0){
+
+            //Set up tabs to let the user switch between text outputs and graphs, and between each graph
             JTabbedPane mainTab = new JTabbedPane();
             JTabbedPane graphTab = new JTabbedPane();
 
+            //For each graph, add a new tab to the graphTab and show the graph and save button
             for(ChartPanel g : graphs){
                 JPanel graphPane = new JPanel(new BorderLayout());
                 JButton btnSave = new JButton("Save Graph");
@@ -113,6 +132,7 @@ public class OutputManager {
         textScroll.getViewport().setViewPosition(new Point(0,0));
         textScroll.getVerticalScrollBar().setValue(0);
 
+        //Forces scroll pane to start at the top rather than the bottom (Text Panes are weird)
         textPane.setSelectionStart(0);
         textPane.setSelectionEnd(0);
 
@@ -140,16 +160,7 @@ public class OutputManager {
      * This function will open a file browser and allow the user to select where to save the output files
      */
     public static void saveOutputsToFile(){
-        //Open Selection menu
-            //User Selects what outputs to save
         displayOutputSelection();
-
-        //Open file browser
-            //User selects where to save files and what name to give them
-
-        //Convert outputs to save format
-        //Build output file
-        //save file
     }
 
     /**
@@ -158,7 +169,7 @@ public class OutputManager {
     private static void displayOutputSelection(){
         boolean[] outputSelections = new boolean[outputs.size()];
 
-        JPanel[] selectors = new JPanel[outputSelections.length];
+        JPanel[] selectionGroups = new JPanel[outputSelections.length];
 
         int i = 0;
 
@@ -181,20 +192,20 @@ public class OutputManager {
             selector.add(label);
             selector.add(selectionBox);
 
-            selectors[i] = selector;
+            selectionGroups[i] = selector;
 
             i++;
         }
 
         //Create new panel to hold selectors
         // Has 2 Columns and splits the measure selectors between the two columns
-        JPanel selectionPanel = new JPanel(new GridLayout((int) Math.ceil(((float) selectors.length)/2.0), 2));
+        JPanel selectionPanel = new JPanel(new GridLayout((int) Math.ceil(((float) selectionGroups.length)/2.0), 2));
 
         JPanel content = new JPanel(new BorderLayout());
 
         JDialog dialog = new JDialog();
 
-        for(JPanel p : selectors){
+        for(JPanel p : selectionGroups){
             selectionPanel.add(p);
         }
 
@@ -267,14 +278,8 @@ public class OutputManager {
     }
 
     /**
-     * It takes the file location and the boolean array of selected outputs, and then it creates a string builder, and then
-     * it loops through the boolean array, and if the boolean is true, it gets the name of the output, and then it splits
-     * the output by commas, and then it copies the array of strings from the second element to the end, and then it
-     * appends the name of the output to the string builder, and then it loops through the array of strings, and it removes
-     * the brackets from the beginning and end of the string, and then it replaces the new line characters with commas, and
-     * then it appends the string to the string builder, and then it appends a comma to the string builder, and then it
-     * appends a new line character to the string builder, and then it writes the string builder to the file, and then it
-     * closes the file
+     * Prepares outputs to be saved by formatting them based on the format selected by the user.
+     * It then saves the file to the location specified
      *
      * @param fileLocation The location of the file to be saved.
      * @param selectedOutputs A boolean array that is the same length as the number of outputs. If the value at a given
@@ -336,7 +341,7 @@ public class OutputManager {
     }
 
     /**
-     * It creates a JFileChooser that only allows you to save files in a specific folder
+     * Displays a file chooser for the user to pick where to save a graph, then saves the graph
      *
      * @param panel The ChartPanel object that contains the chart you want to save.
      */
