@@ -1,6 +1,12 @@
 package GUI;
 
+import Constants.Constants;
+import Enums.CardTypes;
+import GUI.Cards.*;
+import Managers.RepositoryManager;
 import Settings.Themes;
+import Settings.UserSettings;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.FontUIResource;
@@ -16,11 +22,13 @@ public class Frame extends JFrame {
     private static JPanel cardPanel;
     private CellsTable table;
     private RightPanel rightPanel;
+    private JPanel wdPanel;
+    private JLabel wdLabel;
 
     /**Method for generating the frame which holds the GUI*/
     public Frame() {
         /*Create a frame, give it a size, set it to exit on close.*/
-        this.setTitle("Analysis");
+        this.setTitle(Constants.PROGRAM_NAME);
 
 
         AltMenuBar amb = new AltMenuBar();
@@ -31,6 +39,12 @@ public class Frame extends JFrame {
         /*One panel containing other panels, centered so it will resize with frame*/
         this.setLayout(new BorderLayout());
         this.add(window(), BorderLayout.CENTER);
+
+        this.wdPanel = new JPanel();
+        this.wdLabel = new JLabel("Working Directory: " + UserSettings.getWorkingDirectory());
+
+        wdPanel.add(wdLabel);
+        this.add(wdPanel, BorderLayout.SOUTH);
 
         this.addWindowListener(new WindowAdapter() {
 
@@ -48,6 +62,9 @@ public class Frame extends JFrame {
 
         /*Set the frame to start maximized and visible.*/
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        this.setIconImage(RepositoryManager.getImageResource("logo.png"));
+
         this.setVisible(true);
     }
 
@@ -193,5 +210,29 @@ public class Frame extends JFrame {
 
     public void updateRightPanelForLoad(){
         rightPanel.updateForLoad();
+    }
+
+    public void updateWD() {
+        this.wdLabel.setText("Working Directory: " + UserSettings.getWorkingDirectory());
+        this.wdLabel.revalidate();
+        this.wdLabel.updateUI();
+        this.wdPanel.revalidate();
+        this.wdPanel.updateUI();
+    }
+
+    public void changeStatus(String status) {
+        if(!status.equals("")) {
+            this.setTitle(Constants.PROGRAM_NAME + " - Project: " + status);
+        }
+        else {
+            this.setTitle(Constants.PROGRAM_NAME);
+        }
+            this.revalidate();
+            this.repaint();
+
+    }
+
+    public void updateMeasureDropdown(){
+        rightPanel.updateDropdown();
     }
 }

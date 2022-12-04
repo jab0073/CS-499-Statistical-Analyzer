@@ -2,21 +2,20 @@ package Measures;
 
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
-import BackEndUtilities.MeasureConstants;
+import Constants.MeasureConstants;
 import BackEndUtilities.Sample;
-import FrontEndUtilities.ErrorManager;
-import GUI.CardTypes;
-import Graphing.GraphTypes;
+import Managers.ErrorManager;
+import Enums.CardTypes;
+import Enums.GraphTypes;
 import Interfaces.BiasCorrectable;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.math3.stat.StatUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Variance implements IMeasure {
+public class Variance extends BiasCorrectable implements IMeasure {
     private DataSet inputData;
     private final String name = MeasureConstants.variance;
     private final int minimumSamples = 1;
@@ -102,7 +101,11 @@ public class Variance implements IMeasure {
         if(!this.validate())
             return null;
 
-        double result = StatUtils.variance(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
+        org.apache.commons.math3.stat.descriptive.moment.Variance var = new org.apache.commons.math3.stat.descriptive.moment.Variance();
+        var.setBiasCorrected(this.isBiasCorrected);
+
+
+        double result = var.evaluate(ArrayUtils.toPrimitive(inputData.getAllDataAsDouble().toArray(Double[]::new)));
 
         if(Double.isNaN(result))
             return null;

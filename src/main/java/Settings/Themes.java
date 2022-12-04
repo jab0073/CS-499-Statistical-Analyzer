@@ -17,6 +17,7 @@ public class Themes {
         themes.put("Light - Orange", new FlatArcOrangeIJTheme());
         themes.put("Dark - Contrast", new FlatArcDarkContrastIJTheme());
         themes.put("One Dark", new FlatAtomOneDarkIJTheme());
+        themes.put("Dark - Orange", new FlatArcDarkOrangeIJTheme());
     }
 
     public static LookAndFeel getTheme(String theme){

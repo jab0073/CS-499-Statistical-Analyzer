@@ -1,6 +1,6 @@
 package BackEndUtilities;
 
-import FrontEndUtilities.ErrorManager;
+import Managers.ErrorManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mariuszgromada.math.mxparser.*;
@@ -13,21 +13,39 @@ public class Expressions {
     private static boolean evaluate = true;
     private static final Map<String, String> arguments = new HashMap<>();
 
+    /**
+     * Expression evaluation enable.
+     */
     public static void enableEvaluation() {
         logger.debug("Expression evaluation on");
         Expressions.evaluate = true;
     }
 
+    /**
+     * Expression evaluation disable.
+     */
     public static void disableEvaluation() {
         logger.debug("Expression evaluation on");
         Expressions.evaluate = false;
     }
 
+
+    /**
+     * If the expression evaluation is on, then return true, else return false.
+     *
+     * @return A boolean value.
+     */
     public static boolean isEvaluationOn() {
         logger.debug("Expression evaluation is " + (Expressions.evaluate ? "on" : "off"));
         return Expressions.evaluate;
     }
 
+    /**
+     * If the variable doesn't exist, add it to the arguments map
+     *
+     * @param variable The variable name of the argument.
+     * @param value The value of the argument.
+     */
     public static void addArgument(String variable, String value) {
         if(!Expressions.arguments.containsKey(variable)) {
             Expressions.arguments.put(variable, value);
@@ -38,6 +56,12 @@ public class Expressions {
         }
     }
 
+    /**
+     * It adds a new argument to the arguments HashMap, or changes the value of an existing argument
+     *
+     * @param variable The name of the variable you want to set.
+     * @param value The value of the variable.
+     */
     public static void setArgument(String variable, String value){
         if(!Expressions.arguments.containsKey(variable)) {
             Expressions.arguments.put(variable, value);
@@ -49,10 +73,22 @@ public class Expressions {
         }
     }
 
+    /**
+     * It returns the value of the argument with the given name
+     *
+     * @param variable The name of the variable you want to get the value of.
+     * @return The value of the variable in the arguments map.
+     */
     public static String getArgument(String variable) {
         return Expressions.arguments.get(variable);
     }
 
+    /**
+     * If the variable exists, and it's value is not empty, and it's value is numeric, then return true
+     *
+     * @param variable The variable to check
+     * @return A boolean value
+     */
     public static boolean ensureArgument(String variable) {
         boolean contains = arguments.containsKey(variable);
 

@@ -2,19 +2,19 @@ package Measures;
 
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
-import BackEndUtilities.MeasureConstants;
+import Constants.MeasureConstants;
 import BackEndUtilities.Sample;
-import FrontEndUtilities.ErrorManager;
-import GUI.CardTypes;
-import Graphing.DataFormat;
-import Graphing.GraphTypes;
+import Managers.ErrorManager;
+import Enums.CardTypes;
+import Enums.DataFormat;
+import Enums.GraphTypes;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
 import org.apache.commons.math3.distribution.BinomialDistribution;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Binomial implements IMeasure {
 
@@ -22,8 +22,8 @@ public class Binomial implements IMeasure {
     private final String name = MeasureConstants.binomial;
     private final int minimumSamples = 1;
     private final List<String> requiredVariables = Arrays.asList("p", "n");
-    private final boolean isGraphable = false;
-    private final List<GraphTypes> validGraphs = List.of();
+    private final boolean isGraphable = true;
+    private final List<GraphTypes> validGraphs = List.of(GraphTypes.NONE,GraphTypes.NORMAL_CURVE);
     private final CardTypes cardType = CardTypes.ONE_DATA_TWO_VARIABLE;
 
     public boolean isGraphable(){ return this.isGraphable; }
@@ -109,7 +109,10 @@ public class Binomial implements IMeasure {
 
         BinomialDistribution bd = new BinomialDistribution(n, p);
 
-        List<Double> result = inputData.getAllDataAsDouble().stream().map(d -> bd.probability(d.intValue())).toList();
+        List<Double> sortedData = inputData.getAllDataAsDouble();
+        Collections.sort(sortedData);
+
+        List<Double> result = sortedData.stream().map(d -> bd.probability(d.intValue())).toList();
 
         if(result.stream().anyMatch(d -> Double.isNaN(d))) {
             return null;

@@ -2,12 +2,12 @@ package Measures;
 
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
-import BackEndUtilities.MeasureConstants;
+import Constants.MeasureConstants;
 import BackEndUtilities.Sample;
-import FrontEndUtilities.ErrorManager;
-import GUI.CardTypes;
-import Graphing.DataFormat;
-import Graphing.GraphTypes;
+import Managers.ErrorManager;
+import Enums.CardTypes;
+import Enums.DataFormat;
+import Enums.GraphTypes;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
 import org.apache.commons.lang3.ArrayUtils;
@@ -23,7 +23,7 @@ public class LeastSquareLine implements IMeasure {
     private final int minimumSamples = 2;
     private final List<String> requiredVariables = new ArrayList<>();
     private final boolean isGraphable = true;
-    private final List<GraphTypes> validGraphs = List.of(GraphTypes.X_Y);
+    private final List<GraphTypes> validGraphs = List.of(GraphTypes.NONE,GraphTypes.X_Y);
     private final CardTypes cardType = CardTypes.TWO_DATA_NO_VARIABLE;
 
     public boolean isGraphable(){ return this.isGraphable; }
@@ -123,7 +123,7 @@ public class LeastSquareLine implements IMeasure {
         xArray = trimSamples(xArray, maxLen);
         yArray = trimSamples(yArray, maxLen);
 
-        double[][] xyArray = this.pair(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
+        double[][] xyArray = pair(ArrayUtils.toPrimitive(xArray), ArrayUtils.toPrimitive(yArray));
         sr.addData(xyArray);
 
         double b = sr.getIntercept();

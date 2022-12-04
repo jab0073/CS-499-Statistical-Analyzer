@@ -1,10 +1,12 @@
 package GUI;
 
-import FrontEndUtilities.ErrorManager;
+import BackEndUtilities.DynamicJavaClassLoader;
+import Managers.ErrorManager;
 import FrontEndUtilities.GUIDataMaster;
-import FrontEndUtilities.OutputManager;
-import FrontEndUtilities.SaveManager;
-import Graphing.GraphManager;
+import Managers.OutputManager;
+import Managers.SaveManager;
+import Managers.GraphManager;
+import Managers.RepositoryManager;
 import Settings.UserSettings;
 
 import javax.swing.*;
@@ -19,7 +21,7 @@ import java.util.Arrays;
 
 public class AltMenuBar {
     public static boolean isMacOS = false;
-    private JMenuBar menuBar;
+    private final JMenuBar menuBar;
 
     public AltMenuBar() {
         // Create the menu bar
@@ -58,19 +60,22 @@ public class AltMenuBar {
             JButton btnCancel = new JButton("Cancel");
 
             btnYes.addActionListener(y -> {
+
                 SaveManager.saveProgramState(false);
+                SaveManager.setStateCurrentlySaved(false);
+                SaveManager.setCurrentSaveFileName("");
                 GUIDataMaster.newProject();
                 saveBefore.dispose();
             });
 
             btnNo.addActionListener(n -> {
+                SaveManager.setStateCurrentlySaved(false);
+                SaveManager.setCurrentSaveFileName("");
                 GUIDataMaster.newProject();
                 saveBefore.dispose();
             });
 
-            btnCancel.addActionListener(c -> {
-                saveBefore.dispose();
-            });
+            btnCancel.addActionListener(c -> saveBefore.dispose());
 
             centerPane.add(message);
             buttonPane.add(btnYes, BorderLayout.WEST);
@@ -88,39 +93,26 @@ public class AltMenuBar {
 
             saveBefore.setVisible(true);
 
-
         });
         fileNewMenu.add(newProjectMenuItem);
 
-        // File -> New... -> Custom Measure menu item
-        JMenuItem newCustomMeasureMenuItem = new JMenuItem("Custom Measure");
-        newCustomMeasureMenuItem.getAccessibleContext().setAccessibleDescription("Create a new Custom Measure.");
-        newCustomMeasureMenuItem.addActionListener(l -> {
-            // TODO: create functionality to make new user defined measure
+        JMenuItem customMeasureMenuItem = new JMenuItem("Custom Measure");
+        customMeasureMenuItem.addActionListener(a -> {
+            CustomMeasureTemplateDialog cmtd = new CustomMeasureTemplateDialog();
+            //cmtd.setVisible(true);
         });
-        fileNewMenu.add(newCustomMeasureMenuItem);
+        fileNewMenu.add(customMeasureMenuItem);
 
         // File -> Open... menu
         JMenu fileOpenMenu = new JMenu("Open...");
         fileNewMenu.getAccessibleContext().setAccessibleDescription("Open File related options.");
         fileMenu.add(fileOpenMenu);
 
-        // File -> Open... -> DataSet menu item
+        // File -> Open... -> Project menu item
         JMenuItem openDataSetMenuItem = new JMenuItem("Project");
         openDataSetMenuItem.getAccessibleContext().setAccessibleDescription("Open a Project.");
-        openDataSetMenuItem.addActionListener(l -> {
-            // TODO: create functionality to open dataset
-            SaveManager.openSaveFile();
-        });
+        openDataSetMenuItem.addActionListener(l -> SaveManager.openSaveFile());
         fileOpenMenu.add(openDataSetMenuItem);
-
-        // File -> Open... -> Custom Measure menu item
-        JMenuItem openCustomMeasureMenuItem = new JMenuItem("Custom Measure");
-        openCustomMeasureMenuItem.getAccessibleContext().setAccessibleDescription("Open a Custom Measure.");
-        openCustomMeasureMenuItem.addActionListener(l -> {
-            // TODO: create functionality to open user defined measure
-        });
-        fileOpenMenu.add(openCustomMeasureMenuItem);
 
         // File -> Import... menu
         JMenu fileImportMenu = new JMenu("Import...");
@@ -153,6 +145,32 @@ public class AltMenuBar {
         });
         fileImportMenu.add(fileImportCSVMenuItem);
 
+        // File -> Import... -> CSV Data menu
+        JMenuItem fileImportTSVMenuItem = new JMenuItem("TSV");
+        fileImportTSVMenuItem.getAccessibleContext().setAccessibleDescription("Import TSV data.");
+        fileImportTSVMenuItem.addActionListener(l -> {
+
+            // From MenuBar File button action listener
+
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new File(UserSettings.getWorkingDirectory()));
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("TSV Files", "tsv");
+            fileChooser.setFileFilter(filter);
+
+            JDialog dialog = new JDialog();
+
+            int result = fileChooser.showOpenDialog(dialog);
+
+            dialog.setVisible(true);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                CellsTable.loadTSVFile(selectedFile.getAbsolutePath());
+            }
+            dialog.dispose();
+
+        });
+        fileImportMenu.add(fileImportTSVMenuItem);
+
         // File -> Import... -> XLSX Data menu
         JMenuItem fileImportXLSXMenuItem = new JMenuItem("XLSX");
         fileImportXLSXMenuItem.getAccessibleContext().setAccessibleDescription("Import XLSX data.");
@@ -179,23 +197,23 @@ public class AltMenuBar {
         });
         fileImportMenu.add(fileImportXLSXMenuItem);
 
-        // File -> Export Data menu
+        // File -> Save Project Data menu
         JMenuItem fileSaveMenuItem = new JMenuItem("Save Project");
         fileSaveMenuItem.getAccessibleContext().setAccessibleDescription("Save Project");
-        fileSaveMenuItem.addActionListener(l -> {
-            SaveManager.saveProgramState(false);
-        });
+        fileSaveMenuItem.addActionListener(l -> SaveManager.saveProgramState(false));
         fileMenu.add(fileSaveMenuItem);
 
-        // File -> Export Data menu
+        // File -> Save Project As menu
         JMenuItem fileSaveAsMenuItem = new JMenuItem("Save Project As");
         fileSaveAsMenuItem.getAccessibleContext().setAccessibleDescription("Save Project As");
-        fileSaveAsMenuItem.addActionListener(l -> {
-            SaveManager.saveProgramState(true);
-        });
+        fileSaveAsMenuItem.addActionListener(l -> SaveManager.saveProgramState(true));
         fileMenu.add(fileSaveAsMenuItem);
 
-        // File -> Export Data menu
+        JMenuItem fileReloadCustomMeasures = new JMenuItem("Reload Custom Measures");
+        fileReloadCustomMeasures.addActionListener(a -> DynamicJavaClassLoader.init());
+        fileMenu.add(fileReloadCustomMeasures);
+
+        // File -> Exit menu
         JMenuItem fileExitMenuItem = new JMenuItem("Exit");
         fileExitMenuItem.getAccessibleContext().setAccessibleDescription("Exit program.");
         fileExitMenuItem.addActionListener(l -> {
@@ -214,6 +232,7 @@ public class AltMenuBar {
             JButton btnCancel = new JButton("Cancel");
 
             btnYes.addActionListener(y -> {
+
                 SaveManager.saveProgramState(false);
                 Frame.closeDialogs();
                 Arrays.stream(Frame.getFrames()).forEach(Window::dispose);
@@ -224,9 +243,7 @@ public class AltMenuBar {
                 Arrays.stream(Frame.getFrames()).forEach(Window::dispose);
             });
 
-            btnCancel.addActionListener(c -> {
-                saveBefore.dispose();
-            });
+            btnCancel.addActionListener(c -> saveBefore.dispose());
 
             centerPane.add(message);
             buttonPane.add(btnYes, BorderLayout.WEST);
@@ -248,22 +265,6 @@ public class AltMenuBar {
         fileMenu.add(fileExitMenuItem);
 
         /*
-            Start Edit Menu
-         */
-
-        // Build the Edit menu
-        JMenu editMenu = new JMenu("Edit");
-        editMenu.getAccessibleContext().setAccessibleDescription("Edit related options.");
-        menuBar.add(editMenu);
-
-        JMenuItem editCopyMenuItem = new JMenuItem("Copy");
-        editCopyMenuItem.getAccessibleContext().setAccessibleDescription("Copy Selected Data.");
-        editCopyMenuItem.addActionListener(l -> {
-            String data = CellsTable.getSelectedData();
-        });
-        editMenu.add(editCopyMenuItem);
-
-        /*
             Start Settings Menu
          */
 
@@ -271,11 +272,9 @@ public class AltMenuBar {
         JMenu settingsMenu = new JMenu("Settings");
         settingsMenu.getAccessibleContext().setAccessibleDescription("Settings related options.");
         if(AltMenuBar.isMacOS) {
-            JMenuItem settingsMenuItem = new JMenuItem("UI Settings");
+            JMenuItem settingsMenuItem = new JMenuItem("User Settings");
             settingsMenuItem.getAccessibleContext().setAccessibleDescription("Settings for user settings.");
-            settingsMenuItem.addActionListener(a -> {
-                new SettingWindow();
-            });
+            settingsMenuItem.addActionListener(a -> new SettingWindow());
             settingsMenu.add(settingsMenuItem);
         }
         else {
@@ -391,7 +390,40 @@ public class AltMenuBar {
         helpMenu.getAccessibleContext().setAccessibleDescription("Help related options.");
         menuBar.add(helpMenu);
 
-        // TODO: Add Menu Items for Help
+        if(AltMenuBar.isMacOS) {
+            JMenuItem helpMenuItem = new JMenuItem("Documentation");
+            helpMenuItem.getAccessibleContext().setAccessibleDescription("Open Documentation");
+            helpMenuItem.addActionListener(a -> RepositoryManager.openHelpDocument());
+            helpMenu.add(helpMenuItem);
+        }
+        else {
+            helpMenu.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    RepositoryManager.openHelpDocument();
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+
+                }
+            });
+        }
 
         menuBar.setVisible(true);
     }

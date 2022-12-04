@@ -2,12 +2,12 @@ package Measures;
 
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
-import BackEndUtilities.MeasureConstants;
+import Constants.MeasureConstants;
 import BackEndUtilities.Sample;
-import FrontEndUtilities.ErrorManager;
-import GUI.CardTypes;
-import Graphing.DataFormat;
-import Graphing.GraphTypes;
+import Managers.ErrorManager;
+import Enums.CardTypes;
+import Enums.DataFormat;
+import Enums.GraphTypes;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
 import org.apache.commons.lang3.ArrayUtils;
@@ -108,8 +108,8 @@ public class RankSum implements IMeasure {
         Arrays.sort(yList);
 
         // Begin Calculating Ranks for each sample
-        ArrayList<Double> xRanks = new ArrayList();
-        ArrayList<Double> yRanks = new ArrayList();
+        ArrayList<Double> xRanks = new ArrayList<>();
+        ArrayList<Double> yRanks = new ArrayList<>();
 
         int xIndex = 0;
         int yIndex = 0;
@@ -165,7 +165,7 @@ public class RankSum implements IMeasure {
         double z = (u - uExpected)/stdError;
 
 
-        String result = String.format("""
+        return String.format("""
                 n\u2081: %d
                 n\u2082: %d
                 T\u2081: %.1f
@@ -176,8 +176,6 @@ public class RankSum implements IMeasure {
                 \u03BCU: %.1f
                 \u03C3U: %.4f
                 z : %.4f""", nOne, nTwo, tOne, tTwo, uOne, uTwo, u, uExpected, stdError, z);
-        
-        return result;
     }
 
     private double sum(ArrayList<Double> values){

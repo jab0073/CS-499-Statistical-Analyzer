@@ -1,6 +1,5 @@
 package TableUtilities;
 
-import BackEndUtilities.DataSet;
 import BackEndUtilities.Sample;
 
 import java.util.ArrayList;

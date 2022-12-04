@@ -2,12 +2,12 @@ package Measures;
 
 import BackEndUtilities.DataSet;
 import BackEndUtilities.Expressions;
-import BackEndUtilities.MeasureConstants;
+import Constants.MeasureConstants;
 import BackEndUtilities.Sample;
-import FrontEndUtilities.ErrorManager;
-import GUI.CardTypes;
-import Graphing.DataFormat;
-import Graphing.GraphTypes;
+import Managers.ErrorManager;
+import Enums.CardTypes;
+import Enums.DataFormat;
+import Enums.GraphTypes;
 import Interfaces.IMeasure;
 import Interfaces.IValidator;
 import org.apache.commons.math3.distribution.ChiSquaredDistribution;
@@ -18,7 +18,7 @@ public class ChiSquare implements IMeasure {
     private DataSet inputData;
     private final String name = MeasureConstants.chi;
     private final int minimumSamples = 1;
-    private final List<String> requiredVariables = Arrays.asList("d");
+    private final List<String> requiredVariables = List.of("d");
     private final boolean isGraphable = false;
     private final List<GraphTypes> validGraphs = List.of();
     private final CardTypes cardType = CardTypes.ONE_DATA_ONE_VARIABLE;

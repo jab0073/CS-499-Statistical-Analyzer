@@ -1,31 +1,46 @@
 package FrontEndUtilities;
 
 import BackEndUtilities.*;
-import GUI.CardTypes;
-import Graphing.DataFormat;
-import Graphing.GraphManager;
-import Graphing.GraphTypes;
+import Enums.CardTypes;
+import Enums.DataFormat;
+import Managers.ErrorManager;
+import Managers.GraphManager;
+import Enums.GraphTypes;
+import Interfaces.BiasCorrectable;
 import Interfaces.IMeasure;
-import org.jfree.chart.plot.PlotRenderingInfo;
+import Managers.MeasureManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Abstraction of IMeasure interface intended to be used in GUI code in place of IMeasure.
+ * Contains the same data as the reference IMeasure, however data collection does not convert data to the DataSet format required by
+ * IMeasure until it is time to execute the measure, hopefully improving performance
+ */
 public class GUIMeasure {
-    private ArrayList<String>[] measureData;
-    private String name = "";
-    private int minimumSamples = 0;
-    private List<String> requiredVariables = new ArrayList<>();
-    private List<String> variableValues = new ArrayList<>();
-    private boolean isGraphable = false;
-    private List<GraphTypes> validGraphs = new ArrayList<>();
+    private final ArrayList<String>[] measureData;
+    private final String name;
+    private final int minimumSamples;
+    private final List<String> requiredVariables;
+    private final List<String> variableValues = new ArrayList<>();
+    private final boolean isGraphable;
+    private final List<GraphTypes> validGraphs = new ArrayList<>();
     private GraphTypes selectedGraph = null;
-    private DataFormat outputFormat = null;
-    private CardTypes cardType = CardTypes.TWO_DATA_NO_VARIABLE;
+    private final DataFormat outputFormat;
+    private final CardTypes cardType;
+    private boolean biasCorrection = false;
 
+    /**
+     * GUIMeasure Constructor
+     * @param name the name of the measure
+     */
     public GUIMeasure(String name){
+        //Get reference of IMeasure with the same name to copy data from
         IMeasure m = MeasureManager.getMeasure(name);
+
+        //Copy data from m
         this.name = name;
         this.minimumSamples = m.getMinimumSamples();
         this.requiredVariables = m.getRequiredVariables();
@@ -88,25 +103,52 @@ public class GUIMeasure {
 
     }
 
+    /**
+     * Retrieves a list of data, a list of variables, and a list of variable values, and then runs the measure
+     * with the given data and variables
+     *
+     * @return The result of the measure.
+     */
     public Object execute(){
         DataSet ds = new DataSet();
 
+        //Convert String data into a DataSet for the measure
         for(ArrayList<String> arr : measureData){
             Sample s = new Sample();
             s.setData(arr);
             ds.addSample(s);
         }
 
-        MeasureManager.getMeasure(name).setInputData(ds);
+        //Reference the measure to execute
+        IMeasure m = MeasureManager.getMeasure(name);
+
+        //Check if the measure to be executed actually exists
+        if(m == null){
+            ErrorManager.sendErrorMessage(name, "The program does not have this Custom Measure installed");
+            return null;
+        }
+
+        //Set data required for the measure
+        m.setInputData(ds);
 
         for(int i = 0; i < requiredVariables.size(); i++){
             Expressions.setArgument(requiredVariables.get(i), variableValues.get(i));
         }
 
-        Object r = MeasureManager.getMeasure(name).run();
+        if(m instanceof BiasCorrectable){
+            if(biasCorrection){
+                ((BiasCorrectable) m).biasCorrected();
+            }else{
+                ((BiasCorrectable) m).nonBiasCorrected();
+            }
+        }
 
-        if(isGraphable){
-            GraphManager.graphOutput(GraphTypes.X_Y, r, this);
+        //Execute the measure
+        Object r = m.run();
+
+        //Graph the measure with the selected graph, if applicable
+        if(isGraphable && selectedGraph != GraphTypes.NONE){
+            GraphManager.graphOutput(selectedGraph, r, this);
         }
 
         return r;
@@ -135,6 +177,10 @@ public class GUIMeasure {
         return name;
     }
 
+    /**
+     * Retrieves the measure's data as a CSV style string
+     * @return the data as a string
+     */
     public String getDataAsString(){
         StringBuilder data = new StringBuilder();
 
@@ -155,6 +201,11 @@ public class GUIMeasure {
         return data.toString();
     }
 
+    /**
+     * Retrieves the data of a specific set of data as a CSV style string
+     * @param index the index of the set of data to retrieve
+     * @return the data as a string
+     */
     public String getDataAsString(int index){
         StringBuilder data = new StringBuilder();
 
@@ -176,6 +227,11 @@ public class GUIMeasure {
         return data.toString();
     }
 
+    /**
+     * Get the currently set value of a variable
+     * @param index the index of the variable to retrieve
+     * @return String representation of the variable value
+     */
     public String getVariableValue(int index){
         String var = variableValues.get(index);
 
@@ -198,6 +254,8 @@ public class GUIMeasure {
         return this.selectedGraph;
     }
 
+    public List<GraphTypes> getValidGraphs(){return this.validGraphs; }
+
     public DataFormat getOutputFormat(){ return outputFormat; }
 
     public CardTypes getCardType(){ return cardType; }
@@ -207,4 +265,8 @@ public class GUIMeasure {
     public int getNumVariables(){ return requiredVariables.size(); }
 
     public String getVariableName(int i){ return requiredVariables.get(i) ; }
+
+    public void setBiasCorrection(boolean biasCorrection) {
+        this.biasCorrection = biasCorrection;
+    }
 }

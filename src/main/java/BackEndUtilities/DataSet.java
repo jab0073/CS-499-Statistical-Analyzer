@@ -1,21 +1,19 @@
 package BackEndUtilities;
 
 import Interfaces.IValidator;
-import Interop.UIServices;
-import Measures.Measures;
 import TableUtilities.DataTable;
 import Validators.DataValidator;
-import com.google.gson.Gson;
-import com.opencsv.CSVWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * It's basically a list of samples
+ */
 public class DataSet implements Cloneable{
 
     private List<Sample> samples;
@@ -50,12 +48,29 @@ public class DataSet implements Cloneable{
         this.name = name;
     }
 
+    /**
+     * "If the sample is not null, add it to the samples list."
+     *
+     * Check if the sample is null. If it is, we don't do anything. If it isn't, we add it to the
+     * samples list
+     *
+     * @param sample The sample to be added to the dataset
+     */
     public void addSample(Sample sample) {
         if(sample != null)
             this.samples.add(sample);
         logger.debug("Sample of size " + (sample != null ? sample.getSize() : 0) + " added to dataset");
     }
 
+    /**
+     * "If the sample is not null, add it to the samples list at the specified index."
+     *
+     * Check if the sample is null. If it is, we don't do anything. If it isn't, we add it to the
+     * samples list at the specified index
+     *
+     * @param index The index of the sample to be added
+     * @param sample The sample to be added to the dataset
+     */
     public void addSample(int index, Sample sample) {
         if(sample != null)
             this.samples.add(index, sample);
@@ -81,14 +96,33 @@ public class DataSet implements Cloneable{
         throw new IndexOutOfBoundsException();
     }
 
+    /**
+     * Get all the data from all the samples as a list of doubles.
+     *
+     * @return A list of all the data in the samples as doubles.
+     */
     public List<Double> getAllDataAsDouble() {
         return this.samples.stream().map(Sample::getDataAsDouble).toList().stream().flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    /**
+     * > Get all the data from all the samples as a list of strings
+     *
+     * @return A list of all the data in the samples.
+     */
+    public List<String> getAllDataAsString(){
+        return this.samples.stream().map(Sample::getData).toList().stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
     public int getSize() {
         return this.samples.stream().mapToInt(Sample::getSize).sum();
     }
 
+    /**
+     * This function returns the size of the samples in the given indices.
+     *
+     * @return The size of the samples.
+     */
     public int getSize(Integer... indices) {
         int size = 0;
         for(Integer i : indices) {
@@ -103,6 +137,11 @@ public class DataSet implements Cloneable{
         return this.samples.size();
     }
 
+    /**
+     * Convert a DataSet to a DataTable by adding each sample to the DataTable.
+     *
+     * @return A DataTable object
+     */
     public DataTable toTable() {
         logger.debug("Converting DataSet to DataTable");
         DataTable dt = new DataTable();
@@ -110,6 +149,12 @@ public class DataSet implements Cloneable{
         return dt;
     }
 
+    /**
+     * Takes a DataTable and returns a DataSet
+     *
+     * @param dt The DataTable object that you want to convert to a DataSet object.
+     * @return A DataSet object
+     */
     public static DataSet fromTable(DataTable dt) {
         logger.debug("Creating DataSet from DataTable");
         DataSet ds = new DataSet();
