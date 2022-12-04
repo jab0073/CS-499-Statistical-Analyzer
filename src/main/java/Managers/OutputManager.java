@@ -26,8 +26,7 @@ public class OutputManager {
     }
 
     /**
-     * It creates a JFrame with a JTextPane and a JScrollPane, and then adds the textPane to the scrollPane, and then adds
-     * the scrollPane to the frame
+     * Creates a new window displaying all the text results from the measures ran, and a tab containing any graphs that were generated
      */
     public static void displayOutputs(){
         //If there are no outputs, just quit
@@ -72,6 +71,8 @@ public class OutputManager {
                     data.append("\n");
                 }
             }
+
+            // Add indents to the data strings to allow them to be easily distinguished in the results view
             data = new StringBuilder(data.toString().indent(3));
 
             String out = textPane.getText();
@@ -80,6 +81,7 @@ public class OutputManager {
                 out += "\n";
             }
 
+            // Add the name of the measure and the results to the text pane
             out += name;
             out += "\n" + data;
 
@@ -123,6 +125,8 @@ public class OutputManager {
             frame.add(textPanel);
         }
 
+        // Position the window in the center of the program
+        frame.setLocationRelativeTo(GUIDataMaster.getFrameReference());
         frame.setVisible(true);
 
         textScroll.getViewport().setViewPosition(new Point(0,0));
@@ -163,6 +167,7 @@ public class OutputManager {
      * This function displays a dialog box that allows the user to select which outputs they want to save to a file
      */
     private static void displayOutputSelection(){
+        // Array of booleans dictating which outputs the user wants to save
         boolean[] outputSelections = new boolean[outputs.size()];
 
         JPanel[] selectionGroups = new JPanel[outputSelections.length];
@@ -285,8 +290,10 @@ public class OutputManager {
 
         StringBuilder outputFileString = new StringBuilder();
 
+        //The separator used when generating the output file
         String separator = ",";
 
+        //Change separator to tab when outputting to tsv
         if(FilenameUtils.getExtension(fileLocation).equals("tsv")){
             separator = "\t";
         }
@@ -346,7 +353,6 @@ public class OutputManager {
         File root = new File(singleFolder);
         FileSystemView fsv = new SingleRootFileSystemView(root);
         JFileChooser fileChooser = new JFileChooser(fsv);
-        //JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(singleFolder));
         FileNameExtensionFilter filterpng = new FileNameExtensionFilter(
                 "PNG (*.png)", "png");

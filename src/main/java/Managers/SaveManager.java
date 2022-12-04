@@ -32,14 +32,6 @@ public class SaveManager {
         SaveManager.stateCurrentlySaved = stateCurrentlySaved;
     }
 
-    public static boolean isStateCurrentlySaved() {
-        return SaveManager.stateCurrentlySaved;
-    }
-
-    public static String getCurrentSaveFileName() {
-        return SaveManager.currentSaveFileName;
-    }
-
     public static void setCurrentSaveFileName(String currentSaveFileName) {
         SaveManager.currentSaveFileName = currentSaveFileName;
         GUIDataMaster.getFrameReference().changeStatus(SaveManager.currentSaveFileName);

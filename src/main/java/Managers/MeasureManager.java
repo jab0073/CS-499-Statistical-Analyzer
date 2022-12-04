@@ -45,6 +45,10 @@ public class MeasureManager {
         return measures.stream().map(IMeasure::getName).sorted(Comparator.comparing(String::toLowerCase)).collect(Collectors.toList());
     }
 
+    /**
+     * Adds a measure to the currently available list of measures
+     * @param measure the measure to add
+     */
     public static void dynamicallyAddMeasure(IMeasure measure) {
         if(!measures.contains(measure))
             measures.add(measure);
