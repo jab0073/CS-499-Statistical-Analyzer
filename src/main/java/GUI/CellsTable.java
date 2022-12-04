@@ -1,5 +1,6 @@
 package GUI;
 
+import ApplicationMain.Main;
 import Interop.UIServices;
 import TableUtilities.DataTable;
 import TableUtilities.Row;
@@ -8,6 +9,8 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -16,22 +19,22 @@ public class CellsTable extends JPanel {
     private static JTable table;
 
     public CellsTable(){
-        this.add(scrollPane());
+        this.setLayout(new BorderLayout());
+        this.add(table(), BorderLayout.CENTER); //table now added directly to panel for ease of scrolling
     }
 
-    /**Method which creates a scroll pane to contain the JTable.
+    /**Method which creates a scroll pane to contain the JTable. Not currently in use.
      *@return The scroll pane containg the JTable*/
     private JScrollPane scrollPane() {
-        JScrollPane scrollPane = new JScrollPane(table(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setPreferredSize(new Dimension(900, 750));
+        JScrollPane scrollPane = new JScrollPane(table(), JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         return (scrollPane);
     }
 
     /**Method which creates the JTable.
      *@return The JTable*/
     private JTable table() {
-        int numRows = 50;
-        DefaultTableModel tableModel = new DefaultTableModel(numRows, 12);
+        int numRows = 50; int numCol = 15;
+        DefaultTableModel tableModel = new DefaultTableModel(numRows, numCol);
 
         table = new JTable(tableModel);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

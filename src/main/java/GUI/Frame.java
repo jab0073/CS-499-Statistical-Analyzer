@@ -2,8 +2,11 @@ package GUI;
 
 import Settings.Themes;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -22,16 +25,12 @@ public class Frame extends JFrame {
 
         AltMenuBar amb = new AltMenuBar();
         this.setJMenuBar(amb.getMenuBar());
-        this.setSize(1000, 750);
+        this.setSize(new Dimension(1000, 500));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
-        /*Create a layout for the frame and add in the panels in their appropriate positions.*/
+        /*One panel containing other panels, centered so it will resize with frame*/
         this.setLayout(new BorderLayout());
-        //this.add(windowPanelTop(), BorderLayout.NORTH);
-        this.add(windowPanelLeft(), BorderLayout.WEST);
-        this.add(fullWindowPanelMiddle(), BorderLayout.CENTER);
-        this.add(windowPanelRight(), BorderLayout.EAST);
+        this.add(window(), BorderLayout.CENTER);
 
         this.addWindowListener(new WindowAdapter() {
 
@@ -52,21 +51,53 @@ public class Frame extends JFrame {
         this.setVisible(true);
     }
 
+    private JPanel window(){
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 0.8; c.weighty = 0.3;
+        c.gridy = 0; c. gridx = 0;
+        panel.add(windowPanelLeft(), c);
+
+        //this.add(windowPanelTop(), BorderLayout.NORTH);
+
+        GridBagConstraints d = new GridBagConstraints();
+        d.anchor = GridBagConstraints.FIRST_LINE_END;
+        d.fill = GridBagConstraints.BOTH;
+        d.weightx = 0.1; d.weighty = 0.3;
+        d.gridx = 3;
+        panel.add(windowPanelRight(), d);
+
+        GridBagConstraints e = new GridBagConstraints();
+        e.anchor = GridBagConstraints.CENTER;
+        e.fill = GridBagConstraints.BOTH;
+        e.weightx = 0.1; e.weighty = 0.3;
+        e.gridx = 2;
+        panel.add(windowPanelMiddle(), e);
+
+        JScrollPane pane = new JScrollPane(panel);
+        pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        return(panel);
+    }
+
     /**Method which adds the cells table panel to a panel which will be placed to the left of the application.
      *@return The panel containing the cells table panel.*/
     private JPanel windowPanelLeft(){
         JPanel panel = new JPanel(new BorderLayout());
-
         table = new CellsTable();
-
-        panel.add(table, BorderLayout.LINE_START);
+        JScrollPane pane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        panel.add(pane, BorderLayout.CENTER);
 
         return(panel);
     }
 
     /**Method which adds the middle panel to a panel which will be placed in the middle of the application.
      *@return The panel containing the middle panel.*/
-    private JPanel windowPanelMiddle(){
+    private JPanel cardPanel(){
         JPanel panel = new JPanel();
         CardLayout layout = new CardLayout();
         panel.setLayout(layout);
@@ -93,13 +124,10 @@ public class Frame extends JFrame {
         return(panel);
     }
 
-    private JPanel fullWindowPanelMiddle(){
-        JPanel panel = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridy = 0;
-        panel.add(windowPanelMiddle(), c);
-        c.gridy = 1;
-        panel.add(new GraphsComboBox().graphsComboBoxPanel(), c);
+    private JPanel windowPanelMiddle(){
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(cardPanel(), BorderLayout.CENTER);
+        panel.add(new GraphsComboBox().graphsComboBoxPanel(), BorderLayout.SOUTH);
         return panel;
     }
 
