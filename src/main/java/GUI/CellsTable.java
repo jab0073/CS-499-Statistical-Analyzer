@@ -8,8 +8,6 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -115,8 +113,8 @@ public class CellsTable extends JPanel {
             return;
         }
 
-        int numRows = Math.max(50, in.getIndexOfLastRow()+20);
-        int numCols = Math.max(12, in.getLongestRowSize());
+        int numRows = Math.max(60, in.getIndexOfLastRow()+20);
+        int numCols = Math.max(18, in.getLongestRowSize());
 
         table.setModel(new DefaultTableModel(numRows, numCols));
 
