@@ -20,20 +20,13 @@ public class CellsTable extends JPanel {
 
     public CellsTable(){
         this.setLayout(new BorderLayout());
-        this.add(table(), BorderLayout.CENTER); //table now added directly to panel for ease of scrolling
-    }
-
-    /**Method which creates a scroll pane to contain the JTable. Not currently in use.
-     *@return The scroll pane containg the JTable*/
-    private JScrollPane scrollPane() {
-        JScrollPane scrollPane = new JScrollPane(table(), JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        return (scrollPane);
+        this.add(new JScrollPane(table(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER); //table now added directly to panel for ease of scrolling
     }
 
     /**Method which creates the JTable.
      *@return The JTable*/
     private JTable table() {
-        int numRows = 50; int numCol = 15;
+        int numRows = 60; int numCol = 18;
         DefaultTableModel tableModel = new DefaultTableModel(numRows, numCol);
 
         table = new JTable(tableModel);
