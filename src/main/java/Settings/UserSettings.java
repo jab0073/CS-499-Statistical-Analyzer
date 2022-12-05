@@ -14,6 +14,7 @@ import java.util.prefs.Preferences;
 public class UserSettings {
 
     private static String workingDirectory;
+    private static boolean isMacOS = false;
 
     /**
      * Loads the Users settings from the OS Registry
@@ -21,14 +22,10 @@ public class UserSettings {
     public static void init() {
         Preferences prefs = Preferences.userNodeForPackage(Main.class);
 
-        /*
         if (System.getProperty("os.name").toLowerCase().startsWith("mac")) {
-            // If running on macOS, this next line puts the JMenuBar in the system menu bar
-            System.setProperty("apple.laf.useScreenMenuBar", "true");
-            AltMenuBar.isMacOS = true;
+            isMacOS = true;
         }
 
-         */
 
         String userTheme = prefs.get("userTheme", "Light");
         float userZoom = Float.parseFloat(prefs.get("userZoom", "100"));
@@ -57,7 +54,7 @@ public class UserSettings {
 
         UserSettings.workingDirectory = prefs.get("userWD", "N/A");
         if(UserSettings.workingDirectory.equals("N/A")) {
-            if (!AltMenuBar.isMacOS) {
+            if (!isMacOS) {
                 UserSettings.workingDirectory = Constants.WindowsBeginningDefaultDir + System.getProperty("user.name") + Constants.WindowsEndingDefaultDir;
             } else {
                 UserSettings.workingDirectory = Constants.MacBeginningDir + System.getProperty("user.name") + Constants.MacDefaultDir;
