@@ -278,6 +278,17 @@ public class DataTable {
         return longest;
     }
 
+    public void removeTrailingEmptyRows(){
+        int lastIndex = getIndexOfLastRow();
+
+        for(int i = lastIndex; i >= 0; i--){
+            if(rows.get(i).size() > 0){
+                rows.subList(i+1, lastIndex).clear();
+                break;
+            }
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

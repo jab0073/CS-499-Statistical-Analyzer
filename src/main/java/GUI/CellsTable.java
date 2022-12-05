@@ -170,11 +170,11 @@ public class CellsTable extends JPanel {
 
             row.removeTrailingEmptyCells();
 
-            if(row.size() > 0){
-                out.addRow(row);
-            }
+            out.addRow(row);
 
         }
+
+        out.removeTrailingEmptyRows();
 
         return out;
     }
