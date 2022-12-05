@@ -61,9 +61,9 @@ public class FileSystemRepository {
 
             GUIDataMaster.removeAllMeasures();
 
-            input.measures.forEach(GUIDataMaster::addMeasure);
+            input.buildMeasures().forEach(GUIDataMaster::addMeasure);
 
-            GUIDataMaster.getFrameReference().getCellsTable().loadFromDT(input.table);
+            GUIDataMaster.getFrameReference().getCellsTable().loadFromDT(input.tableAsDT());
 
             SaveManager.setCurrentSaveFileName(FilenameUtils.getBaseName(targetName.getFileName().toString()));
             SaveManager.setStateCurrentlySaved(true);
@@ -73,7 +73,7 @@ public class FileSystemRepository {
     }
 
     private Path getFileName(String name, String folder) {
-        return Paths.get(folder + "/" + name + ".sasf");
+        return Paths.get(folder + "/" + name + ".wasp");
     }
 
     public void init() {
