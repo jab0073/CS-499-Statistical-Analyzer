@@ -126,9 +126,11 @@ public class SaveManager {
                 StringBuilder measureString = new StringBuilder(measure.getName());
 
                 for(int i = 0; i < dataIndexes.length; i++){
+                    //Build each dataset reference
                     measureString.append(",ds").append(i).append("=").append(dataIndexes[i]);
                 }
 
+                //Build each variable reference
                 for(int i = 0; i < measure.getNumVariables(); i++){
                     String varName = measure.getVariableName(i);
                     String varVal = measure.getVariableValue(i);
@@ -136,6 +138,7 @@ public class SaveManager {
                     measureString.append(",var").append(i).append("=").append(varName).append("=").append(varVal);
                 }
 
+                //Build the graph reference
                 if(measure.getSelectedGraph() != null){
                     measureString.append(",graph=").append(measure.getSelectedGraph().toString());
                 }
@@ -147,6 +150,10 @@ public class SaveManager {
 
         }
 
+        /**
+         * Converts the SaveObject's list of measure strings into a list of actual GUIMeasure objects
+         * @return A list of GUIMeasure objects
+         */
         public ArrayList<GUIMeasure> buildMeasures(){
             ArrayList<GUIMeasure> newMeasures = new ArrayList<>();
 
@@ -231,6 +238,11 @@ public class SaveManager {
             return dt;
         }
 
+        /**
+         * Converts a DataTable to a CSV style string
+         * @param dt the DataTable to convert
+         * @return the DataTable converted into a string
+         */
         private String dtToCSV(DataTable dt){
             StringBuilder csv = new StringBuilder();
 
@@ -238,13 +250,16 @@ public class SaveManager {
                 for(Cell c : r.getCells()){
                     String val = c.data;
 
+                    //If the cell has no data, just put a space
                     if(val == null){
                         csv.append(" ");
                     }
 
                     if(isNumeric(val)){
+                        //If the cell's data is a number, just save it
                         csv.append(val);
                     }else{
+                        //If the cell's data is not a number, wrap it in quotes to preserve any commas or other characters
                         csv.append('"').append(val).append('"');
                     }
 
