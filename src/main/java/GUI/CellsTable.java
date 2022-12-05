@@ -184,8 +184,8 @@ public class CellsTable extends JPanel {
             return;
         }
 
-        int numRows = Math.max(50, in.getIndexOfLastRow()+20);
-        int numCols = Math.max(12, in.getLongestRowSize());
+        int numRows = Math.max(60, in.getIndexOfLastRow()+20);
+        int numCols = Math.max(18, in.getLongestRowSize());
 
         table.setModel(new DefaultTableModel(numRows, numCols));
 
