@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class AltMenuBar {
-    public static boolean isMacOS = false;
     private final JMenuBar menuBar;
 
     public AltMenuBar() {
@@ -271,13 +270,6 @@ public class AltMenuBar {
         // Build the Settings menu
         JMenu settingsMenu = new JMenu("Settings");
         settingsMenu.getAccessibleContext().setAccessibleDescription("Settings related options.");
-        if(AltMenuBar.isMacOS) {
-            JMenuItem settingsMenuItem = new JMenuItem("User Settings");
-            settingsMenuItem.getAccessibleContext().setAccessibleDescription("Settings for user settings.");
-            settingsMenuItem.addActionListener(a -> new SettingWindow());
-            settingsMenu.add(settingsMenuItem);
-        }
-        else {
             settingsMenu.addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -304,7 +296,6 @@ public class AltMenuBar {
 
                 }
             });
-        }
         menuBar.add(settingsMenu);
 
         // TODO: Add Menu Items for Settings
@@ -316,29 +307,6 @@ public class AltMenuBar {
         // Build the Run menu
         JMenu runMenu = new JMenu("Run");
         runMenu.getAccessibleContext().setAccessibleDescription("Run related options.");
-        if(AltMenuBar.isMacOS) {
-            JMenuItem runMenuItem = new JMenuItem("Run Measures");
-            runMenuItem.getAccessibleContext().setAccessibleDescription("Run Measures");
-            runMenuItem.addActionListener(a -> {
-                GUIDataMaster.flush();
-                boolean success = GUIDataMaster.executeMeasures();
-
-                if(!success){
-                    ErrorManager.displayErrors();
-                    return;
-                }
-
-                ArrayList<Object> r = GUIDataMaster.getResults();
-                for(Object o : r){
-                    OutputManager.addOutput(GUIDataMaster.getGUIMeasure(r.indexOf(o)).getName() ,(o==null) ? null : o.toString());
-                }
-
-                GraphManager.displayGraphs();
-                OutputManager.displayOutputs();
-            });
-            runMenu.add(runMenuItem);
-        }
-        else {
             runMenu.addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -379,7 +347,6 @@ public class AltMenuBar {
 
                 }
             });
-        }
 
         menuBar.add(runMenu);
 
@@ -389,14 +356,6 @@ public class AltMenuBar {
         JMenu helpMenu = new JMenu("Help");
         helpMenu.getAccessibleContext().setAccessibleDescription("Help related options.");
         menuBar.add(helpMenu);
-
-        if(AltMenuBar.isMacOS) {
-            JMenuItem helpMenuItem = new JMenuItem("Documentation");
-            helpMenuItem.getAccessibleContext().setAccessibleDescription("Open Documentation");
-            helpMenuItem.addActionListener(a -> RepositoryManager.openHelpDocument());
-            helpMenu.add(helpMenuItem);
-        }
-        else {
             helpMenu.addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -423,7 +382,6 @@ public class AltMenuBar {
 
                 }
             });
-        }
 
         menuBar.setVisible(true);
     }

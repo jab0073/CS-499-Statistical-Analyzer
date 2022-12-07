@@ -27,12 +27,15 @@ public class Main {
             return;
         }
         else {
+            //Initialize all managers and systems
             Themes.init();
             UserSettings.init();
             RepositoryManager.init();
             MeasureManager.init();
             DynamicJavaClassLoader.init();
             GraphManager.init();
+
+            //Create GUI and give reference to the GUIDataMaster
             GUI.Frame frame = new GUI.Frame();
             FrontEndUtilities.GUIDataMaster.setFrameReference(frame);
         }

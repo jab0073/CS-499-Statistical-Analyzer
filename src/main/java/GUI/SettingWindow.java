@@ -11,7 +11,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.util.prefs.Preferences;
 
 public class SettingWindow extends JDialog {
@@ -36,17 +35,9 @@ public class SettingWindow extends JDialog {
 
         this.setTitle("Settings");
 
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
+        buttonOK.addActionListener(e -> onOK());
 
-        buttonCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        });
+        buttonCancel.addActionListener(e -> onCancel());
 
         String currentTheme = Themes.getCurrentThemeName();
 
@@ -56,14 +47,13 @@ public class SettingWindow extends JDialog {
 
         themeSelector.setSelectedItem(currentTheme);
 
-        zoomSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int zoom = (int) Math.round((zoomSlider.getValue()*1.75) + 25);
-                zoomReadout.setText(zoom + "%");
-            }
+        zoomSlider.addChangeListener(e -> {
+            //Convert slider 0-100 range to 25-200 range
+            int zoom = (int) Math.round((zoomSlider.getValue()*1.75) + 25);
+            zoomReadout.setText(zoom + "%");
         });
 
+        //Get the current font and set the value of the zoom slider based on the current font size
         Font currentFont = (Font) UIManager.get("defaultFont");
         double currentZoomSlide = (((double) currentFont.getSize()-3.0)/21.0) * 100;
 
@@ -99,14 +89,11 @@ public class SettingWindow extends JDialog {
         });
 
         // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         this.pack();
 
+        //Set the position of the settings window to the center of the rest of the program
         this.setLocationRelativeTo(GUIDataMaster.getFrameReference());
 
         this.setVisible(true);
@@ -117,11 +104,11 @@ public class SettingWindow extends JDialog {
         try{
             Frame frame = GUIDataMaster.getFrameReference();
 
+            //Convert 0-100 range to 25-200 range
             float zoom =  ((float) zoomSlider.getValue()*1.75F) + 25F;
 
+            //Set the zoom value and theme to those selected by the user
             frame.setLookAndFeel(themeName, zoom);
-
-            Preferences prefs = Preferences.userNodeForPackage(Main.class);
 
             if(EvalCheckBox.isSelected()){
                 Expressions.enableEvaluation();
@@ -133,11 +120,13 @@ public class SettingWindow extends JDialog {
 
             UserSettings.setWorkingDirectory(this.workingDirectoryTextField.getText());
 
-            prefs.put("userTheme", Themes.getCurrentThemeName());
-            prefs.put("userZoom", String.valueOf(zoom));
-            prefs.put("userEval", String.valueOf(EvalCheckBox.isSelected()));
-            prefs.put("userBias", String.valueOf(biasCheckBox.isSelected()));
-            prefs.put("userWD", UserSettings.getWorkingDirectory());
+            //Save users chosen settings
+            UserSettings.saveUserSettings(Themes.getCurrentThemeName()
+                    ,String.valueOf(zoom)
+                    ,String.valueOf(EvalCheckBox.isSelected())
+                    ,String.valueOf(biasCheckBox.isSelected())
+                    ,UserSettings.getWorkingDirectory());
+
 
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();

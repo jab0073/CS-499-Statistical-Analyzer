@@ -1,12 +1,18 @@
 package Managers;
 
+import BackEndUtilities.Sample;
 import Constants.Constants;
+import Enums.GraphTypes;
 import FrontEndUtilities.GUIDataMaster;
 import FrontEndUtilities.GUIMeasure;
 import GUI.SingleRootFileSystemView;
 import Settings.UserSettings;
+import TableUtilities.Cell;
 import TableUtilities.DataTable;
+import TableUtilities.Row;
 import com.google.gson.Gson;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.*;
@@ -14,6 +20,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -32,14 +41,6 @@ public class SaveManager {
         SaveManager.stateCurrentlySaved = stateCurrentlySaved;
     }
 
-    public static boolean isStateCurrentlySaved() {
-        return SaveManager.stateCurrentlySaved;
-    }
-
-    public static String getCurrentSaveFileName() {
-        return SaveManager.currentSaveFileName;
-    }
-
     public static void setCurrentSaveFileName(String currentSaveFileName) {
         SaveManager.currentSaveFileName = currentSaveFileName;
         GUIDataMaster.getFrameReference().changeStatus(SaveManager.currentSaveFileName);
@@ -54,32 +55,12 @@ public class SaveManager {
      */
     public static void saveProgramState(boolean saveNew){
         if(stateCurrentlySaved && !saveNew){
-            RepositoryManager.putSaveState(currentSaveFileName.replace(".sasf", ""));
+            RepositoryManager.putSaveState(currentSaveFileName.replace(".wasp", ""));
         }else{
             String fileName = JOptionPane.showInputDialog(GUIDataMaster.getFrameReference(), "Save File Name");
             if(fileName != null) {
                 RepositoryManager.putSaveState(fileName);
             }
-        }
-    }
-
-    @Deprecated
-    public static boolean saveProgramStateAs(String fName){
-        ArrayList<GUIMeasure> guiMeasures = GUIDataMaster.getAllMeasures();
-        DataTable table = GUIDataMaster.getFrameReference().getCellsTable().getTableAsDT();
-
-        SaveObject saveObject = new SaveObject(guiMeasures, table);
-
-        String saveJson = gson.toJson(saveObject);
-
-        try {
-            FileWriter fileWriter = new FileWriter(fName);
-            fileWriter.write(saveJson);
-            fileWriter.close();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
         }
     }
 
@@ -94,7 +75,7 @@ public class SaveManager {
         //JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(UserSettings.getWorkingDirectory() + "/" + Constants.PROJECTS_FOLDER));
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Statistical Analyzer Save (*.sasf)", "sasf");
+                "Statistical Analyzer Save (*.wasp)", "wasp");
         fileChooser.setFileFilter(filter);
 
         JDialog dialog = new JDialog();
@@ -110,15 +91,204 @@ public class SaveManager {
     }
 
     /**
-     * A class that holds GUIMeasure objects and a DataTable object
+     * Object used is saving and loading of program state
      */
     public static class SaveObject{
-        public ArrayList<GUIMeasure> measures;
-        public DataTable table;
+        //The list of unique datasets each measure contains
+        private final ArrayList<String> measureDataSet = new ArrayList<>();
+
+        //The list of each measure and their associated datasets. Pattern is "name,ds0=Index,ds1=Index,...,var0=name=value,var0=name=value...,graph=name
+        private final ArrayList<String> measures = new ArrayList<>();
+
+        //Datatable for the cellsTable
+        public String table;
 
         public SaveObject(ArrayList<GUIMeasure> m, DataTable t){
-            measures = m;
-            table = t;
+
+            for(GUIMeasure measure : m){
+                //Array of dataSet indexes
+                int[] dataIndexes = new int[measure.getMinimumSamples()];
+
+                //Add unique datasets to the list of datasets and store indexes to each measure's associated datasets
+                for(int i = 0; i < measure.getMinimumSamples(); i++){
+                    String data = measure.getDataAsString(i);
+
+                    if(measureDataSet.contains(data)){
+                        dataIndexes[i] = measureDataSet.indexOf(data);
+                    }else{
+                        measureDataSet.add(data);
+                        dataIndexes[i] = measureDataSet.size()-1;
+                    }
+
+                }
+
+                //Begin building measure save string
+                StringBuilder measureString = new StringBuilder(measure.getName());
+
+                for(int i = 0; i < dataIndexes.length; i++){
+                    //Build each dataset reference
+                    measureString.append(",ds").append(i).append("=").append(dataIndexes[i]);
+                }
+
+                //Build each variable reference
+                for(int i = 0; i < measure.getNumVariables(); i++){
+                    String varName = measure.getVariableName(i);
+                    String varVal = measure.getVariableValue(i);
+
+                    measureString.append(",var").append(i).append("=").append(varName).append("=").append(varVal);
+                }
+
+                //Build the graph reference
+                if(measure.getSelectedGraph() != null){
+                    measureString.append(",graph=").append(measure.getSelectedGraph().toString());
+                }
+
+                measures.add(measureString.toString());
+            }
+
+            table = dtToCSV(t);
+
         }
+
+        /**
+         * Converts the SaveObject's list of measure strings into a list of actual GUIMeasure objects
+         * @return A list of GUIMeasure objects
+         */
+        public ArrayList<GUIMeasure> buildMeasures(){
+            ArrayList<GUIMeasure> newMeasures = new ArrayList<>();
+
+            for(String measureString : measures){
+                String[] measureComponents = measureString.split(",");
+
+                GUIMeasure measure = new GUIMeasure(measureComponents[0]);
+
+                //loop over each subsequent component of the measure string and assign the values to the GUIMeasure accordingly
+                for(int i = 1; i < measureComponents.length; i++){
+                    //Starting with d implies this is a dataset
+                    if(measureComponents[i].startsWith("d")){
+                        String[] dataSetComponents = measureComponents[i].split("\u003d");
+
+                        //Get the dataset number from the component
+                        int datasetNumber = Integer.parseInt(dataSetComponents[0].replaceAll("[^0-9]", ""));
+
+                        //Get the index of the dataset
+                        int index = Integer.parseInt(dataSetComponents[1]);
+
+                        //Store the dataset to the measure
+                        measure.addData(false, datasetNumber, measureDataSet.get(index).split(","));
+
+                        continue;
+                    }
+
+                    //Starting with v implies this is a variable
+                    if(measureComponents[i].startsWith("v")){
+                        String[] variableComponents = measureComponents[i].split("\u003d");
+
+                        //Get the variable number from the component
+                        int varNumber = Integer.parseInt(variableComponents[0].replaceAll("[^0-9]", ""));
+
+                        //Get the variable name
+                        String varName = variableComponents[1];
+
+                        //Get the value of the variable
+                        String value = variableComponents[2];
+
+                        //Store the variable to the measure
+                        measure.setVariable(varName, value);
+
+                        continue;
+                    }
+
+                    //Starting with g implies this is a graph
+                    if(measureComponents[i].startsWith("g")){
+                        String[] graphComponents = measureComponents[i].split("\u003d");
+
+                        //Store the graph type to the measure
+                        measure.setSelectedGraph(GraphTypes.valueOf(graphComponents[1]));
+
+                    }
+                }
+
+                newMeasures.add(measure);
+
+            }
+
+            return newMeasures;
+        }
+
+        /**
+         * converts the CSV style String table field to a DataTable
+         *
+         * @return A DataTable object.
+         */
+        public DataTable tableAsDT() {
+            DataTable dt = new DataTable();
+            try (CSVReader reader = new CSVReader(new StringReader(table))) {
+                List<String[]> r = reader.readAll();
+                r.forEach(x -> {
+                    Sample sample = new Sample();
+                    sample.addData(Arrays.asList(x));
+                    int index = r.indexOf(x);
+                    Row row = new Row(index, sample);
+                    dt.getRows().add(row.clone());
+                });
+            } catch (IOException | CsvException e) {
+                return null;
+            }
+            return dt;
+        }
+
+        /**
+         * Converts a DataTable to a CSV style string
+         * @param dt the DataTable to convert
+         * @return the DataTable converted into a string
+         */
+        private String dtToCSV(DataTable dt){
+            StringBuilder csv = new StringBuilder();
+
+            for(Row r : dt.getRows()){
+                for(Cell c : r.getCells()){
+                    String val = c.data;
+
+                    //If the cell has no data, just put a space
+                    if(val == null){
+                        csv.append(" ");
+                    }
+
+                    if(isNumeric(val)){
+                        //If the cell's data is a number, just save it
+                        csv.append(val);
+                    }else{
+                        //If the cell's data is not a number, wrap it in quotes to preserve any commas or other characters
+                        csv.append('"').append(val).append('"');
+                    }
+
+                    csv.append(',');
+                }
+
+                csv.append('\n');
+            }
+
+            return csv.toString();
+        }
+
+        /**
+         * Checks if a string is numeric
+         * @param str the string to analyze
+         * @return whether the string is numeric
+         */
+        private boolean isNumeric(String str){
+            if(str == null){
+                return false;
+            }
+            try{
+                double d = Double.parseDouble(str);
+            }catch(NumberFormatException e){
+                return false;
+            }
+
+            return true;
+        }
+
     }
 }

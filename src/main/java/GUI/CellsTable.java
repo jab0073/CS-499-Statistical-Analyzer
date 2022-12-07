@@ -8,8 +8,6 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -115,8 +113,8 @@ public class CellsTable extends JPanel {
             return;
         }
 
-        int numRows = Math.max(50, in.getIndexOfLastRow()+20);
-        int numCols = Math.max(12, in.getLongestRowSize());
+        int numRows = Math.max(60, in.getIndexOfLastRow()+20);
+        int numCols = Math.max(18, in.getLongestRowSize());
 
         table.setModel(new DefaultTableModel(numRows, numCols));
 
@@ -133,7 +131,7 @@ public class CellsTable extends JPanel {
      * @param file String representation of the file path to the target file
      */
     public static void loadFile(String file){
-        fromDataTable(InputManager.fromCSV(file));
+        loadFromDT(InputManager.fromCSV(file));
     }
 
     public static void loadTSVFile(String file) {
@@ -172,22 +170,22 @@ public class CellsTable extends JPanel {
 
             row.removeTrailingEmptyCells();
 
-            if(row.size() > 0){
-                out.addRow(row);
-            }
+            out.addRow(row);
 
         }
+
+        out.removeTrailingEmptyRows();
 
         return out;
     }
 
-    public void loadFromDT(DataTable in){
+    public static void loadFromDT(DataTable in){
         if(in == null){
             return;
         }
 
-        int numRows = Math.max(50, in.getIndexOfLastRow()+20);
-        int numCols = Math.max(12, in.getLongestRowSize());
+        int numRows = Math.max(60, in.getIndexOfLastRow()+20);
+        int numCols = Math.max(18, in.getLongestRowSize());
 
         table.setModel(new DefaultTableModel(numRows, numCols));
 
@@ -195,7 +193,13 @@ public class CellsTable extends JPanel {
             TableUtilities.Row r = in.getRow(i);
 
             for(int j = 0; j < r.size(); j++){
-                table.getModel().setValueAt(r.get(j).data, r.getIndex(), j);
+                String data = r.get(j).data;
+                if(data == null || data.equals("null")){
+                    data = "";
+                }
+
+                data = data.replaceAll("\"", "'");
+                table.getModel().setValueAt(data, r.getIndex(), j);
             }
         }
     }

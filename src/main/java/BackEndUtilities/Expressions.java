@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.mariuszgromada.math.mxparser.*;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class Expressions {
@@ -153,14 +154,22 @@ public class Expressions {
             Expression exp = new Expression(d);
             if(!Expressions.arguments.isEmpty()) {
                 for (String key : Expressions.arguments.keySet()) {
-                    Argument arg = new Argument(arguments.get(key));
+                    Argument arg = new Argument(key + "=" + arguments.get(key));
                     exp.addArguments(arg);
                 }
             }
             return exp;
         }).toList();
 
-        return exps.stream().map(Expression::calculate).peek(System.out::println).collect(Collectors.toList());
+
+        AtomicInteger i = new AtomicInteger();
+        return exps.stream().map(Expression::calculate)
+                .peek(e -> {
+                    if(Double.isNaN(e)){
+                        ErrorManager.sendErrorMessage("Expression Evaluation", "Error Evaluating Expression: " + dataset.getData().get(i.get()));
+                    }
+                    i.getAndIncrement();
+                }).collect(Collectors.toList());
     }
 
     /**

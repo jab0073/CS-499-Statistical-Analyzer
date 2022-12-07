@@ -20,16 +20,19 @@ public class Themes {
         themes.put("Dark - Orange", new FlatArcDarkOrangeIJTheme());
     }
 
+    /**
+     * Gets a LookAndFeel based off of it's name
+     * @param theme The name of the LookAndFeel
+     * @return The lookAndFeel with the matching name
+     */
     public static LookAndFeel getTheme(String theme){
         return themes.get(theme);
     }
 
-    public static LookAndFeel getRandomTheme(){
-        Random generator = new Random();
-        List<LookAndFeel> values = new ArrayList<>(themes.values());
-        return values.get(generator.nextInt(values.size()));
-    }
-
+    /**
+     * Gets the name of all currently available themes
+     * @return List of available theme names
+     */
     public static ArrayList<String> getThemeNames(){
         ArrayList<String> names = new ArrayList<>(themes.keySet());
         Collections.sort(names);
@@ -37,6 +40,10 @@ public class Themes {
         return names;
     }
 
+    /**
+     * Get the name of the currently loaded theme
+     * @return Name of the currently loaded theme
+     */
     public static String getCurrentThemeName() {
         String current = UIManager.getLookAndFeel().getName();
 

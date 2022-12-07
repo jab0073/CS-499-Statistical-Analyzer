@@ -51,6 +51,9 @@ public class ErrorManager {
         errors.add(sender + ":\n-" + message);
     }
 
+    /**
+     * Clears all errors currently stored
+     */
     public static void clearErrors(){
         errors.clear();
     }

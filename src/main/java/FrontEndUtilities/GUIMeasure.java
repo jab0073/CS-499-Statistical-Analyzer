@@ -51,8 +51,8 @@ public class GUIMeasure {
 
         this.measureData = new ArrayList[minimumSamples];
 
-        for(ArrayList a : measureData){
-            a = new ArrayList<String>();
+        for(ArrayList<String> a : measureData){
+            a = new ArrayList<>();
         }
 
         this.isGraphable = m.isGraphable();
@@ -72,6 +72,7 @@ public class GUIMeasure {
      * @param data The data to add
      */
     public void addData(boolean append, int index, String... data){
+        //If index is out of bounds, stop before you get into trouble
         if(index > measureData.length-1){
             return;
         }
@@ -79,11 +80,9 @@ public class GUIMeasure {
         if(append){
             measureData[index].addAll(Arrays.asList(data));
         }else{
-            measureData[index] = new ArrayList<String>();
+            measureData[index] = new ArrayList<>();
             measureData[index].addAll(Arrays.asList(data));
         }
-
-        int i = 0;
     }
 
     /**
@@ -104,8 +103,8 @@ public class GUIMeasure {
     }
 
     /**
-     * Retrieves a list of data, a list of variables, and a list of variable values, and then runs the measure
-     * with the given data and variables
+     * Builds the data passed to it into a form a normal IMeasure will accept
+     * before passing said data to the IMeasure instance and running it
      *
      * @return The result of the measure.
      */

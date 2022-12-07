@@ -64,10 +64,6 @@ public class Sample implements Cloneable{
      * @return A list of BigDecimal objects.
      */
     public List<Double> getDataAsDouble() {
-        if(Expressions.isEvaluationOn()) {
-            return Expressions.eval(this);
-        }
-        else {
             return data.stream().map(s -> {
                 try {
                     return Double.parseDouble(s);
@@ -75,7 +71,6 @@ public class Sample implements Cloneable{
                     return null;
                 }
             }).filter(Objects::nonNull).collect(Collectors.toList());
-        }
     }
 
     /**

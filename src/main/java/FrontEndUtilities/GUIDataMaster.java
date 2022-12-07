@@ -11,6 +11,10 @@ import TableUtilities.DataTable;
 
 import java.util.ArrayList;
 
+/**
+ * Manages data collected from elements on the GUI
+ * Acts as a sort of "Controller" in an MVC type system
+ */
 public class GUIDataMaster {
     private static final ArrayList<GUIMeasure> measures = new ArrayList<>();
     private static final ArrayList<Object> results = new ArrayList<>();
@@ -191,6 +195,9 @@ public class GUIDataMaster {
         return biasCorrection;
     }
 
+    /**
+     * Updates the list of available measures in the onscreen dropdown with any new measures that have been loaded
+     */
     public static void updateMeasureListForDynamicLoad(){
         frameReference.updateMeasureDropdown();
     }

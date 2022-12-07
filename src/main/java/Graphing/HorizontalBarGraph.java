@@ -86,7 +86,7 @@ public class HorizontalBarGraph implements IGraph {
     private CategoryDataset  createDataSet(String title, GUIMeasure measure){
         switch (this.dataFormat){
             case PROBABILITY -> {
-                return probabilityDataset(title, measure);
+                return probabilityDataset();
             }
             default -> {
                 return null;
@@ -95,7 +95,7 @@ public class HorizontalBarGraph implements IGraph {
 
     }
 
-    private CategoryDataset probabilityDataset(String title, GUIMeasure measure){
+    private CategoryDataset probabilityDataset(){
         String[] data = this.data.split(",");
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
