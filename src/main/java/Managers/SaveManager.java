@@ -68,11 +68,8 @@ public class SaveManager {
      * Open a file chooser dialog, and if the user selects a file, load the save state with the same name as the file.
      */
     public static void openSaveFile(){
-        File root = new File(UserSettings.getWorkingDirectory() + "/" + Constants.PROJECTS_FOLDER);
-        FileSystemView fsv = new SingleRootFileSystemView(root);
-        JFileChooser fileChooser = new JFileChooser(fsv);
+        JFileChooser fileChooser = new JFileChooser();
 
-        //JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(UserSettings.getWorkingDirectory() + "/" + Constants.PROJECTS_FOLDER));
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
                 "Statistical Analyzer Save (*.wasp)", "wasp");
