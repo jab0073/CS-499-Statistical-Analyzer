@@ -120,11 +120,16 @@ public class NormalGraph implements IGraph {
 
         int i = 0;
         for(String s : data){
-            if(i - 1 > 0){
+            if(measureData.get(i) <= mean && i - 1 >= 0){
                 bars.add(measureData.get(i), (Number) Double.parseDouble(data[i-1]));
             }
 
             bars.add(measureData.get(i), (Number) Double.parseDouble(s));
+
+            if(measureData.get(i) >= mean && i + 1 < measureData.size()){
+                bars.add(measureData.get(i), (Number) Double.parseDouble(data[i+1]));
+            }
+
             i++;
         }
 
