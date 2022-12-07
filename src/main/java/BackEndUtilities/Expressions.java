@@ -153,14 +153,14 @@ public class Expressions {
             Expression exp = new Expression(d);
             if(!Expressions.arguments.isEmpty()) {
                 for (String key : Expressions.arguments.keySet()) {
-                    Argument arg = new Argument(arguments.get(key));
+                    Argument arg = new Argument(key + "=" + arguments.get(key));
                     exp.addArguments(arg);
                 }
             }
             return exp;
         }).toList();
 
-        return exps.stream().map(Expression::calculate).peek(System.out::println).collect(Collectors.toList());
+        return exps.stream().map(Expression::calculate).collect(Collectors.toList());
     }
 
     /**

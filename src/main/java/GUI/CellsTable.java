@@ -131,7 +131,7 @@ public class CellsTable extends JPanel {
      * @param file String representation of the file path to the target file
      */
     public static void loadFile(String file){
-        fromDataTable(InputManager.fromCSV(file));
+        loadFromDT(InputManager.fromCSV(file));
     }
 
     public static void loadTSVFile(String file) {
@@ -179,7 +179,7 @@ public class CellsTable extends JPanel {
         return out;
     }
 
-    public void loadFromDT(DataTable in){
+    public static void loadFromDT(DataTable in){
         if(in == null){
             return;
         }
@@ -193,7 +193,13 @@ public class CellsTable extends JPanel {
             TableUtilities.Row r = in.getRow(i);
 
             for(int j = 0; j < r.size(); j++){
-                table.getModel().setValueAt(r.get(j).data, r.getIndex(), j);
+                String data = r.get(j).data;
+                if(data == null || data.equals("null")){
+                    data = "";
+                }
+
+                data = data.replaceAll("\"", "'");
+                table.getModel().setValueAt(data, r.getIndex(), j);
             }
         }
     }
